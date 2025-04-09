@@ -35,7 +35,7 @@ jobs:
         setup-command: ''
         command: javac -cp utilities/antlr-4.13.1-complete.jar -d out $(find src gen
           -name "*.java") && java -cp out:utilities/antlr-4.13.1-complete.jar SimpleLang
-          samples/sample1.slc
+          samples/sample1.sl
         input: ''
         expected-output: |-
           New Scope: first_func
