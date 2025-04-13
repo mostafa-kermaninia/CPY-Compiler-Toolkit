@@ -13,167 +13,247 @@ jobs:
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
-    - name: Value
-      id: value
+    - name: Func
+      id: func
       uses: classroom-resources/autograding-io-grader@v1
       with:
-        test-name: Value
+        test-name: Func
         setup-command: ''
         command: javac -cp utilities/antlr-4.13.1-complete.jar -d out $(find src gen
           -name "*.java") && java -cp out:utilities/antlr-4.13.1-complete.jar SimpleLang
-          tests/value.c
+          tests/01-func.cpy
         input: ''
-        expected-output: '1'
+        expected-output: |
+          ####Statements####
+          func foo: 1
+          func main: 2
+
+          ####Expressions####
         comparison-method: contains
         timeout: 10
         max-score: 1
-    - name: sample1
-      id: sample1
+    - name: For
+      id: for
       uses: classroom-resources/autograding-io-grader@v1
       with:
-        test-name: sample1
+        test-name: For
         setup-command: ''
         command: javac -cp utilities/antlr-4.13.1-complete.jar -d out $(find src gen
           -name "*.java") && java -cp out:utilities/antlr-4.13.1-complete.jar SimpleLang
-          samples/sample1.sl
+          tests/02-for.cpy
+        input: ''
+        expected-output: |
+          ####Statements####
+          func main: 2
+          for: 2
+
+          ####Expressions####
+        comparison-method: contains
+        timeout: 10
+        max-score: 1
+    - name: If
+      id: if
+      uses: classroom-resources/autograding-io-grader@v1
+      with:
+        test-name: If
+        setup-command: ''
+        command: javac -cp utilities/antlr-4.13.1-complete.jar -d out $(find src gen
+          -name "*.java") && java -cp out:utilities/antlr-4.13.1-complete.jar SimpleLang
+          tests/03-if.cpy
+        input: ''
+        expected-output: |
+          ####Statements####
+          func main: 4
+          if: 1 2 3
+
+          ####Expressions####
+        comparison-method: contains
+        timeout: 10
+        max-score: 1
+    - name: While
+      id: while
+      uses: classroom-resources/autograding-io-grader@v1
+      with:
+        test-name: While
+        setup-command: ''
+        command: javac -cp utilities/antlr-4.13.1-complete.jar -d out $(find src gen
+          -name "*.java") && java -cp out:utilities/antlr-4.13.1-complete.jar SimpleLang
+          tests/04-while.cpy
+        input: ''
+        expected-output: |
+          ####Statements####
+          func main: 2
+          while: 2
+
+          ####Expressions####
+        comparison-method: contains
+        timeout: 10
+        max-score: 1
+    - name: Nested
+      id: nested
+      uses: classroom-resources/autograding-io-grader@v1
+      with:
+        test-name: Nested
+        setup-command: ''
+        command: javac -cp utilities/antlr-4.13.1-complete.jar -d out $(find src gen
+          -name "*.java") && java -cp out:utilities/antlr-4.13.1-complete.jar SimpleLang
+          tests/05-nested.cpy
+        input: ''
+        expected-output: |
+          ####Statements####
+          func main: 2
+          for: 5
+          if: 1 2 3
+          while: 0
+
+          ####Expressions####
+        comparison-method: contains
+        timeout: 10
+        max-score: 1
+    - name: Binary Exp
+      id: binary-exp
+      uses: classroom-resources/autograding-io-grader@v1
+      with:
+        test-name: Binary Exp
+        setup-command: ''
+        command: javac -cp utilities/antlr-4.13.1-complete.jar -d out $(find src gen
+          -name "*.java") && java -cp out:utilities/antlr-4.13.1-complete.jar SimpleLang
+          tests/06-binery_exp.cpy
         input: ''
         expected-output: |-
-          New Scope: first_func
-          Declared variable: apple
-          Used variable: apple
-          Used variable: apple
-          New Scope: second_func
-          Declared variable: banana
-          Used variable: banana
-          Used variable: three
-          Used variable: banana
-          New Scope: Main
-          Declared variable: test
-          Used variable: test
-          Declared variable: tmp
-          Used variable: tmp
-          Called function: second_func
-          Called function: first_func
-          1
+          ####Statements####
+          func main: 3
+
+          ####Expressions####
+          +: 1
         comparison-method: contains
         timeout: 10
-    - name: Nested Statement
-      id: nested-statement
+        max-score: 1
+    - name: Unary Exp
+      id: unary-exp
       uses: classroom-resources/autograding-io-grader@v1
       with:
-        test-name: Nested Statement
+        test-name: Unary Exp
         setup-command: ''
         command: javac -cp utilities/antlr-4.13.1-complete.jar -d out $(find src gen
           -name "*.java") && java -cp out:utilities/antlr-4.13.1-complete.jar SimpleLang
-          tests/nested_statement.c
+          tests/07-unery_exp.cpy
         input: ''
-        expected-output: ''
+        expected-output: |-
+          ####Statements####
+          func main: 3
+
+          ####Expressions####
+          ++: 1
         comparison-method: contains
         timeout: 10
-    - name: Expression Advanced
-      id: expression-advanced
+        max-score: 1
+    - name: Binary Exp 2
+      id: binary-exp-2
       uses: classroom-resources/autograding-io-grader@v1
       with:
-        test-name: Expression Advanced
+        test-name: Binary Exp 2
         setup-command: ''
         command: javac -cp utilities/antlr-4.13.1-complete.jar -d out $(find src gen
           -name "*.java") && java -cp out:utilities/antlr-4.13.1-complete.jar SimpleLang
-          tests/expression_advanced.c
+          tests/08-binery_exp2.cpy
         input: ''
-        expected-output: ''
+        expected-output: |-
+          ####Statements####
+          func main: 3
+
+          ####Expressions####
+          +=: 1
         comparison-method: contains
         timeout: 10
-    - name: Global Scope
-      id: global-scope
+        max-score: 1
+    - name: Binary Exp Long
+      id: binary-exp-long
       uses: classroom-resources/autograding-io-grader@v1
       with:
-        test-name: Global Scope
+        test-name: Binary Exp Long
         setup-command: ''
         command: javac -cp utilities/antlr-4.13.1-complete.jar -d out $(find src gen
           -name "*.java") && java -cp out:utilities/antlr-4.13.1-complete.jar SimpleLang
-          tests/global_scope.c
+          tests/09-binery_exp_long.cpy
         input: ''
-        expected-output: ''
+        expected-output: |-
+          ####Statements####
+          func main: 3
+
+          ####Expressions####
+          +: 2
+          -: 1
         comparison-method: contains
         timeout: 10
-    - name: Identifier
-      id: identifier
+        max-score: 1
+    - name: Mix Exp
+      id: mix-exp
       uses: classroom-resources/autograding-io-grader@v1
       with:
-        test-name: Identifier
+        test-name: Mix Exp
         setup-command: ''
         command: javac -cp utilities/antlr-4.13.1-complete.jar -d out $(find src gen
           -name "*.java") && java -cp out:utilities/antlr-4.13.1-complete.jar SimpleLang
-          tests/identifier.c
+          tests/10-mix_exp.cpy
         input: ''
-        expected-output: ''
+        expected-output: |-
+          ####Statements####
+          func main: 3
+
+          ####Expressions####
+          *=: 5
+          -: 4
+          +: 3
+          ++: 1
+          *: 2
+          --: 1
+          +=: 1
         comparison-method: contains
         timeout: 10
-    - name: Nested Statement
-      id: nested-statement
+        max-score: 1
+    - name: Program
+      id: program
       uses: classroom-resources/autograding-io-grader@v1
       with:
-        test-name: Nested Statement
+        test-name: Program
         setup-command: ''
         command: javac -cp utilities/antlr-4.13.1-complete.jar -d out $(find src gen
           -name "*.java") && java -cp out:utilities/antlr-4.13.1-complete.jar SimpleLang
-          tests/nested_statement.c
+          tests/11-program.cpy
         input: ''
-        expected-output: ''
-        comparison-method: contains
-        timeout: 10
-    - name: Space
-      id: space
-      uses: classroom-resources/autograding-io-grader@v1
-      with:
-        test-name: Space
-        setup-command: ''
-        command: javac -cp utilities/antlr-4.13.1-complete.jar -d out $(find src gen
-          -name "*.java") && java -cp out:utilities/antlr-4.13.1-complete.jar SimpleLang
-          tests/javac -cp utilities/antlr-4.13.1-complete.jar -d out $(find src gen
-          -name "*.java") && java -cp out:utilities/antlr-4.13.1-complete.jar SimpleLang
-          tests/space.c
-        input: ''
-        expected-output: ''
-        comparison-method: contains
-        timeout: 10
-    - name: Statement
-      id: statement
-      uses: classroom-resources/autograding-io-grader@v1
-      with:
-        test-name: Statement
-        setup-command: ''
-        command: javac -cp utilities/antlr-4.13.1-complete.jar -d out $(find src gen
-          -name "*.java") && java -cp out:utilities/antlr-4.13.1-complete.jar SimpleLang
-          tests/statement.c
-        input: ''
-        expected-output: ''
-        comparison-method: contains
-        timeout: 10
-    - name: Type
-      id: type
-      uses: classroom-resources/autograding-io-grader@v1
-      with:
-        test-name: Type
-        setup-command: ''
-        command: javac -cp utilities/antlr-4.13.1-complete.jar -d out $(find src gen
-          -name "*.java") && java -cp out:utilities/antlr-4.13.1-complete.jar SimpleLang
-          tests/type.c
-        input: ''
-        expected-output: ''
+        expected-output: |-
+          ####Statements####
+          func reverseNumber: 3
+          while: 2
+          func main: 8
+          if: 2
+          if: 1 1
+
+          ####Expressions####
+          >: 1
+          +: 2
+          *: 1
+          %: 1
+          /=: 1
+          &: 1
+          <: 1
+          ==: 1
         comparison-method: contains
         timeout: 10
     - name: Autograding Reporter
       uses: classroom-resources/autograding-grading-reporter@v1
       env:
-        VALUE_RESULTS: "${{steps.value.outputs.result}}"
-        SAMPLE1_RESULTS: "${{steps.sample1.outputs.result}}"
-        NESTED-STATEMENT_RESULTS: "${{steps.nested-statement.outputs.result}}"
-        EXPRESSION-ADVANCED_RESULTS: "${{steps.expression-advanced.outputs.result}}"
-        GLOBAL-SCOPE_RESULTS: "${{steps.global-scope.outputs.result}}"
-        IDENTIFIER_RESULTS: "${{steps.identifier.outputs.result}}"
-        SPACE_RESULTS: "${{steps.space.outputs.result}}"
-        STATEMENT_RESULTS: "${{steps.statement.outputs.result}}"
-        TYPE_RESULTS: "${{steps.type.outputs.result}}"
+        FUNC_RESULTS: "${{steps.func.outputs.result}}"
+        FOR_RESULTS: "${{steps.for.outputs.result}}"
+        IF_RESULTS: "${{steps.if.outputs.result}}"
+        WHILE_RESULTS: "${{steps.while.outputs.result}}"
+        NESTED_RESULTS: "${{steps.nested.outputs.result}}"
+        BINARY-EXP_RESULTS: "${{steps.binary-exp.outputs.result}}"
+        UNARY-EXP_RESULTS: "${{steps.unary-exp.outputs.result}}"
+        BINARY-EXP-2_RESULTS: "${{steps.binary-exp-2.outputs.result}}"
+        BINARY-EXP-LONG_RESULTS: "${{steps.binary-exp-long.outputs.result}}"
+        MIX-EXP_RESULTS: "${{steps.mix-exp.outputs.result}}"
+        PROGRAM_RESULTS: "${{steps.program.outputs.result}}"
       with:
-        runners: value,sample1,nested-statement,expression-advanced,global-scope,identifier,nested-statement,space,statement,type
+        runners: func,for,if,while,nested,binary-exp,unary-exp,binary-exp-2,binary-exp-long,mix-exp,program
