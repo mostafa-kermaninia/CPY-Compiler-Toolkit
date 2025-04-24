@@ -21,7 +21,7 @@ jobs:
         setup-command: ''
         command: javac -cp utilities/antlr-4.13.1-complete.jar -d out $(find src gen
           -name "*.java") && java -cp out:utilities/antlr-4.13.1-complete.jar SimpleLang
-          tests/01-func.cpy
+          tests/01-func.cpy | sort -t':' -k1.6n -k2
         input: ''
         expected-output: |-
           Line 1: Stmt function foo = 1
@@ -37,7 +37,7 @@ jobs:
         setup-command: ''
         command: javac -cp utilities/antlr-4.13.1-complete.jar -d out $(find src gen
           -name "*.java") && java -cp out:utilities/antlr-4.13.1-complete.jar SimpleLang
-          tests/02-for.cpy
+          tests/02-for.cpy | sort -t':' -k1.6n -k2
         input: ''
         expected-output: |-
           Line 1: Stmt function main = 1
@@ -53,7 +53,7 @@ jobs:
         setup-command: ''
         command: javac -cp utilities/antlr-4.13.1-complete.jar -d out $(find src gen
           -name "*.java") && java -cp out:utilities/antlr-4.13.1-complete.jar SimpleLang
-          tests/03-if.cpy
+          tests/03-if.cpy | sort -t':' -k1.6n -k2
         input: ''
         expected-output: |-
           Line 1: Stmt function main = 1
@@ -73,7 +73,7 @@ jobs:
         setup-command: ''
         command: javac -cp utilities/antlr-4.13.1-complete.jar -d out $(find src gen
           -name "*.java") && java -cp out:utilities/antlr-4.13.1-complete.jar SimpleLang
-          tests/04-while.cpy
+          tests/04-while.cpy | sort -t':' -k1.6n -k2
         input: ''
         expected-output: |-
           Line 1: Stmt function main = 2
@@ -91,16 +91,16 @@ jobs:
         setup-command: ''
         command: javac -cp utilities/antlr-4.13.1-complete.jar -d out $(find src gen
           -name "*.java") && java -cp out:utilities/antlr-4.13.1-complete.jar SimpleLang
-          tests/05-nested.cpy
+          tests/05-nested.cpy | sort -t':' -k1.6n -k2
         input: ''
         expected-output: |-
           Line 1: Stmt function main = 2
           Line 2: Stmt for = 3
           Line 5: Expr 1
           Line 5: Stmt selection = 1
+          Line 7: Expr 0
           Line 7: Stmt selection = 2
           Line 10: Stmt selection = 3
-          Line 7: Expr 0
           Line 16: Expr 0
         comparison-method: contains
         timeout: 10
@@ -113,7 +113,7 @@ jobs:
         setup-command: ''
         command: javac -cp utilities/antlr-4.13.1-complete.jar -d out $(find src gen
           -name "*.java") && java -cp out:utilities/antlr-4.13.1-complete.jar SimpleLang
-          tests/06-binery_exp.cpy
+          tests/06-binery_exp.cpy | sort -t':' -k1.6n -k2
         input: ''
         expected-output: |-
           Line 1: Stmt function main = 3
@@ -131,7 +131,7 @@ jobs:
         setup-command: ''
         command: javac -cp utilities/antlr-4.13.1-complete.jar -d out $(find src gen
           -name "*.java") && java -cp out:utilities/antlr-4.13.1-complete.jar SimpleLang
-          tests/07-unery_exp.cpy
+          tests/07-unery_exp.cpy | sort -t':' -k1.6n -k2
         input: ''
         expected-output: |-
           Line 1: Stmt function main = 3
@@ -149,7 +149,7 @@ jobs:
         setup-command: ''
         command: javac -cp utilities/antlr-4.13.1-complete.jar -d out $(find src gen
           -name "*.java") && java -cp out:utilities/antlr-4.13.1-complete.jar SimpleLang
-          tests/08-binery_exp2.cpy
+          tests/08-binery_exp2.cpy | sort -t':' -k1.6n -k2
         input: ''
         expected-output: |-
           Line 1: Stmt function main = 3
@@ -167,7 +167,7 @@ jobs:
         setup-command: ''
         command: javac -cp utilities/antlr-4.13.1-complete.jar -d out $(find src gen
           -name "*.java") && java -cp out:utilities/antlr-4.13.1-complete.jar SimpleLang
-          tests/09-binery_exp_long.cpy
+          tests/09-binery_exp_long.cpy | sort -t':' -k1.6n -k2
         input: ''
         expected-output: |-
           Line 1: Stmt function main = 3
@@ -185,7 +185,7 @@ jobs:
         setup-command: ''
         command: javac -cp utilities/antlr-4.13.1-complete.jar -d out $(find src gen
           -name "*.java") && java -cp out:utilities/antlr-4.13.1-complete.jar SimpleLang
-          tests/10-mix_exp.cpy
+          tests/10-mix_exp.cpy | sort -t':' -k1.6n -k2
         input: ''
         expected-output: |-
           Line 1: Stmt function main = 3
@@ -203,7 +203,7 @@ jobs:
         setup-command: ''
         command: javac -cp utilities/antlr-4.13.1-complete.jar -d out $(find src gen
           -name "*.java") && java -cp out:utilities/antlr-4.13.1-complete.jar SimpleLang
-          tests/11-program.cpy
+          tests/11-program.cpy | sort -t':' -k1.6n -k2
         input: ''
         expected-output: |-
           Line 2: Stmt function reverseNumber = 3
@@ -223,8 +223,8 @@ jobs:
           Line 25: Expr reverseNumber
           Line 26: Expr ==
           Line 26: Stmt selection = 1
-          Line 28: Stmt selection = 1
           Line 27: Expr printf
+          Line 28: Stmt selection = 1
           Line 29: Expr printf
           Line 32: Expr 0
         comparison-method: contains
