@@ -1,4 +1,45 @@
-package main.ast.nodes;
+package main.ast.nodes_DIR;
 
-public class Node {
+import main.visitor.IVisitor;
+/**
+ * Base class for all AST nodes.
+ * Stores source‐code position (line & column) and integrates with the visitor pattern.
+ */
+public abstract class Node {
+    private int line;
+    private int column;
+
+    public Node() {
+    }
+
+    public Node(int line, int column) {
+        this.line = line;
+        this.column = column;
+    }
+
+    public int getLine() {
+        return line;
+    }
+
+    public void setLine(int line) {
+        this.line = line;
+    }
+
+    public int getColumn() {
+        return column;
+    }
+
+    public void setColumn(int column) {
+        this.column = column;
+    }
+
+    public abstract <T> T accept(IVisitor<T> visitor);
+
+    @Override
+    public String toString() {
+        return getClass().getSimpleName() + "{" +
+                "line=" + line +
+                ", column=" + column +
+                '}';
+    }
 }
