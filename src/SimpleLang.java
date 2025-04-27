@@ -12,8 +12,8 @@ import java.io.IOException;
 public class SimpleLang {
     public static void main(String[] args) throws IOException {
 //        convert cpy to c
-//        Convertor convertor = new Convertor(args[0]);
-        Convertor convertor = new Convertor("C:\\Users\\mosta\\github-classroom\\PLC-UT\\phase-1-ce-mostafa-kermaninia\\tests\\11-program.cpy");
+        Convertor convertor = new Convertor(args[0]);
+//        Convertor convertor = new Convertor("C:\\Users\\mosta\\github-classroom\\PLC-UT\\phase-1-ce-mostafa-kermaninia\\tests\\11-program.cpy");
 
 //        lexer part
         CharStream reader = CharStreams.fromString(convertor.converted);
