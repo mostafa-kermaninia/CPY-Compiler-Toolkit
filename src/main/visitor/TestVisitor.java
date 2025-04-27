@@ -56,14 +56,20 @@ public class TestVisitor {
         }
 
         evaluateBody(sel.getThenBody(), "Then");
-        evaluateBody(sel.getElseBody(), "Else");
+        if (!(sel.getElseBody() instanceof SelectionStatement)) {
+        evaluateBody(sel.getElseBody(), "Else");}
+        else {
+            SelectionStatement sel2 = (SelectionStatement) sel.getElseBody();
+            evaluateSelectionStatement(sel2);
+        }
     }
 
     private void evaluateBody(Node body, String bodyType) {
         if (body != null) {
+
             int count = countStatements(body);
-            System.out.println("Line " + body.getLine() + ": Stmt selection (" + bodyType + ") = " + count);
-//            System.out.println("Line " + body.getLine() + ": Stmt selection" + " = " + count);
+//            System.out.println("Line " + body.getLine() + ": Stmt selection (" + bodyType + ") = " + count);
+            System.out.println("Line " + body.getLine() + ": Stmt selection" + " = " + count);
             counter(body);
         }
     }
