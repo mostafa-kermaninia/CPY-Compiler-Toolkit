@@ -1,4 +1,4 @@
-// Generated from C:/Users/mosta/OneDrive/Desktop/Final/src/main/grammar/SimpleLang.g4 by ANTLR 4.13.2
+// Generated from C:/Users/mosta/github-classroom/PLC-UT/phase-1-ce-mostafa-kermaninia/src/main/grammar/SimpleLang.g4 by ANTLR 4.13.2
 package main.grammar;
 
     import main.ast.declaration_DIR.*;
