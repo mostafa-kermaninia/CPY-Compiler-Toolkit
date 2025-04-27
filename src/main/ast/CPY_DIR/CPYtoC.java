@@ -5,17 +5,17 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.regex.Pattern;
 
-public class Convertor {
+public class CPYtoC {
     private static final Pattern FUNCTION_PATTERN = Pattern.compile("^(\\w+\\s+)?\\w+\\s*\\(.*\\)\\s*:$");
     private static final Pattern CONTROL_FLOW_PATTERN = Pattern.compile("^(if|else if|while|for)\\s*\\(.*\\)\\s*:$");
     private static final Pattern ELSE_PATTERN = Pattern.compile("^else\\s*:$");
     private static final Pattern VAR_DECL_PATTERN = Pattern.compile("^\\w+\\s+\\w+\\s*(=\\s*.+)?$");
     private static final Pattern COMMENT_PATTERN = Pattern.compile("^//.*");
-    public String converted;
+    public String finalC;
 
-    public Convertor(String inputPath) throws IOException {
+    public CPYtoC(String inputPath) throws IOException {
         String input = Files.readString(Paths.get(inputPath));
-        converted = convertSimpleLangToC(input);
+        finalC = convertSimpleLangToC(input);
 //        System.out.println(converted);
     }
 
