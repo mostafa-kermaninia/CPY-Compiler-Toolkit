@@ -47,15 +47,12 @@ public class IterationStatement extends Stmt {
     }
 
     @Override
-    public List<Node> get_child() {
+    public List<Node> accept_subNodes() {
         List<Node> children = new ArrayList<>();
         if (condition != null) children.add(condition);
         if (body != null) children.add(body);
         return children;
     }
 
-    @Override
-    public <T> T accept(IVisitor<T> visitor) {
-        return visitor.visit(this);
-    }
+
 }

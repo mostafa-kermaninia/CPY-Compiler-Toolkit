@@ -15,6 +15,5 @@ public class StringVal extends Expr {
     }
     @Override
     public String toString(){return "StringValue:" +this.string_val;}
-    @Override
-    public <T> T accept(IVisitor<T> visitor){return visitor.visit(this);}
+
 }

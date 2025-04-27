@@ -29,12 +29,8 @@ public class TranslationUnit extends Node {
     }
 
     @Override
-    public List<Node> get_child() {
+    public List<Node> accept_subNodes() {
         return new ArrayList<>(externalDeclarations);
     }
 
-    @Override
-    public <T> T accept(IVisitor<T> visitor) {
-        return visitor.visit(this);
-    }
 }

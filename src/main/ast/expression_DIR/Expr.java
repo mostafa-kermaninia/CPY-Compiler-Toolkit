@@ -12,7 +12,4 @@ public abstract class Expr extends Node {
     public void setLine(int line) {
         this.line = line;
     }
-    public <T> T accept(main.visitor.IVisitor<T> visitor) {
-        return visitor.visit(this);
-    }
 }

@@ -23,13 +23,9 @@ public class InitializerListEntry extends Node {
         return initializer;
     }
 
-    @Override
-    public <T> T accept(IVisitor<T> visitor) {
-        return visitor.visit(this);
-    }
 
     @Override
-    public List<Node> get_child() {
+    public List<Node> accept_subNodes() {
         List<Node> children = new ArrayList<>();
         if (designation != null) {
             children.add(designation);

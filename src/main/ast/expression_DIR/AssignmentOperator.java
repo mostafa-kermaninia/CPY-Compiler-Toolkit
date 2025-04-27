@@ -18,10 +18,6 @@ public class AssignmentOperator extends Node {
         this.operatorType = operatorType;
     }
 
-    @Override
-    public <T> T accept(IVisitor<T> visitor) {
-        return visitor.visit(this);
-    }
 
     @Override
     public String toString() {

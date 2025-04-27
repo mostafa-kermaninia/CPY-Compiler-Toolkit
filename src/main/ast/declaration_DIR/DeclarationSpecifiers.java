@@ -17,13 +17,9 @@ public class DeclarationSpecifiers extends Node {
         this.declarationSpecifiers.add(declarationSpecifier);
     }
 
-    @Override
-    public <T> T accept(IVisitor<T> visitor) {
-        return visitor.visit(this);
-    }
 
     @Override
-    public List<Node> get_child() {
+    public List<Node> accept_subNodes() {
         return new ArrayList<>(declarationSpecifiers);
     }
 

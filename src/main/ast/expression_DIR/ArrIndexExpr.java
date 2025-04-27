@@ -31,7 +31,7 @@ public class ArrIndexExpr extends Expr {
     }
 
     @Override
-    public List<Node> get_child() {
+    public List<Node> accept_subNodes() {
         List<Node> children = new ArrayList<>();
         if (array != null) {
             children.add(array);

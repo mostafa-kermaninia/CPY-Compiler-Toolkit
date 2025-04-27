@@ -47,7 +47,7 @@ public class Declarator extends Declaration {
     }
 
     @Override
-    public List<Node> get_child() {
+    public List<Node> accept_subNodes() {
         List<Node> children = new ArrayList<>();
         if (pointer != null)
             children.add(pointer);

@@ -33,13 +33,9 @@ public class Initializer extends Node {
         this.initializerList = initializerList;
     }
 
-    @Override
-    public <T> T accept(main.visitor.IVisitor<T> visitor) {
-        return visitor.visit(this);
-    }
 
     @Override
-    public List<Node> get_child() {
+    public List<Node> accept_subNodes() {
         List<Node> children = new ArrayList<>();
         if (expression != null) {
             children.add(expression);

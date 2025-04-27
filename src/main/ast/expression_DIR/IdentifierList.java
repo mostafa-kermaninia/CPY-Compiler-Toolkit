@@ -21,13 +21,9 @@ public class IdentifierList extends Node {
         this.identifiers = identifiers;
     }
 
-    @Override
-    public <T> T accept(IVisitor<T> visitor) {
-        return visitor.visit(this);
-    }
 
     @Override
-    public List<Node> get_child() {
+    public List<Node> accept_subNodes() {
         List<Node> children = new ArrayList<>();
         for (Identifier identifier : identifiers) {
             children.add(identifier);

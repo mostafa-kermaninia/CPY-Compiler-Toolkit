@@ -8,7 +8,6 @@ public class FuncCallExpr extends Expr{
     public FuncCallExpr(String _name) {name = _name;}
     public void setName(String name) {this.name = name;}
     public String getName(){return this.name;}
-    @Override
-    public <T> T accept(IVisitor<T> visitor) {return visitor.visit(this);}
+
 
 }

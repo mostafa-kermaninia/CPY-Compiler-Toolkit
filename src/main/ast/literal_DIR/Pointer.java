@@ -32,11 +32,6 @@ public class Pointer extends Node {
         return lineNumber;
     }
 
-    @Override
-    public <T> T accept(IVisitor<T> visitor) {
-        return visitor.visit(this);
-    }
-
     public void printPointerDetails() {
         System.out.println("Pointer Level: " + levelOfPointer);
         System.out.println("Is Constant: " + isConstant);

@@ -50,7 +50,7 @@ public class ForCondition extends Node {
     }
 
     @Override
-    public List<Node> get_child() {
+    public List<Node> accept_subNodes() {
         List<Node> children = new ArrayList<>();
         if (forDeclaration != null) children.add(forDeclaration);
         if (condition != null) children.add(condition);
@@ -59,10 +59,5 @@ public class ForCondition extends Node {
         return children;
     }
 
-
-    @Override
-    public <T> T accept(IVisitor<T> visitor) {
-        return visitor.visit(this);
-    }
 
 }

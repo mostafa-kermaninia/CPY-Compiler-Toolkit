@@ -41,7 +41,7 @@ public class AssignmentExpr extends Expr {
     }
 
     @Override
-    public List<Node> get_child() {
+    public List<Node> accept_subNodes() {
         List<Node> children = new ArrayList<>();
         if (leftHandSide != null) {
             children.add(leftHandSide);

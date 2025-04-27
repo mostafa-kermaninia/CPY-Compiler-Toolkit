@@ -32,13 +32,9 @@ public class InitDeclaratorList extends Node {
         this.initDeclarators.add(initDeclarator);
     }
 
-    @Override
-    public <T> T accept(IVisitor<T> visitor) {
-        return visitor.visit(this);
-    }
 
     @Override
-    public List<Node> get_child() {
+    public List<Node> accept_subNodes() {
         return initDeclarators == null ? new ArrayList<>() : new ArrayList<>(initDeclarators);
     }
 

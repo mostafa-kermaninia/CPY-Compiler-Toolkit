@@ -17,10 +17,6 @@ public class UnaryExpr extends Expr{
         this.operand = operand;
     }
 
-    @Override
-    public <T> T accept(IVisitor<T> visitor) {
-        return visitor.visit(this);
-    }
 
     public String getOperand() {
         return operand;
@@ -41,7 +37,7 @@ public class UnaryExpr extends Expr{
     }
 
     @Override
-    public List<Node> get_child() {
+    public List<Node> accept_subNodes() {
         List<Node> children = new ArrayList<>();
         if (operator != null) {
             children.add(operator);

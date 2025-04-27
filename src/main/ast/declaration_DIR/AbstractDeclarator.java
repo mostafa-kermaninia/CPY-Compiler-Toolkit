@@ -27,9 +27,4 @@ public class AbstractDeclarator extends Node {
     }
 
 
-
-    @Override
-    public <T> T accept(main.visitor.IVisitor<T> visitor) {
-        return visitor.visit(this);
-    }
 }

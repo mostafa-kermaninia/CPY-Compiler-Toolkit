@@ -9,10 +9,6 @@ public class VarDec extends Stmt{
     public VarDec(String varName) {
         this.varName = varName;
     }
-    @Override
-    public <T> T accept(IVisitor<T> visitor) {
-        return visitor.visit(this);
-    }
 
     public String getVarName() {
         return varName;

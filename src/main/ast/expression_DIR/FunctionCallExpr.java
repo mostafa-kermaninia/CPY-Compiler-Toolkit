@@ -36,7 +36,7 @@ public class FunctionCallExpr extends Expr {
     }
 
     @Override
-    public List<Node> get_child() {
+    public List<Node> accept_subNodes() {
         List<Node> children = new ArrayList<>();
         if (instance != null) {
             children.add(instance);

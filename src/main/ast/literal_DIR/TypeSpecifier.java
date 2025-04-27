@@ -10,11 +10,6 @@ public class TypeSpecifier extends Node {
         this.name = name;
     }
 
-    @Override
-    public <T> T accept(IVisitor<T> visitor) {
-        return visitor.visit(this);
-    }
-
     public String getName() {
         return name;
     }

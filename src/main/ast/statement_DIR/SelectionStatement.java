@@ -47,7 +47,7 @@ public class SelectionStatement extends Stmt {
     }
 
     @Override
-    public List<Node> get_child() {
+    public List<Node> accept_subNodes() {
         List<Node> children = new ArrayList<>();
         if (condition != null) children.add(condition);
         if (thenStatement != null) children.add(thenStatement);
@@ -55,8 +55,5 @@ public class SelectionStatement extends Stmt {
         return children;
     }
 
-    @Override
-    public <T> T accept(IVisitor<T> visitor) {
-        return visitor.visit(this);
-    }
+
 }

@@ -44,7 +44,7 @@ public class DeclarationSpecifier extends Declaration {
     }
 
     @Override
-    public List<Node> get_child() {
+    public List<Node> accept_subNodes() {
         ArrayList<Node> children = new ArrayList<>();
         if (typeSpecifier != null)
             children.add(typeSpecifier);

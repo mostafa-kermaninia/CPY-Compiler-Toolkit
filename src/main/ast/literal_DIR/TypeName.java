@@ -29,11 +29,6 @@ public class TypeName extends Node {
         this.abstractDeclarator = abstractDeclarator;
     }
 
-    @Override
-    public <T> T accept(IVisitor<T> visitor) {
-        return visitor.visit(this);
-    }
-
 
 
 }

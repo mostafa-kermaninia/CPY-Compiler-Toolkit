@@ -17,6 +17,5 @@ public class BoolVal extends Expr {
     }
     @Override
     public String toString(){return "BoolValue:" + String.valueOf(this.bool_val);}
-    @Override
-    public <T> T accept(IVisitor<T> visitor){return visitor.visit(this);}
+
 }

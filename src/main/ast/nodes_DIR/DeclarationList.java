@@ -23,7 +23,7 @@ public class DeclarationList extends ExternalDeclaration {
     }
 
     @Override
-    public List<Node> get_child() {
+    public List<Node> accept_subNodes() {
         return new ArrayList<>(declarations);
     }
 

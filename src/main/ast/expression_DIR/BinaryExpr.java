@@ -25,10 +25,6 @@ public class BinaryExpr extends Expr {
         return secondOperand;
     }
 
-    @Override
-    public <T> T accept(IVisitor<T> visitor) {
-        return visitor.visit(this);
-    }
 
     public Expr getFirstOperand() {
         return firstOperand;
@@ -55,7 +51,7 @@ public class BinaryExpr extends Expr {
     }
 
     @Override
-    public List<Node> get_child() {
+    public List<Node> accept_subNodes() {
         List<Node> children = new ArrayList<>();
         if (firstOperand != null) children.add(firstOperand);
         if (secondOperand != null) children.add(secondOperand);

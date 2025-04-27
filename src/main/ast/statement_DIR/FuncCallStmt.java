@@ -14,10 +14,6 @@ public class FuncCallStmt extends Stmt{
         this.function = function;
     }
 
-    @Override
-    public <T> T accept(IVisitor<T> visitor) {
-        return visitor.visit(this);
-    }
 
     public FuncCallExpr getFunction() {
         return function;
@@ -28,7 +24,7 @@ public class FuncCallStmt extends Stmt{
     }
 
     @Override
-    public List<Node> get_child() {
+    public List<Node> accept_subNodes() {
         List<Node> children = new ArrayList<>();
         if (function != null) {
             children.add(function);

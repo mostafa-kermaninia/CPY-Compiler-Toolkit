@@ -33,7 +33,7 @@ public class ParameterList extends Declaration {
     }
 
     @Override
-    public List<Node> get_child() {
+    public List<Node> accept_subNodes() {
         List<Node> children = new ArrayList<>();
         if (parameters != null) {
             children.addAll(parameters); // Add all parameter declarations to the children list

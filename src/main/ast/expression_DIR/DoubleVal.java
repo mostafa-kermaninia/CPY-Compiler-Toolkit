@@ -15,7 +15,6 @@ public class DoubleVal extends Expr {
     }
     @Override
     public String toString(){return "DoubleValue:" + String.valueOf(this.double_val);}
-    @Override
-    public <T> T accept(IVisitor<T> visitor){return visitor.visit(this);}
+
 }
 

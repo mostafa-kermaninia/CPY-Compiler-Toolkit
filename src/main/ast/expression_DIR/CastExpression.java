@@ -6,7 +6,8 @@ import main.ast.literal_DIR.TypeName;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CastExpression extends Expr {
+public class
+CastExpression extends Expr {
     private TypeName typeName;
     private Expr expression;
     private String digitSequence;
@@ -54,7 +55,7 @@ public class CastExpression extends Expr {
     }
 
     @Override
-    public List<Node> get_child() {
+    public List<Node> accept_subNodes() {
         List<Node> children = new ArrayList<>();
         if (typeName != null) {
             children.add(typeName);

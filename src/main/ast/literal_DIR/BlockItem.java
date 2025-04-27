@@ -33,12 +33,7 @@ public class BlockItem extends Node {
     }
 
     @Override
-    public <T> T accept(IVisitor<T> visitor) {
-        return visitor.visit(this);
-    }
-
-    @Override
-    public List<Node> get_child() {
+    public List<Node> accept_subNodes() {
         List<Node> children = new ArrayList<>();
         if (stmt != null) {
             children.add(stmt);

@@ -24,7 +24,7 @@ public class ExternalDeclaration extends Node {
     }
 
     @Override
-    public List<Node> get_child() {
+    public List<Node> accept_subNodes() {
         List<Node> children = new ArrayList<>();
         if (declaration != null) {
             children.add(declaration);
@@ -32,8 +32,4 @@ public class ExternalDeclaration extends Node {
         return children;
     }
 
-    @Override
-    public <T> T accept(IVisitor<T> visitor) {
-        return visitor.visit(this);
-    }
 }

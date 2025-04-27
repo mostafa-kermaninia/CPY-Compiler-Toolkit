@@ -26,7 +26,7 @@ public class TestVisitor {
             evaluateExpressionNode((Expr) node);
         } else {
             // Traverse child nodes
-            node.get_child().forEach(this::counter);
+            node.accept_subNodes().forEach(this::counter);
         }
     }
 

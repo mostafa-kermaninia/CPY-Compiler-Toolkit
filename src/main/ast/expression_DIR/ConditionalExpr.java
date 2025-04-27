@@ -41,7 +41,7 @@ public class ConditionalExpr extends Expr {
     }
 
     @Override
-    public List<Node> get_child() {
+    public List<Node> accept_subNodes() {
         List<Node> children = new ArrayList<>();
         if (condition != null) children.add(condition);
         if (exprIfTrue != null) children.add(exprIfTrue);

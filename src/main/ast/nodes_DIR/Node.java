@@ -10,9 +10,8 @@ public abstract class Node {
 
     public void setLine(int line){this.line = line;}
     public int getLine(){return this.line;}
-    public abstract <T> T accept(IVisitor<T> visitor);
 
-    public List<Node> get_child() {
+    public List<Node> accept_subNodes() {
         return new ArrayList<>();
     }
 }

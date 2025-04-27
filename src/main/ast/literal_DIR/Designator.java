@@ -38,13 +38,9 @@ Designator extends Node {
         return fieldName;
     }
 
-    @Override
-    public <T> T accept(IVisitor<T> visitor) {
-        return visitor.visit(this);
-    }
 
     @Override
-    public List<Node> get_child() {
+    public List<Node> accept_subNodes() {
         List<Node> children = new ArrayList<>();
         if (indexExpr != null) {
             children.add(indexExpr);

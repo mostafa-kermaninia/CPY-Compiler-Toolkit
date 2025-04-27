@@ -48,11 +48,5 @@ public class SpecifierQualifierList extends Node {
         }
     }
 
-    @Override
-    public <T> T accept(IVisitor<T> visitor) {
-        return visitor.visit(this);
-    }
-
-
 
 }

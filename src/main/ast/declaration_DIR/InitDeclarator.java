@@ -39,13 +39,9 @@ public class InitDeclarator extends Node {
         this.initializer = initializer;
     }
 
-    @Override
-    public <T> T accept(IVisitor<T> visitor) {
-        return visitor.visit(this);
-    }
 
     @Override
-    public List<Node> get_child() {
+    public List<Node> accept_subNodes() {
         List<Node> children = new ArrayList<>();
         if (declarator != null)
             children.add(declarator);

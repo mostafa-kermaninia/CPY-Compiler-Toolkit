@@ -16,10 +16,6 @@ public class Assign extends Stmt {
         this.rightHand = expr;
     }
 
-    @Override
-    public <T> T accept(IVisitor<T> visitor) {
-        return visitor.visit(this);
-    }
 
     public String getLeftHand() {
         return leftHand;
@@ -38,7 +34,7 @@ public class Assign extends Stmt {
     }
 
     @Override
-    public List<Node> get_child() {
+    public List<Node> accept_subNodes() {
         List<Node> children = new ArrayList<>();
         if (rightHand != null) {
             children.add(rightHand);

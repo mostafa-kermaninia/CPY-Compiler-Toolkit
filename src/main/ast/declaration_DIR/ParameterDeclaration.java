@@ -49,7 +49,7 @@ public class ParameterDeclaration extends Declaration {
     }
 
     @Override
-    public List<Node> get_child() {
+    public List<Node> accept_subNodes() {
         List<Node> children = new ArrayList<>();
         if (declarationSpecifiers != null) {
             children.add(declarationSpecifiers);

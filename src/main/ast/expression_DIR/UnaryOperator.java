@@ -18,8 +18,4 @@ public class UnaryOperator extends Node {
         this.operator = operator;
     }
 
-    @Override
-    public <T> T accept(IVisitor<T> visitor) {
-        return visitor.visit(this);
-    }
 }

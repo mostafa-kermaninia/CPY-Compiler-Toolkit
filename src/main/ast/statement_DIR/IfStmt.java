@@ -16,10 +16,6 @@ public class IfStmt extends Stmt {
         this.condition = expr;
     }
 
-    @Override
-    public <T> T accept(IVisitor<T> visitor) {
-        return visitor.visit(this);
-    }
 
     public Stmt getIfBody() {
         return ifBody;
@@ -46,7 +42,7 @@ public class IfStmt extends Stmt {
     }
 
     @Override
-    public List<Node> get_child() {
+    public List<Node> accept_subNodes() {
         List<Node> children = new ArrayList<>();
         if (condition != null) {
             children.add(condition);

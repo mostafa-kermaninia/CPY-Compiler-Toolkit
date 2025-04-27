@@ -22,12 +22,7 @@ public class ArgumentExpressionList extends Node {
     }
 
     @Override
-    public <T> T accept(IVisitor<T> visitor) {
-        return visitor.visit(this);
-    }
-
-    @Override
-    public List<Node> get_child() {
+    public List<Node> accept_subNodes() {
         List<Node> children = new ArrayList<>();
         for (Expr expr : arguments) {
             children.add(expr);
