@@ -4,7 +4,7 @@ int reverseNumber(int num):
     while (num > 0):
         reversedNum = (reversedNum * 10) + (num % 10)
         num /= 10
-    
+
     return reversedNum
 end
 
@@ -19,7 +19,7 @@ int main():
     if (number < 0):
         printf("%d is not a palindrome.\n", number)
         return 0
-    
+
 
     // Check if the number is a palindrome
     int reversed = reverseNumber(number)
@@ -27,7 +27,7 @@ int main():
         printf("%d is a palindrome.\n", number)
     else:
         printf("%d is not a palindrome.\n", number)
-    
+
 
     return 0
 end

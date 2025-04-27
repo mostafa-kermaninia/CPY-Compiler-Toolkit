@@ -1,13 +1,10 @@
 package main.visitor;
 
-import main.ast.nodes.Program;
-import main.ast.nodes.Stmt.*;
-import main.ast.nodes.declaration.*;
-import main.ast.nodes.expression.*;
-import main.ast.nodes.expression.primitives.BoolVal;
-import main.ast.nodes.expression.primitives.DoubleVal;
-import main.ast.nodes.expression.primitives.IntVal;
-import main.ast.nodes.expression.primitives.StringVal;
+import main.ast.declaration_DIR.*;
+import main.ast.expression_DIR.*;
+import main.ast.literal_DIR.*;
+import main.ast.nodes_DIR.*;
+import main.ast.statement_DIR.*;
 
 /*GOALs:
 *   1. print out scope changes each time a new scope starts
@@ -21,13 +18,6 @@ import main.ast.nodes.expression.primitives.StringVal;
 public abstract class Visitor<T> implements IVisitor<T> {
     @Override
     public T visit(Program program) {
-        return null;
-    }
-    public T visit(Main main) {
-        return null;
-    }
-
-    public T visit(FuncDec funcDec) {
         return null;
     }
 
@@ -66,4 +56,33 @@ public abstract class Visitor<T> implements IVisitor<T> {
         return null;
     }
 
+    public T visit(TranslationUnit translationUnit) { return null; }
+    public T visit(FunctionDefinition functionDefinition) { return null; }
+    public T visit(Declaration declaration) { return null; }
+    public T visit(TypeSpecifier typeSpecifier) { return null; }
+    public T visit(UnaryOperator unaryOperator_2) { return null; }
+    public T visit(Pointer pointer) { return null; }
+    public T visit(ExternalDeclaration externalDeclaration) { return null; }
+    public T visit(DirectDeclarator directDeclarator) { return null; }
+    public T visit(ForCondition forCondition) { return null; }
+    public T visit(SelectionStatement selectionStatement) { return null; }
+    public T visit(ExpressionStatement expressionStatement) { return null; }
+    public T visit(BlockItem blockItem) { return null; }
+    public T visit(Designation designation) { return null; }
+    public T visit(Initializer initializer) { return null; }
+    public T visit(InitializerList initializerList) { return null; }
+    public T visit(AbstractDeclarator abstractDeclarator) { return null; }
+    public T visit(IdentifierList identifierList) { return null; }
+    public T visit(DirectAbstractDeclarator directAbstractDeclarator) { return null; }
+    public T visit(InitDeclarator initDeclarator) { return null; }
+    public T visit(InitDeclaratorList initDeclaratorList) { return null; }
+    public T visit(SpecifierQualifierList specifierQualifierList) { return null; }
+    public T visit(CompoundStatement compoundStatement) { return null; }
+    public T visit(Expr expr) { return null; }
+    public T visit(TypeName typeName) { return null; }
+    public T visit(JumpStatement jumpStatement) { return null; }
+    public T visit(AssignmentOperator assignmentOperator) { return null; }
+    public T visit(IterationStatement iterationStatement) { return null; }
+    public T visit(StraySemiColon straySemiColon) { return null; }
+    public T visit(InitializerListEntry initializerListEntry) { return null; }
 }

@@ -1,4 +1,4 @@
-int main():
+void main():
     if (1):
         int a
     else if (0):
@@ -8,6 +8,4 @@ int main():
         int a
         int b
         int c
-
-    return 0
 end

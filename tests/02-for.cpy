@@ -1,6 +1,5 @@
-int main():
+void main():
     for (;;):
         int a
         int b
-    return 0
 end
