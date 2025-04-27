@@ -62,7 +62,8 @@ public class TestVisitor {
     private void evaluateBody(Node body, String bodyType) {
         if (body != null) {
             int count = countStatements(body);
-            System.out.println("Line " + body.getLine() + ": Stmt selection (" + bodyType + ") = " + count);
+//            System.out.println("Line " + body.getLine() + ": Stmt selection (" + bodyType + ") = " + count);
+            System.out.println("Line " + body.getLine() + ": Stmt selection" + " = " + count);
             count(body);
         }
     }
