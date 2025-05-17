@@ -61,7 +61,7 @@ jobs:
           Line 1: Stmt function process = 1 1
           Line 7: Stmt function f2 = 1 0
           Line 10: Stmt function f1 = 1 0
-          Line 13: Stmt function main = 1 0
+          Line 13: Stmt function main = 2 0
         comparison-method: contains
         timeout: 10
         max-score: 1
@@ -106,7 +106,7 @@ jobs:
         input: ''
         expected-output: |-
           Line 3: Stmt function main = 2 0
-          Line 5: Stmt iteration for = 1
+          Line 5: Stmt for = 1
         comparison-method: contains
         timeout: 10
         max-score: 1
