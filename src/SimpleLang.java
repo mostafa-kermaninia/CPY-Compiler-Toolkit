@@ -22,7 +22,7 @@ public class SimpleLang {
         Program program = flParser.program().programRet;
         System.out.println();
 
-        
+
         NameAnalyzer my_name_analyzer = new NameAnalyzer();
         my_name_analyzer.visit(program);
 
