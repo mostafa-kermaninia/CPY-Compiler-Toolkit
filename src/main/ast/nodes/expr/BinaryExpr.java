@@ -1,17 +1,24 @@
 package main.ast.nodes.expr;
 
 import main.visitor.IVisitor;
-import main.ast.nodes.expr.operator.*;
+import main.ast.nodes.*;
 
-public class BinaryExpr extends Expr {
-    private Expr firstOperand;
-    private Expr secondOperand;
-    private BinaryOperator binaryOperator;
+public class BinaryExpr extends Expr{
+    private Expr expr1;
+    private Expr expr2;
+    private String operator;
+    private AssignmentOp assignmentOp;
 
-    public BinaryExpr(Expr firstOperand, BinaryOperator operator, Expr secondOperand) {
-        this.firstOperand = firstOperand;
-        this.secondOperand = secondOperand;
-        this.binaryOperator = operator;
+    public BinaryExpr(Expr expr1, Expr expr2, String operator){
+        this.expr1 = expr1;
+        this.expr2 = expr2;
+        this.operator = operator;
+    }
+
+    public BinaryExpr(Expr expr1, Expr expr2, AssignmentOp assignmentOp){
+        this.expr1 = expr1;
+        this.expr2 = expr2;
+        this.assignmentOp = assignmentOp;
     }
 
     @Override
@@ -19,27 +26,8 @@ public class BinaryExpr extends Expr {
         return visitor.visit(this);
     }
 
-    public Expr getFirstOperand() {
-        return firstOperand;
-    }
-
-    public void setFirstOperand(Expr firstOperand) {
-        this.firstOperand = firstOperand;
-    }
-
-    public Expr getSecondOperand() {
-        return secondOperand;
-    }
-
-    public void setSecondOperand(Expr secondOperand) {
-        this.secondOperand = secondOperand;
-    }
-
-    public BinaryOperator getOperator() {
-        return binaryOperator;
-    }
-
-    public void setOperator(BinaryOperator operator) {
-        this.binaryOperator = operator;
-    }
+    public Expr getExpr1(){ return expr1; }
+    public Expr getExpr2(){ return expr2; }
+    public String getOperator(){ return operator; }
+    public AssignmentOp getAssignmentOp(){ return assignmentOp; }
 }

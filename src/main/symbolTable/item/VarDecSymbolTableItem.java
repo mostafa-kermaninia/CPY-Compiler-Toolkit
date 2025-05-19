@@ -1,27 +1,27 @@
 package main.symbolTable.item;
 
-import main.ast.nodes.Stmt.VarDec;
+import main.ast.nodes.TypeSpecifier;
 
 public class VarDecSymbolTableItem extends SymbolTableItem{
     public static final String START_KEY = "VarDec_";
 
-    public VarDec getVarDec() {
+    public TypeSpecifier getVarDec() {
         return varDec;
     }
 
-    public void setVarDec(VarDec varDec) {
+    public void setVarDec(TypeSpecifier varDec) {
         this.varDec = varDec;
     }
 
-    private VarDec varDec;
+    private TypeSpecifier varDec;
 
-    public VarDecSymbolTableItem(VarDec varDec) {
+    public VarDecSymbolTableItem(TypeSpecifier varDec) {
         this.varDec = varDec;
     }
 
     @Override
     public String getKey() {
-        return START_KEY + this.varDec.getVarName();
+        return START_KEY + this.varDec.getType();
     }
 
 }

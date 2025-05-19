@@ -1,189 +1,472 @@
 package main.visitor;
 
-import main.ast.nodes.Program;
+import main.ast.nodes.*;
 import main.ast.nodes.Stmt.*;
-import main.ast.nodes.declaration.FuncDec;
-import main.ast.nodes.declaration.Main;
 import main.ast.nodes.expr.*;
-import main.ast.nodes.expr.primitives.*;
-import main.symbolTable.SymbolTable;
+import main.ast.nodes.ExternalDeclaration.*;
+import main.ast.nodes.For.*;
+import main.symbolTable.*;
 import main.symbolTable.exceptions.ItemAlreadyExistsException;
 import main.symbolTable.exceptions.ItemNotFoundException;
 import main.symbolTable.item.FuncDecSymbolTableItem;
+import main.symbolTable.item.SymbolTableItem;
 import main.symbolTable.item.VarDecSymbolTableItem;
 
-/*
-*   Main Changes:
-*       1.create a SymbolTable class to act as our symbol table
-*       2.create some symbolTableItems as the different nodes which are going to be stored in the SymbolTable
-*       3.create a new visitor as our NameAnalyzer
-*       4.add a symbolTable field in program, main, and func_dec AST nodes to store the corresponding symbol table
-* */
 
+
+/*GOALs:
+ *   1. print out scope changes each time a new scope starts
+ *   2. print the identifier if it is initialized
+ *   3. print the identifier if it is used
+ *   4. print out the name of the function when it is defined
+ *   5. print out the name of the function when it is used
+ *
+ * */
 
 
 public class NameAnalyzer extends Visitor<Void>{
-
+    public boolean noError = true;
     @Override
     public Void visit(Program program) {
         SymbolTable.top = new SymbolTable();
         SymbolTable.root = SymbolTable.top;
 
-        program.set_symbol_table(SymbolTable.top);
-
-        for (FuncDec funcDec : program.getFuncDecs()) {
-            if (funcDec != null) {
-                funcDec.accept(this);
-            }
-        }
-
-        if (program.getMain() != null) {
-            program.getMain().accept(this);
-        }
-
+        program.setSymbolTable(SymbolTable.top);
+        program.getTranslationUnit().accept(this);
         return null;
     }
 
-    @Override
-    public Void visit(FuncDec func_dec) {
-        FuncDecSymbolTableItem func_dec_item = new FuncDecSymbolTableItem(func_dec);
+    public Void visit(TranslationUnit translationUnit) {
+        for (ExternalDeclaration externalDeclaration : translationUnit.getExternalDeclaration()){
+            externalDeclaration.accept(this);
+        }
+        return null;
+    }
+
+    public Void visit(ExternalDeclaration externalDeclaration) {
+        if (externalDeclaration.getDeclaration() != null)
+            externalDeclaration.getDeclaration().accept(this);
+        else
+            externalDeclaration.getFunctionDefinition().accept(this);
+        return null;
+    }
+
+    public Void visit(FunctionDefinition functionDefinition) {
+        FuncDecSymbolTableItem func_dec_item = new FuncDecSymbolTableItem(functionDefinition);
         try {
             SymbolTable.top.put(func_dec_item);
         } catch (ItemAlreadyExistsException e) {
-            System.out.println("Redefinition of function \"" + func_dec.getFuncName() +"\" in line " + func_dec.getLine());
+            System.out.println("Redefinition of function \"" +
+                    functionDefinition.getDeclarator().getDirectDec().getDirectDec().getIdentifier()
+                    +"\" in line " + functionDefinition.getDeclarator().getDirectDec().getDirectDec().getLine());
+            noError = false;
         }
 
 
         SymbolTable func_dec_symbol_table = new SymbolTable(SymbolTable.top);
-        func_dec.set_symbol_table(func_dec_symbol_table);
+        functionDefinition.setSymbolTable(func_dec_symbol_table);
         SymbolTable.push(func_dec_symbol_table);
 
-        for (Stmt stmt : func_dec.getStmts()) {
-            if (stmt != null) {
-                stmt.accept(this);
+        if (functionDefinition.getDecSpecifiers() != null)
+            functionDefinition.getDecSpecifiers().accept(this);
+        functionDefinition.getDeclarator().accept(this);
+        if (functionDefinition.getDecList() != null)
+            functionDefinition.getDecList().accept(this);
+        functionDefinition.getCompoundStmt().accept(this);
+
+        ParameterList plist = functionDefinition.getDeclarator().getDirectDec().getParameterList();
+        if (plist == null) {
+            functionDefinition.setNumArgs(0);
+            System.out.println("Parameter list: " + func_dec_item.getKey());
+        }
+        else {
+            functionDefinition.setNumArgs(plist.getParameterDecs().size());
+            System.out.println("Parameter list: " + func_dec_item.getKey());
+        }
+        SymbolTable.pop();
+        return null;
+    }
+
+    public Void visit(CastExpr castExpr) {
+        if (castExpr.getCastExpr() != null)
+            castExpr.getCastExpr().accept(this);
+        if (castExpr.getExpr() != null)
+            castExpr.getExpr().accept(this);
+        if (castExpr.getTypeName() != null)
+            castExpr.getTypeName().accept(this);
+        return null;
+    }
+
+
+    public Void visit(Declaration declaration) {
+        declaration.getDeclarationSpecifiers().accept(this);
+        if (declaration.getInitDeclaratorList() != null)
+            declaration.getInitDeclaratorList().accept(this);
+        return null;
+    }
+
+    public Void visit(DecList decList) {
+        for (Declaration declaration : decList.getDeclarations())
+            declaration.accept(this);
+        return null;
+    }
+
+    public Void visit(DeclarationSpecifiers declarationSpecifiers) {
+        for (DeclarationSpecifier declarationSpecifier : declarationSpecifiers.getDeclarationSpecifiers())
+            declarationSpecifier.accept(this);
+        return null;
+    }
+
+    public Void visit(ForDec forDec) {
+        forDec.getDeclarationSpecifiers().accept(this);
+        if (forDec.getInitDecList() != null)
+            forDec.getInitDecList().accept(this);
+
+        return null;
+    }
+
+
+    public Void visit(DeclarationSpecifier declarationSpecifier) {
+        if (declarationSpecifier.getTypeSpecifier() != null)
+            declarationSpecifier.getTypeSpecifier().accept(this);
+        return null;
+    }
+
+    public Void visit(InitDeclaratorList initDeclaratorList) {
+        for (InitDeclarator initDeclarator : initDeclaratorList.getInitDeclarators())
+            initDeclarator.accept(this);
+
+        return null;
+    }
+
+    public Void visit(InitDeclarator initDeclarator) {
+        initDeclarator.getDeclarator().accept(this);
+        if (initDeclarator.getInitializer() != null)
+            initDeclarator.getInitializer().accept(this);
+        return null;
+    }
+
+    public Void visit(ArgExpr argExpr) {
+        for (Expr expr : argExpr.getExprs())
+            if (expr != null)
+                expr.accept(this);
+        return null;
+    }
+
+    public Void visit(UnaryOperator unaryOperator) {
+        return null;
+    }
+
+
+    public Void visit(TypeSpecifier typeSpecifier) {
+        if (typeSpecifier.isVar_dec()) {
+            VarDecSymbolTableItem var_dec_item = new VarDecSymbolTableItem(typeSpecifier);
+            try {
+                SymbolTable.top.put(var_dec_item);
+            } catch (ItemAlreadyExistsException e) {
+                System.out.println("Redeclaration of variable \"" + typeSpecifier.getType() + "\" in line " + typeSpecifier.getLine());
+                noError = false;
             }
         }
 
-        SymbolTable.pop();
 
         return null;
     }
 
-    @Override
-    public Void visit(Main main) {
-        SymbolTable main_symbol_table = new SymbolTable(SymbolTable.top);
-        main.set_symbol_table(main_symbol_table);
-        SymbolTable.push(main_symbol_table);
-
-        for (Stmt stmt : main.getStmts()) {
-            if (stmt != null) {
-                stmt.accept(this);
-            }
-        }
-
-        SymbolTable.pop();
-
+    public Void visit(AssignmentOp assignmentOp) {
         return null;
     }
 
-    @Override
-    public Void visit(FuncCallStmt func_call_stmt) {
-        try {
-            SymbolTable.top.getItem(FuncDecSymbolTableItem.START_KEY + func_call_stmt.getFunction().getName());
-        } catch (ItemNotFoundException e) {
-            System.out.println("Function \"" +func_call_stmt.getFunction().getName() + "\" not declared in line : " + func_call_stmt.getLine());
-        }
-
+    public Void visit(Pointer pointer) {
         return null;
     }
 
-    @Override
-    public Void visit(FuncCallExpr func_call_expr) {
-        try {
-            SymbolTable.top.getItem(FuncDecSymbolTableItem.START_KEY + func_call_expr.getName());
-        } catch (ItemNotFoundException e) {
-            System.out.println("Function \"" +func_call_expr.getName() + "\" not declared in line : " + func_call_expr.getLine());
-        }
-
+    public Void visit(ParameterList parameterList) {
+        for (ParameterDec parameterDec : parameterList.getParameterDecs())
+            parameterDec.accept(this);
         return null;
     }
 
-    @Override
-    public Void visit(VarDec var_dec) {
 
-
-        VarDecSymbolTableItem var_dec_item = new VarDecSymbolTableItem(var_dec);
-        try {
-            SymbolTable.top.put(var_dec_item);
-        } catch (ItemAlreadyExistsException e) {
-            System.out.println("Redeclaration of variable \"" + var_dec.getVarName() +"\" in line " + var_dec.getLine());
-        }
-
+    public Void visit(Declarator declarator) {
+        declarator.getDirectDec().accept(this);
+        if (declarator.getPointer() != null)
+            declarator.getPointer().accept(this);
         return null;
     }
 
-    @Override
-    public Void visit(Assign assign) {
-        try {
-            SymbolTable.top.getItem(VarDecSymbolTableItem.START_KEY + assign.getLeftHand());
-        } catch (ItemNotFoundException e) {
-            System.out.println("Variable \"" + assign.getLeftHand() + "\" not declared in line : " + assign.getLine());
-        }
-
-        if ( assign.getRightHand() != null ) {
-            assign.getRightHand().accept(this);
-        }
-
+    public Void visit(DirectDec directDec) {
+        if (directDec.getDeclarator() != null)
+            directDec.getDeclarator().accept(this);
+        if (directDec.getDirectDec() != null)
+            directDec.getDirectDec().accept(this);
+        if (directDec.getIdentifierList() != null)
+            directDec.getIdentifierList().accept(this);
+        if (directDec.getExpr() != null)
+            directDec.getExpr().accept(this);
+        if (directDec.getParameterList() != null)
+            directDec.getParameterList().accept(this);
         return null;
     }
 
-    @Override
-    public Void visit(IfStmt if_stmt) {
+    public Void visit(SpecifierQualifierList specifierQualifierList) {
+        if (specifierQualifierList.getTypeSpecifier() != null)
+            specifierQualifierList.getTypeSpecifier().accept(this);
+        if (specifierQualifierList.getSpecifierQualifierList() != null)
+            specifierQualifierList.getSpecifierQualifierList().accept(this);
+        return null;
+    }
+
+    public Void visit(ParameterDec parameterDec) {
+        parameterDec.getDeclarationSpecifier().accept(this);
+        if (parameterDec.getAbstractDec() != null)
+            parameterDec.getAbstractDec().accept(this);
+        if (parameterDec.getDeclarator() != null)
+            parameterDec.getDeclarator().accept(this);
+        return null;
+    }
+
+    public Void visit(IdentifierList identifierList) {
+        return null;
+    }
+
+    public Void visit(TypeName typeName) {
+        typeName.getSpecifierQualifierList().accept(this);
+        if (typeName.getAbstractDec() != null)
+            typeName.getAbstractDec().accept(this);
+        return null;
+    }
+
+
+    public Void visit(DirectAbsDec directAbsDec) {
+        if (directAbsDec.getExpr() != null)
+            directAbsDec.getExpr().accept(this);
+        if (directAbsDec.getAbstractDec() != null)
+            directAbsDec.getAbstractDec().accept(this);
+        if (directAbsDec.getParameterList() != null)
+            directAbsDec.getParameterList().accept(this);
+        if (directAbsDec.getDirectAbsDec() != null)
+            directAbsDec.getDirectAbsDec().accept(this);
+        return null;
+    }
+
+    public Void visit(AbstractDec abstractDec) {
+        abstractDec.getPointer().accept(this);
+        if (abstractDec.getDirectAbsDec() != null)
+            abstractDec.getDirectAbsDec().accept(this);
+        return null;
+    }
+
+    public Void visit(Initializer initializer) {
+        if (initializer.getExpr() != null)
+            initializer.getExpr().accept(this);
+        else
+            initializer.getInitList().accept(this);
+        return null;
+    }
+
+    public Void visit(InitializerList initializerList) {
+        for (Initializer initializer : initializerList.getInitializers())
+            initializer.accept(this);
+        for (Designation designation : initializerList.getDesignations())
+            designation.accept(this);
+        return null;
+    }
+
+    public Void visit(Designation designation) {
+        for (Designator designator : designation.getDesignators())
+            designator.accept(this);
+        return null;
+    }
+
+    public Void visit(Designator designator) {
+        if (designator.getExpr() != null)
+            designator.getExpr().accept(this);
+        return null;
+    }
+
+    public Void visit(CompoundStmt compoundStmt) {
+        for (BlockItem blockItem : compoundStmt.getBlockItems()){
+            blockItem.accept(this);
+        }
+        return null;
+    }
+
+    public Void visit(BlockItem blockItem) {
+        if (blockItem.getStmt() != null)
+            blockItem.getStmt().accept(this);
+        else
+            blockItem.getDeclaration().accept(this);
+        return null;
+    }
+
+    public Void visit(ExprStmt exprStmt) {
+        if (exprStmt.getExpr() != null)
+            exprStmt.getExpr().accept(this);
+        return null;
+    }
+
+    public Void visit(SelectionStmt selectionStmt) {
         SymbolTable symbolTable = new SymbolTable(SymbolTable.top);
-        if_stmt.setSymbol_table(symbolTable);
+        selectionStmt.setSymbolTable(symbolTable);
         SymbolTable.push(symbolTable);
 
-        if_stmt.getCondition().accept(this);
-        if_stmt.getIfBody().accept(this);
-        if(if_stmt.getElseBody()!= null){
-            if_stmt.getElseBody().accept(this);
-        }
+        selectionStmt.getExpr().accept(this);
+        selectionStmt.getMainStmt().accept(this);
+        if (selectionStmt.getElseStmt() != null)
+            selectionStmt.getElseStmt().accept(this);
 
         SymbolTable.pop();
         return null;
     }
 
-    @Override
-    public Void visit(Return return_stmt) {
-        return_stmt.getReturn_value().accept(this);
+
+    public Void visit(IterStmt iterStmt) {
+        SymbolTable symbolTable = new SymbolTable(SymbolTable.top);
+        iterStmt.setSymbolTable(symbolTable);
+        SymbolTable.push(symbolTable);
+
+        if (iterStmt.getExpr() != null)
+            iterStmt.getExpr().accept(this);
+        if (iterStmt.getStmt() != null)
+            iterStmt.getStmt().accept(this);
+        if (iterStmt.getForCondition() != null)
+            iterStmt.getForCondition().accept(this);
+
+        SymbolTable.pop();
         return null;
     }
 
-    @Override
-    public Void visit(UnaryExpr unary_expr) {
-        unary_expr.getOperand().accept(this);
+    public Void visit(ForCondition forCondition) {
+        if (forCondition.getForDec() != null)
+            forCondition.getForDec().accept(this);
+        if (forCondition.getExpr() != null)
+            forCondition.getExpr().accept(this);
+        if (forCondition.getForExpr1() != null)
+            forCondition.getForExpr1().accept(this);
+        if (forCondition.getForExpr2() != null)
+            forCondition.getForExpr2().accept(this);
         return null;
     }
 
-    @Override
-    public Void visit(BinaryExpr binary_expr) {
-        binary_expr.getFirstOperand().accept(this);
-        binary_expr.getSecondOperand().accept(this);
-        return null;
-    }
-
-    @Override
-    public Void visit(IntVal int_val) {
-        return null;
-    }
-
-    @Override
-    public Void visit(Identifier the_id) {
-        try {
-            SymbolTable.top.getItem(VarDecSymbolTableItem.START_KEY + the_id.getName());
-        } catch (ItemNotFoundException e) {
-            System.out.println("Variable \"" + the_id.getName() + "\" not declared in line : " + the_id.getLine());
+    public Void visit(ForExpr forExpr) {
+        for (Expr expr : forExpr.getExprs()) {
+            if (expr != null)
+                expr.accept(this);
         }
         return null;
     }
+
+    public Void visit(JumpStmt jumpStmt) {
+        if (jumpStmt.getCondition() != null)
+            jumpStmt.getCondition().accept(this);
+        return null;
+    }
+
+    public Void visit(FuncCall funcCall) {
+
+        String funcName = ((Identifier) funcCall.getExpr()).getIdentifier();
+        int line = ((Identifier) funcCall.getExpr()).getLine();
+        ((Identifier) funcCall.getExpr()).setFunc();
+
+        if (funcName.equals("scanf") || funcName.equals("printf")){}
+
+        else {
+            try {
+                System.out.println("babaa " + FuncDecSymbolTableItem.START_KEY + funcCall.getNumArgs() + funcName);
+                SymbolTable.top.getItem(FuncDecSymbolTableItem.START_KEY  + funcCall.getNumArgs() + funcName );
+            } catch (ItemNotFoundException e) {
+                System.out.println("Function \"" + funcName + "\" not declared in line : " + line);
+                noError = false;
+            }
+        }
+
+        funcCall.getExpr().accept(this);
+        if (funcCall.getArgExpr() != null) {
+            funcCall.getArgExpr().accept(this);
+        }
+
+        return null;
+    }
+
+    public Void visit(UnaryExpr unaryExpr) {
+        unaryExpr.getExpr().accept(this);
+        return null;
+    }
+
+    public Void visit(ExprCast exprCast) {
+        exprCast.getCastExpr().accept(this);
+        exprCast.getTypeName().accept(this);
+        return null;
+    }
+
+    public Void visit(BinaryExpr binaryExpr) {
+        binaryExpr.getExpr1().accept(this);
+        binaryExpr.getExpr2().accept(this);
+        if (binaryExpr.getAssignmentOp() != null)
+            binaryExpr.getAssignmentOp().accept(this);
+        return null;
+    }
+
+    public Void visit(CondExpr condExpr) {
+        condExpr.getExpr1().accept(this);
+        condExpr.getExpr2().accept(this);
+        condExpr.getExpr3().accept(this);
+        return null;
+    }
+
+    public Void visit(CommaExpr commaExpr) {
+        for (Expr expr : commaExpr.getExprs())
+            if (expr != null)
+                expr.accept(this);
+        return null;
+    }
+
+    public Void visit(ArrayIndexing arrayIndexing) {
+        arrayIndexing.getExpr1().accept(this);
+        arrayIndexing.getExpr2().accept(this);
+        return null;
+    }
+
+    public Void visit(Identifier identifier) {
+        if (!identifier.isFunc()){
+            try {
+                SymbolTable.top.getItem(VarDecSymbolTableItem.START_KEY + identifier.getIdentifier());
+            } catch (ItemNotFoundException e) {
+                System.out.println("Line:" + identifier.getLine() + "-> " + identifier.getIdentifier() + " not declared");
+                noError = false;
+            }
+        }
+
+        return null;
+    }
+
+    public Void visit(Constant constant) {
+        return null;
+    }
+
+    public Void visit(TIExpr tiExpr) {
+        tiExpr.getInitializerList().accept(this);
+        tiExpr.getTypeName().accept(this);
+        return null;
+    }
+
+
+    public Void visit(PrefixExpr prefixExpr) {
+        if (prefixExpr.getExpr() != null)
+            prefixExpr.getExpr().accept(this);
+        if (prefixExpr.getCastExpr() != null)
+            prefixExpr.getCastExpr().accept(this);
+        if (prefixExpr.getTypeName() != null)
+            prefixExpr.getTypeName().accept(this);
+        if (prefixExpr.getTIExpr() != null)
+            prefixExpr.getTIExpr().accept(this);
+        if (prefixExpr.getUnaryOp() != null)
+            prefixExpr.getUnaryOp().accept(this);
+        return null;
+    }
+
+
 }
+
+

@@ -1,26 +1,28 @@
 package main.symbolTable.item;
 
-import main.ast.nodes.declaration.FuncDec;
+import main.ast.nodes.ExternalDeclaration.FunctionDefinition;
 
 public class FuncDecSymbolTableItem extends SymbolTableItem {
     public static final String START_KEY = "FuncDec_";
 
-    public FuncDec getFuncDec() {
+
+    public FunctionDefinition getFuncDec() {
         return funcDec;
     }
 
-    public void setFuncDec(FuncDec funcDec) {
+    public void setFuncDec(FunctionDefinition funcDec) {
         this.funcDec = funcDec;
     }
 
-    private FuncDec funcDec;
+    private FunctionDefinition funcDec;
 
-    public FuncDecSymbolTableItem(FuncDec funcDec) {
+    public FuncDecSymbolTableItem(FunctionDefinition funcDec) {
         this.funcDec = funcDec;
     }
 
     @Override
     public String getKey() {
-        return START_KEY + this.funcDec.getFuncName();
+        return START_KEY + funcDec.getNumArgs()
+                + this.funcDec.getDeclarator().getDirectDec().getDirectDec().getIdentifier();
     }
 }

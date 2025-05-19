@@ -1,35 +1,22 @@
 package main.ast.nodes.expr;
 
-import main.ast.nodes.expr.operator.UnaryOperator;
 import main.visitor.IVisitor;
+import main.ast.nodes.*;
 
 public class UnaryExpr extends Expr{
-    private Expr operand;
-    private UnaryOperator operator;
+    private Expr expr;
+    private String Op;
 
-
-    public UnaryExpr(Expr operand, UnaryOperator operator)
-    {
-        this.operator = operator;
-        this.operand = operand;
+    public UnaryExpr(Expr expr, String Op){
+        this.expr = expr;
+        this.Op = Op;
     }
-
     @Override
     public <T> T accept(IVisitor<T> visitor) {
         return visitor.visit(this);
     }
 
-    public Expr getOperand() {
-        return operand;
-    }
+    public Expr getExpr(){ return expr; }
+    public String getOp(){ return Op; }
 
-    public void setOperand(Expr operand) {
-        this.operand = operand;
-    }
-
-    public UnaryOperator getOperator() {return operator;}
-
-    public void setOperator(UnaryOperator operator) {
-        this.operator = operator;
-    }
 }

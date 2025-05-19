@@ -49,12 +49,18 @@ public class SymbolTable {
     }
 
     public SymbolTableItem getItem(String key) throws ItemNotFoundException {
+        key = key.trim();
         SymbolTable currentSymbolTable = this;
-
         while(currentSymbolTable != null) {
             SymbolTableItem symbolTableItem = currentSymbolTable.items.get(key);
-            if( symbolTableItem != null )
+            if( symbolTableItem != null ) {
+//                System.out.println(symbolTableItem.getKey().equals(key));
+//                System.out.println(symbolTableItem.getKey() + " shombol " + key);
+//                System.out.println(key.hashCode());
+//                System.out.println(symbolTableItem.getKey().hashCode());
+//                System.out.println(key.hashCode() == symbolTableItem.getKey().hashCode());
                 return symbolTableItem;
+            }
             currentSymbolTable = currentSymbolTable.pre;
         }
         throw new ItemNotFoundException();
