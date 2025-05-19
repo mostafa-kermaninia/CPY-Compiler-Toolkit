@@ -12,8 +12,8 @@ import java.io.IOException;
 
 public class SimpleLang {
     public static void main(String[] args) throws IOException {
-//        Convertor convertor = new Convertor(args[0]);
-        Convertor convertor = new Convertor("E:\\university\\term 6\\Compiler\\Project phase 2\\phase-2-ce-AmirNaddaf2004\\samples\\sample1.sl");
+        Convertor convertor = new Convertor(args[0]);
+//        Convertor convertor = new Convertor("E:\\university\\term 6\\Compiler\\Project phase 2\\phase-2-ce-AmirNaddaf2004\\samples\\sample1.sl");
 //        System.out.print(convertor.converted);
         CharStream reader = CharStreams.fromString(convertor.converted);
         SimpleLangLexer simpleLangLexer = new SimpleLangLexer(reader);
