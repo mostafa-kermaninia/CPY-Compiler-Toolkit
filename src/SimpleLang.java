@@ -14,7 +14,9 @@ public class SimpleLang {
     public static void main(String[] args) throws IOException {
 
 //        PART 1 : convert to C
-        CPYtoC CPYtoC = new CPYtoC(args[0]);
+//        CPYtoC CPYtoC = new CPYtoC(args[0]);
+        CPYtoC CPYtoC = new CPYtoC("C:\\Users\\mosta\\github-classroom\\PLC-UT\\phase-2-ce-mostafa-kermaninia\\tests\\NameAnalysis\\1-Variable Undefined.cpy");
+
 //        System.out.print(CPYtoC.finalC);
 
 //        PART 2 : Lexical analysis
@@ -33,7 +35,7 @@ public class SimpleLang {
         NameAnalyzer nameAnalyzer = new NameAnalyzer();
         nameAnalyzer.visit(program);
 
-        if (nameAnalyzer.noError) {
+        if (nameAnalyzer.analysisSucceeded()) {
             TestVisitor my_visitor = new TestVisitor();
             my_visitor.visit(program);
         }

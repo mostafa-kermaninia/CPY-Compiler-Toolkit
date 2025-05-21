@@ -1,497 +1,325 @@
 package main.visitor;
 
-import main.ast.literal_DIR.*;
-import main.ast.baseNodes_DIR.Program;
-import main.ast.baseNodes_DIR.TranslationUnit;
-import main.ast.declaration_DIR.Declaration;
-import main.ast.declaration_DIR.ExternalDeclaration;
-import main.ast.declaration_DIR.FunctionDefinition;
-import main.ast.declaration_DIR.ForDec;
-import main.ast.expression_DIR.ForExpr;
-import main.ast.statement_DIR.*;
+import main.ast.baseNodes_DIR.*;
+import main.ast.declaration_DIR.*;
 import main.ast.expression_DIR.*;
+import main.ast.literal_DIR.*;
+import main.ast.statement_DIR.*;
 import main.symbolTable.*;
-import main.symbolTable.exceptions.ItemAlreadyExistsException;
-import main.symbolTable.exceptions.ItemNotFoundException;
-import main.symbolTable.item.FuncDecSymbolTableItem;
-import main.symbolTable.item.VarDecSymbolTableItem;
+import main.symbolTable.exceptions.*;
+import main.symbolTable.item.*;
+import main.visitor.utils.ScopedErrorCollector;
 
+public class NameAnalyzer extends Visitor<Void> {
 
+    private SymbolTable globalTable;
+    private final ScopedErrorCollector errors = new ScopedErrorCollector();
 
-public class NameAnalyzer extends Visitor<Void>{
-    public SymbolTable symbolTableMain;
-    public boolean noError = true;
+    public SymbolTable getGlobalTable() {
+        return globalTable;
+    }
+
+    public boolean analysisSucceeded() {
+        return !errors.hasErrors();
+    }
+
     @Override
-    public Void visit(Program program) {
-        SymbolTable.top = new SymbolTable();
-        SymbolTable.root = SymbolTable.top;
-
-        program.setSymbolTable(SymbolTable.top);
-        program.getTranslationUnit().accept(this);
-        symbolTableMain = SymbolTable.top;
+    public Void visit(Program node) {
+        initializeTable(node);
+        analyzeTranslationUnit(node.getTranslationUnit());
+        globalTable = SymbolTable.top;
         return null;
     }
 
-    public Void visit(TranslationUnit translationUnit) {
-        for (ExternalDeclaration externalDeclaration : translationUnit.getExternalDeclaration()){
-            externalDeclaration.accept(this);
-        }
-        return null;
+    /* ---------- Top Level Analysis ---------- */
+
+    private void initializeTable(Program node) {
+        SymbolTable.top = SymbolTable.root = new SymbolTable();
+        node.setSymbolTable(SymbolTable.top);
     }
 
-    public Void visit(ExternalDeclaration externalDeclaration) {
-        if (externalDeclaration.getDeclaration() != null)
-            externalDeclaration.getDeclaration().accept(this);
-        else
-            externalDeclaration.getFunctionDefinition().accept(this);
-        return null;
+    private void analyzeTranslationUnit(TranslationUnit tu) {
+        tu.getExternalDeclaration().forEach(this::analyzeExternalDecl);
     }
 
-    public Void visit(FunctionDefinition functionDefinition) {
-        ParameterList plist = functionDefinition.getDeclarator().getDirectDec().getParameterList();
-        if (plist == null)
-            functionDefinition.setNumArgs(0);
-        else
-            functionDefinition.setNumArgs(plist.getParameterDecs().size());
+    private void analyzeExternalDecl(ExternalDeclaration ext) {
+        if (ext.getDeclaration() != null)
+            analyzeDeclaration(ext.getDeclaration());
+        else if (ext.getFunctionDefinition() != null)
+            analyzeFunction(ext.getFunctionDefinition());
+    }
 
+    /* ---------- Function Analysis ---------- */
 
-        FuncDecSymbolTableItem func_dec_item = new FuncDecSymbolTableItem(functionDefinition);
+    private void analyzeFunction(FunctionDefinition f) {
+        setNumArgs(f);
+        declareFunction(f);
+        pushScopeForNode(f);
+
+        acceptIfNotNull(f.getDecSpecifiers());
+        acceptIfNotNull(f.getDeclarator());
+        acceptIfNotNull(f.getDecList());
+        acceptIfNotNull(f.getCompoundStmt());
+
+        SymbolTable.pop();
+    }
+
+    private void setNumArgs(FunctionDefinition f) {
+        ParameterList params = f.getDeclarator().getDirectDec().getParameterList();
+        f.setNumArgs(params == null ? 0 : params.getParameterDecs().size());
+    }
+
+    private void declareFunction(FunctionDefinition f) {
         try {
-            SymbolTable.top.put(func_dec_item);
+            SymbolTable.top.put(new FuncDecSymbolTableItem(f));
         } catch (ItemAlreadyExistsException e) {
-            System.out.println("Redefinition of function \"" +
-                    functionDefinition.getDeclarator().getDirectDec().getDirectDec().getIdentifier()
-                    +"\" in line " + functionDefinition.getDeclarator().getDirectDec().getDirectDec().getLine());
-            noError = false;
+            errors.redefineFunction(
+                    f.getDeclarator().getDirectDec().getDirectDec().getIdentifier(),
+                    f.getDeclarator().getDirectDec().getDirectDec().getLine()
+            );
         }
-
-
-        SymbolTable func_dec_symbol_table = new SymbolTable(SymbolTable.top);
-        functionDefinition.setSymbolTable(func_dec_symbol_table);
-        SymbolTable.push(func_dec_symbol_table);
-
-        if (functionDefinition.getDecSpecifiers() != null)
-            functionDefinition.getDecSpecifiers().accept(this);
-        functionDefinition.getDeclarator().accept(this);
-        if (functionDefinition.getDecList() != null)
-            functionDefinition.getDecList().accept(this);
-        functionDefinition.getCompoundStmt().accept(this);
-
-//        System.out.println();
-        SymbolTable.pop();
-        return null;
     }
 
-    public Void visit(CastExpr castExpr) {
-        if (castExpr.getCastExpr() != null)
-            castExpr.getCastExpr().accept(this);
-        if (castExpr.getExpr() != null)
-            castExpr.getExpr().accept(this);
-        if (castExpr.getTypeName() != null)
-            castExpr.getTypeName().accept(this);
-        return null;
+    /* ---------- Declaration Analysis ---------- */
+
+    private void analyzeDeclaration(Declaration d) {
+        d.getDeclarationSpecifiers().accept(this);
+        acceptIfNotNull(d.getInitDeclaratorList());
     }
 
-
-    public Void visit(Declaration declaration) {
-        declaration.getDeclarationSpecifiers().accept(this);
-        if (declaration.getInitDeclaratorList() != null)
-            declaration.getInitDeclaratorList().accept(this);
-        return null;
-    }
-
-    public Void visit(DecList decList) {
-        for (Declaration declaration : decList.getDeclarations())
-            declaration.accept(this);
-        return null;
-    }
-
-    public Void visit(DeclarationSpecifiers declarationSpecifiers) {
-        for (DeclarationSpecifier declarationSpecifier : declarationSpecifiers.getDeclarationSpecifiers())
-            declarationSpecifier.accept(this);
-        if (declarationSpecifiers.getDeclarationSpecifiers().get(0).getType() != null && declarationSpecifiers.getDeclarationSpecifiers().get(0).getType().equals("typedef"))
-            declarationSpecifiers.getDeclarationSpecifiers().get(declarationSpecifiers.getDeclarationSpecifiers().size()
-                    - 1 ).getTypeSpecifier().setTypeDef(declarationSpecifiers.getDeclarationSpecifiers().get(1).getType());
-        return null;
-    }
-
-    public Void visit(ForDec forDec) {
-        forDec.getDeclarationSpecifiers().accept(this);
-        if (forDec.getInitDecList() != null)
-            forDec.getInitDecList().accept(this);
-
-        return null;
-    }
-
-
-    public Void visit(DeclarationSpecifier declarationSpecifier) {
-        if (declarationSpecifier.getTypeSpecifier() != null)
-            declarationSpecifier.getTypeSpecifier().accept(this);
-        return null;
-    }
-
-    public Void visit(InitDeclaratorList initDeclaratorList) {
-        for (InitDeclarator initDeclarator : initDeclaratorList.getInitDeclarators())
-            initDeclarator.accept(this);
-
-        return null;
-    }
-
-    public Void visit(InitDeclarator initDeclarator) {
-        DirectDec directDec = initDeclarator.getDeclarator().getDirectDec();
-        while (directDec.getIdentifier().isEmpty())
-            directDec = directDec.getDirectDec();
-        if (!directDec.getIdentifier().isEmpty()){
-            TypeSpecifier typeSpecifier = new TypeSpecifier(directDec.getIdentifier());
-            typeSpecifier.setLine(directDec.getLine());
-            directDec.setTypeSpecifier(typeSpecifier);
-            VarDecSymbolTableItem var_dec_item = new VarDecSymbolTableItem(typeSpecifier);
-            try {
-                SymbolTable.top.put(var_dec_item);
-            } catch (ItemAlreadyExistsException e) {
-                System.out.println("Redeclaration of variable \"" + typeSpecifier.getType() + "\" in line " + typeSpecifier.getLine());
-                noError = false;
-            }
+    @Override
+    public Void visit(DeclarationSpecifiers specs) {
+        specs.getDeclarationSpecifiers().forEach(this::acceptIfNotNull);
+        // Handle "typedef" mapping
+        if (isTypedef(specs)) {
+            var all = specs.getDeclarationSpecifiers();
+            all.get(all.size() - 1).getTypeSpecifier().setTypeDef(all.get(1).getType());
         }
-
-        initDeclarator.getDeclarator().accept(this);
-        if (initDeclarator.getInitializer() != null)
-            initDeclarator.getInitializer().accept(this);
         return null;
     }
 
-    public Void visit(ArgExpr argExpr) {
-        for (Expr expr : argExpr.getExprs())
-            if (expr != null)
-                expr.accept(this);
+    private boolean isTypedef(DeclarationSpecifiers specs) {
+        var declSpecs = specs.getDeclarationSpecifiers();
+        return !declSpecs.isEmpty() && "typedef".equals(declSpecs.get(0).getType());
+    }
+
+    @Override
+    public Void visit(InitDeclaratorList l) {
+        l.getInitDeclarators().forEach(this::analyzeVarInit);
         return null;
     }
 
-    public Void visit(UnaryOperator unaryOperator) {
-        return null;
+    private void analyzeVarInit(InitDeclarator decl) {
+        DirectDec idNode = getDirectDecWithId(decl.getDeclarator().getDirectDec());
+        if (idNode != null && !idNode.getIdentifier().isEmpty()) {
+            declareVariable(idNode);
+        }
+        acceptIfNotNull(decl.getDeclarator());
+        acceptIfNotNull(decl.getInitializer());
     }
 
+    private DirectDec getDirectDecWithId(DirectDec d) {
+        while (d != null && d.getIdentifier().isEmpty())
+            d = d.getDirectDec();
+        return d;
+    }
 
-    public Void visit(TypeSpecifier typeSpecifier) {
+    private void declareVariable(DirectDec idNode) {
+        TypeSpecifier type = new TypeSpecifier(idNode.getIdentifier());
+        type.setLine(idNode.getLine());
+        idNode.setTypeSpecifier(type);
         try {
-            TypeSpecifier typeSpecifier2 = ((VarDecSymbolTableItem) SymbolTable.top.getItem(VarDecSymbolTableItem.START_KEY + typeSpecifier.getType())).getVarDec();
-            if (typeSpecifier2.isTypeDef()) {
-                typeSpecifier.setType(typeSpecifier2.getTypeDefName());
-                typeSpecifier.setNotVarDec();
+            SymbolTable.top.put(new VarDecSymbolTableItem(type));
+        } catch (ItemAlreadyExistsException e) {
+            errors.redefineVariable(type.getType(), type.getLine());
+        }
+    }
+
+    /* ---------- Expression & Statement Analysis ---------- */
+
+    @Override
+    public Void visit(ParameterList params) {
+        params.getParameterDecs().forEach(this::acceptIfNotNull);
+        return null;
+    }
+
+    @Override
+    public Void visit(ParameterDec p) {
+        acceptIfNotNull(p.getDeclarationSpecifier());
+        acceptIfNotNull(p.getAbstractDec());
+        acceptIfNotNull(p.getDeclarator());
+        return null;
+    }
+
+    @Override
+    public Void visit(Declarator d) {
+        acceptIfNotNull(d.getDirectDec());
+        acceptIfNotNull(d.getPointer());
+        return null;
+    }
+
+    @Override
+    public Void visit(DirectDec d) {
+        acceptIfNotNull(d.getDeclarator());
+        acceptIfNotNull(d.getDirectDec());
+        acceptIfNotNull(d.getIdentifierList());
+        acceptIfNotNull(d.getExpr());
+        acceptIfNotNull(d.getParameterList());
+        return null;
+    }
+
+    @Override
+    public Void visit(TypeSpecifier t) {
+        try {
+            TypeSpecifier def = ((VarDecSymbolTableItem)
+                    SymbolTable.top.getItem(VarDecSymbolTableItem.START_KEY + t.getType())).getVarDec();
+            if (def.isTypeDef()) {
+                t.setType(def.getTypeDefName());
+                t.setNotVarDec();
             }
-        } catch(ItemNotFoundException e){
+        } catch (ItemNotFoundException ignored) {}
+        if (t.isVar_dec())
+            declareVariableFromTypeSpecifier(t);
+        return null;
+    }
 
+    private void declareVariableFromTypeSpecifier(TypeSpecifier t) {
+        try {
+            SymbolTable.top.put(new VarDecSymbolTableItem(t));
+        } catch (ItemAlreadyExistsException e) {
+            errors.redefineVariable(t.getType(), t.getLine());
         }
+    }
 
-        if (typeSpecifier.isVar_dec()) {
-            VarDecSymbolTableItem var_dec_item = new VarDecSymbolTableItem(typeSpecifier);
-            try {
-                SymbolTable.top.put(var_dec_item);
-            } catch (ItemAlreadyExistsException e) {
-                System.out.println("Redeclaration of variable \"" + typeSpecifier.getType() + "\" in line " + typeSpecifier.getLine());
-                noError = false;
-            }
-        }
+    /* ---------- Scoping Utilities ---------- */
 
+    private void pushScopeForNode(Node n) {
+        SymbolTable scope = new SymbolTable(SymbolTable.top);
+        n.setSymbolTable(scope);
+        SymbolTable.push(scope);
+    }
 
+    /* ---------- Utility Accept ---------- */
+
+    private void acceptIfNotNull(Node n) {
+        if (n != null) n.accept(this);
+    }
+
+    /* ---------- Statements ---------- */
+
+    @Override
+    public Void visit(CompoundStmt c) {
+        c.getBlockItems().forEach(this::acceptIfNotNull);
         return null;
     }
 
-    public Void visit(AssignmentOp assignmentOp) {
+    @Override
+    public Void visit(BlockItem b) {
+        acceptIfNotNull(b.getStmt());
+        acceptIfNotNull(b.getDeclaration());
         return null;
     }
 
-    public Void visit(Pointer pointer) {
+    @Override
+    public Void visit(ExprStmt s) {
+        acceptIfNotNull(s.getExpr());
         return null;
     }
 
-    public Void visit(ParameterList parameterList) {
-        for (ParameterDec parameterDec : parameterList.getParameterDecs())
-            parameterDec.accept(this);
-        return null;
-    }
-
-
-    public Void visit(Declarator declarator) {
-        declarator.getDirectDec().accept(this);
-        if (declarator.getPointer() != null)
-            declarator.getPointer().accept(this);
-        return null;
-    }
-
-    public Void visit(DirectDec directDec) {
-        if (directDec.getDeclarator() != null)
-            directDec.getDeclarator().accept(this);
-        if (directDec.getDirectDec() != null)
-            directDec.getDirectDec().accept(this);
-        if (directDec.getIdentifierList() != null)
-            directDec.getIdentifierList().accept(this);
-        if (directDec.getExpr() != null)
-            directDec.getExpr().accept(this);
-        if (directDec.getParameterList() != null)
-            directDec.getParameterList().accept(this);
-        return null;
-    }
-
-    public Void visit(SpecifierQualifierList specifierQualifierList) {
-        if (specifierQualifierList.getTypeSpecifier() != null)
-            specifierQualifierList.getTypeSpecifier().accept(this);
-        if (specifierQualifierList.getSpecifierQualifierList() != null)
-            specifierQualifierList.getSpecifierQualifierList().accept(this);
-        return null;
-    }
-
-    public Void visit(ParameterDec parameterDec) {
-        parameterDec.getDeclarationSpecifier().accept(this);
-        if (parameterDec.getAbstractDec() != null)
-            parameterDec.getAbstractDec().accept(this);
-        if (parameterDec.getDeclarator() != null)
-            parameterDec.getDeclarator().accept(this);
-        return null;
-    }
-
-    public Void visit(IdentifierList identifierList) {
-        return null;
-    }
-
-    public Void visit(TypeName typeName) {
-        typeName.getSpecifierQualifierList().accept(this);
-        if (typeName.getAbstractDec() != null)
-            typeName.getAbstractDec().accept(this);
-        return null;
-    }
-
-
-    public Void visit(DirectAbsDec directAbsDec) {
-        if (directAbsDec.getExpr() != null)
-            directAbsDec.getExpr().accept(this);
-        if (directAbsDec.getAbstractDec() != null)
-            directAbsDec.getAbstractDec().accept(this);
-        if (directAbsDec.getParameterList() != null)
-            directAbsDec.getParameterList().accept(this);
-        if (directAbsDec.getDirectAbsDec() != null)
-            directAbsDec.getDirectAbsDec().accept(this);
-        return null;
-    }
-
-    public Void visit(AbstractDec abstractDec) {
-        abstractDec.getPointer().accept(this);
-        if (abstractDec.getDirectAbsDec() != null)
-            abstractDec.getDirectAbsDec().accept(this);
-        return null;
-    }
-
-    public Void visit(Initializer initializer) {
-        if (initializer.getExpr() != null)
-            initializer.getExpr().accept(this);
-        else
-            initializer.getInitList().accept(this);
-        return null;
-    }
-
-    public Void visit(InitializerList initializerList) {
-        for (Initializer initializer : initializerList.getInitializers())
-            initializer.accept(this);
-        for (Designation designation : initializerList.getDesignations())
-            designation.accept(this);
-        return null;
-    }
-
-    public Void visit(Designation designation) {
-        for (Designator designator : designation.getDesignators())
-            designator.accept(this);
-        return null;
-    }
-
-    public Void visit(Designator designator) {
-        if (designator.getExpr() != null)
-            designator.getExpr().accept(this);
-        return null;
-    }
-
-    public Void visit(CompoundStmt compoundStmt) {
-        for (BlockItem blockItem : compoundStmt.getBlockItems()){
-            blockItem.accept(this);
-        }
-        return null;
-    }
-
-    public Void visit(BlockItem blockItem) {
-        if (blockItem.getStmt() != null)
-            blockItem.getStmt().accept(this);
-        else
-            blockItem.getDeclaration().accept(this);
-        return null;
-    }
-
-    public Void visit(ExprStmt exprStmt) {
-        if (exprStmt.getExpr() != null)
-            exprStmt.getExpr().accept(this);
-        return null;
-    }
-
-    public Void visit(SelectionStmt selectionStmt) {
-        SymbolTable symbolTable = new SymbolTable(SymbolTable.top);
-        selectionStmt.setSymbolTable(symbolTable);
-        SymbolTable.push(symbolTable);
-
-        selectionStmt.getExpr().accept(this);
-        selectionStmt.getMainStmt().accept(this);
-        if (selectionStmt.getElseStmt() != null)
-            selectionStmt.getElseStmt().accept(this);
-
+    @Override
+    public Void visit(SelectionStmt s) {
+        pushScopeForNode(s);
+        acceptIfNotNull(s.getExpr());
+        acceptIfNotNull(s.getMainStmt());
+        acceptIfNotNull(s.getElseStmt());
         SymbolTable.pop();
         return null;
     }
 
-
-    public Void visit(IterStmt iterStmt) {
-        SymbolTable symbolTable = new SymbolTable(SymbolTable.top);
-        iterStmt.setSymbolTable(symbolTable);
-        SymbolTable.push(symbolTable);
-
-        if (iterStmt.getForCondition() != null)
-            iterStmt.getForCondition().accept(this);
-        if (iterStmt.getExpr() != null)
-            iterStmt.getExpr().accept(this);
-        if (iterStmt.getStmt() != null)
-            iterStmt.getStmt().accept(this);
-
-
+    @Override
+    public Void visit(IterStmt s) {
+        pushScopeForNode(s);
+        acceptIfNotNull(s.getForCondition());
+        acceptIfNotNull(s.getExpr());
+        acceptIfNotNull(s.getStmt());
         SymbolTable.pop();
         return null;
     }
 
-    public Void visit(ForCondition forCondition) {
-        if (forCondition.getForDec() != null)
-            forCondition.getForDec().accept(this);
-        if (forCondition.getExpr() != null)
-            forCondition.getExpr().accept(this);
-        if (forCondition.getForExpr1() != null)
-            forCondition.getForExpr1().accept(this);
-        if (forCondition.getForExpr2() != null)
-            forCondition.getForExpr2().accept(this);
+    @Override
+    public Void visit(ForCondition f) {
+        acceptIfNotNull(f.getForDec());
+        acceptIfNotNull(f.getExpr());
+        acceptIfNotNull(f.getForExpr1());
+        acceptIfNotNull(f.getForExpr2());
         return null;
     }
 
-    public Void visit(ForExpr forExpr) {
-        for (Expr expr : forExpr.getExprs()) {
-            if (expr != null)
-                expr.accept(this);
-        }
+    @Override
+    public Void visit(ForExpr f) {
+        f.getExprs().forEach(this::acceptIfNotNull);
         return null;
     }
 
-    public Void visit(JumpStmt jumpStmt) {
-        if (jumpStmt.getCondition() != null)
-            jumpStmt.getCondition().accept(this);
+    /* ---------- Expressions ---------- */
+
+    @Override
+    public Void visit(FuncCall call) {
+        checkFunctionCall(call);
+        acceptIfNotNull(call.getExpr());
+        acceptIfNotNull(call.getArgExpr());
         return null;
     }
 
-    public Void visit(FuncCall funcCall) {
-
-        String funcName = ((Identifier) funcCall.getExpr()).getIdentifier();
-        int line = ((Identifier) funcCall.getExpr()).getLine();
-        ((Identifier) funcCall.getExpr()).setFunc();
-
-        if (funcName.equals("scanf") || funcName.equals("printf")){}
-
-        else {
+    private void checkFunctionCall(FuncCall call) {
+        Identifier id = (Identifier) call.getExpr();
+        String name = id.getIdentifier();
+        int line = id.getLine();
+        id.setFunc();
+        if (!("scanf".equals(name) || "printf".equals(name))) {
             try {
-                SymbolTable.top.getItem(FuncDecSymbolTableItem.START_KEY  + funcCall.getNumArgs() + funcName );
+                SymbolTable.top.getItem(FuncDecSymbolTableItem.START_KEY + call.getNumArgs() + name);
             } catch (ItemNotFoundException e) {
-                System.out.println(FuncDecSymbolTableItem.START_KEY  + funcCall.getNumArgs() + funcName );
-                System.out.println("Line:" + line + "-> " + funcName + " not declared");
-                noError = false;
+                errors.undeclaredFunction(name, line, call.getNumArgs());
             }
         }
+    }
 
-        funcCall.getExpr().accept(this);
-        if (funcCall.getArgExpr() != null) {
-            funcCall.getArgExpr().accept(this);
+    @Override
+    public Void visit(Identifier id) {
+        if (id.isFunc() || id.getIdentifier().startsWith("\"")) return null;
+        try {
+            SymbolTable.top.getItem(VarDecSymbolTableItem.START_KEY + id.getIdentifier());
+        } catch (ItemNotFoundException e) {
+            errors.undeclaredVariable(id.getIdentifier(), id.getLine());
         }
-
         return null;
     }
 
-    public Void visit(UnaryExpr unaryExpr) {
-        unaryExpr.getExpr().accept(this);
-        return null;
-    }
+    /* ---------- Catch-All for Simple/Recursive Nodes ---------- */
 
-    public Void visit(ExprCast exprCast) {
-        exprCast.getCastExpr().accept(this);
-        exprCast.getTypeName().accept(this);
-        return null;
-    }
-
-    public Void visit(BinaryExpr binaryExpr) {
-        binaryExpr.getExpr1().accept(this);
-        binaryExpr.getExpr2().accept(this);
-        if (binaryExpr.getAssignmentOp() != null)
-            binaryExpr.getAssignmentOp().accept(this);
-        return null;
-    }
-
-    public Void visit(CondExpr condExpr) {
-        condExpr.getExpr1().accept(this);
-        condExpr.getExpr2().accept(this);
-        condExpr.getExpr3().accept(this);
-        return null;
-    }
-
-    public Void visit(CommaExpr commaExpr) {
-        for (Expr expr : commaExpr.getExprs())
-            if (expr != null)
-                expr.accept(this);
-        return null;
-    }
-
-    public Void visit(ArrayIndexing arrayIndexing) {
-        arrayIndexing.getExpr1().accept(this);
-        arrayIndexing.getExpr2().accept(this);
-        return null;
-    }
-
-    public Void visit(Identifier identifier) {
-        if (!identifier.isFunc() && !identifier.getIdentifier().startsWith("\"")){
-            try {
-                SymbolTable.top.getItem(VarDecSymbolTableItem.START_KEY + identifier.getIdentifier());
-            } catch (ItemNotFoundException e) {
-                System.out.println("Line:" + identifier.getLine() + "-> " + identifier.getIdentifier() + " not declared");
-                noError = false;
-            }
-        }
-
-        return null;
-    }
-
-    public Void visit(Constant constant) {
-        return null;
-    }
-
-    public Void visit(TIExpr tiExpr) {
-        tiExpr.getInitializerList().accept(this);
-        tiExpr.getTypeName().accept(this);
-        return null;
-    }
-
-
-    public Void visit(PrefixExpr prefixExpr) {
-        if (prefixExpr.getExpr() != null)
-            prefixExpr.getExpr().accept(this);
-        if (prefixExpr.getCastExpr() != null)
-            prefixExpr.getCastExpr().accept(this);
-        if (prefixExpr.getTypeName() != null)
-            prefixExpr.getTypeName().accept(this);
-        if (prefixExpr.getTIExpr() != null)
-            prefixExpr.getTIExpr().accept(this);
-        if (prefixExpr.getUnaryOp() != null)
-            prefixExpr.getUnaryOp().accept(this);
-        return null;
-    }
-
-
+    @Override public Void visit(CastExpr n) { acceptIfNotNull(n.getCastExpr()); acceptIfNotNull(n.getExpr()); acceptIfNotNull(n.getTypeName()); return null; }
+    @Override public Void visit(ArgExpr n) { n.getExprs().forEach(this::acceptIfNotNull); return null; }
+    @Override public Void visit(UnaryOperator n) { return null; }
+    @Override public Void visit(AssignmentOp n) { return null; }
+    @Override public Void visit(Pointer n) { return null; }
+    @Override public Void visit(IdentifierList n) { return null; }
+    @Override public Void visit(TypeName n) { acceptIfNotNull(n.getSpecifierQualifierList()); acceptIfNotNull(n.getAbstractDec()); return null; }
+    @Override public Void visit(DirectAbsDec n) { acceptIfNotNull(n.getExpr()); acceptIfNotNull(n.getAbstractDec()); acceptIfNotNull(n.getParameterList()); acceptIfNotNull(n.getDirectAbsDec()); return null; }
+    @Override public Void visit(AbstractDec n) { acceptIfNotNull(n.getPointer()); acceptIfNotNull(n.getDirectAbsDec()); return null; }
+    @Override public Void visit(Initializer n) { acceptIfNotNull(n.getExpr()); acceptIfNotNull(n.getInitList()); return null; }
+    @Override public Void visit(InitializerList n) { n.getInitializers().forEach(this::acceptIfNotNull); n.getDesignations().forEach(this::acceptIfNotNull); return null; }
+    @Override public Void visit(Designation n) { n.getDesignators().forEach(this::acceptIfNotNull); return null; }
+    @Override public Void visit(Designator n) { acceptIfNotNull(n.getExpr()); return null; }
+    @Override public Void visit(SpecifierQualifierList n) { acceptIfNotNull(n.getTypeSpecifier()); acceptIfNotNull(n.getSpecifierQualifierList()); return null; }
+    @Override public Void visit(JumpStmt n) { acceptIfNotNull(n.getCondition()); return null; }
+    @Override public Void visit(UnaryExpr n) { acceptIfNotNull(n.getExpr()); return null; }
+    @Override public Void visit(ExprCast n) { acceptIfNotNull(n.getCastExpr()); acceptIfNotNull(n.getTypeName()); return null; }
+    @Override public Void visit(BinaryExpr n) { acceptIfNotNull(n.getExpr1()); acceptIfNotNull(n.getExpr2()); acceptIfNotNull(n.getAssignmentOp()); return null; }
+    @Override public Void visit(CondExpr n) { acceptIfNotNull(n.getExpr1()); acceptIfNotNull(n.getExpr2()); acceptIfNotNull(n.getExpr3()); return null; }
+    @Override public Void visit(CommaExpr n) { n.getExprs().forEach(this::acceptIfNotNull); return null; }
+    @Override public Void visit(ArrayIndexing n) { acceptIfNotNull(n.getExpr1()); acceptIfNotNull(n.getExpr2()); return null; }
+    @Override public Void visit(Constant n) { return null; }
+    @Override public Void visit(TIExpr n) { acceptIfNotNull(n.getInitializerList()); acceptIfNotNull(n.getTypeName()); return null; }
+    @Override public Void visit(PrefixExpr n) { acceptIfNotNull(n.getExpr()); acceptIfNotNull(n.getCastExpr()); acceptIfNotNull(n.getTypeName()); acceptIfNotNull(n.getTIExpr()); acceptIfNotNull(n.getUnaryOp()); return null; }
 }
-
-
