@@ -21,7 +21,7 @@ jobs:
         setup-command: ''
         command: javac -cp utilities/antlr-4.13.1-complete.jar -d out $(find src gen
           -name "*.java") && java -cp out:utilities/antlr-4.13.1-complete.jar SimpleLang
-          "tests/NameAnalysis/1-Variable Undefined.cpy" | sort -t':' -k1.6n -k2
+          "tests/NameAnalysis/1-VariableUndefined.cpy" | sort -t':' -k1.6n -k2
         input: ''
         expected-output: |-
           Line:6-> b not declared
@@ -38,7 +38,7 @@ jobs:
         setup-command: ''
         command: javac -cp utilities/antlr-4.13.1-complete.jar -d out $(find src gen
           -name "*.java") && java -cp out:utilities/antlr-4.13.1-complete.jar SimpleLang
-          "tests/NameAnalysis/2-Function Undefined.cpy" | sort -t':' -k1.6n -k2
+          "tests/NameAnalysis/2-FunctionUndefined.cpy" | sort -t':' -k1.6n -k2
         input: ''
         expected-output: |-
           Line:12-> moo not declared
