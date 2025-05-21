@@ -22,7 +22,7 @@ public class ScopedErrorCollector {
     }
 
     public void undeclaredFunction(String name, int line, int argc) {
-        errors.add("Line:" + line + "-> " + name + " (with " + argc + " args) not declared");
+        errors.add("Line:" + line + "-> " + name + " not declared");
         System.out.println(errors.get(errors.size() - 1));
     }
 
