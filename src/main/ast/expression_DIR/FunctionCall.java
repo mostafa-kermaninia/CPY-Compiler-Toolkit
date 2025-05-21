@@ -17,6 +17,10 @@ public class FunctionCall extends Expression {
         return visitor.visit(this);
     }
 
+    public void removeArg() {
+        argumentExpression.removeLastExpr();
+    }
+
     public Expression getExpression(){ return expression; }
 
     public ArgumentExpression getArgumentExpression(){ return argumentExpression; }

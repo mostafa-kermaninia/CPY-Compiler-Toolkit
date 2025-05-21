@@ -1,6 +1,7 @@
 package main.ast.statement_DIR;
 
 import main.ast.expression_DIR.Expression;
+import main.ast.statement_DIR.*;
 import main.visitor.IVisitor;
 import main.symbolTable.SymbolTable;
 
@@ -31,6 +32,26 @@ public class SelectionStatement extends Statement {
     public Statement getElseStatement() { return elseStatement; }
     public void setElseStatement(Statement statement) { this.elseStatement = statement; }
 
+    public boolean allReturn() {
+        boolean result = true;
+        if (elseStatement == null) {
+            return false;
+        }
+        else if (elseStatement instanceof SelectionStatement) {
+            SelectionStatement selStatement = (SelectionStatement) elseStatement;
+            result = result && selStatement.allReturn();
+        }
+        else if (elseStatement instanceof CompoundStatement) {
+            CompoundStatement compoundStatement = (CompoundStatement) elseStatement;
+            result = result && compoundStatement.hasJumpStatement();
+        }
+        if (mainStatement instanceof CompoundStatement)
+            result = result & ((CompoundStatement) mainStatement).hasJumpStatement();
+        else if (mainStatement instanceof SelectionStatement)
+            result = result && ((SelectionStatement) mainStatement).allReturn();
+
+        return result;
+    }
     public int getElseLine() { return elseLine; }
     public void setElseLine(int line) { this.elseLine = line; }
 

@@ -26,6 +26,7 @@ public class ArgumentExpression extends Node {
         this.expressions.add(expression);
     }
 
+    public void removeLastExpr() { expressions.remove(expressions.size()-1); }
     public void notFirstExpression() {
         for (Expression expression : expressions) {
             expression.notFirst();

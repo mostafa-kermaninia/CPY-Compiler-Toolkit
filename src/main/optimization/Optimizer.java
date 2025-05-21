@@ -283,7 +283,7 @@ public class Optimizer extends Visitor<Void>{
             if ((blockItem.getStatement() != null && blockItem.getStatement() instanceof JumpStatement) ||
                     (blockItem.getStatement() != null && blockItem.getStatement() instanceof SelectionStatement &&
                             ((SelectionStatement)blockItem.getStatement()).allReturn()))
-                changed = changed | compoundStatement.removeNextBIs(blockItem);
+                changed = changed | compoundStatement.removeNextBlockItems(blockItem);
             if (blockItem.getStatement() != null && blockItem.getStatement() instanceof ExpressionStatement) {
                 ExpressionStatement expressionStatement = (ExpressionStatement) blockItem.getStatement();
                 if (expressionStatement.getExpression() != null && ((expressionStatement.getExpression() instanceof BinaryExpression
@@ -291,7 +291,7 @@ public class Optimizer extends Visitor<Void>{
                         expressionStatement.getExpression() instanceof Constant || expressionStatement.getExpression() instanceof Identifier ||
                         expressionStatement.getExpression() instanceof ArrayIndexing || expressionStatement.getExpression() instanceof CondExpression ||
                         expressionStatement.getExpression() instanceof CommaExpression)) {
-                    boolean temp = compoundStatement.removeBI(blockItem);
+                    boolean temp = compoundStatement.removeBlockItem(blockItem);
                     if (temp)
                         i--;
                     changed = changed | temp;
@@ -303,7 +303,7 @@ public class Optimizer extends Visitor<Void>{
                         if (blockItem.getDeclaration().getDeclarationSpecifiers().getDeclarationSpecifiers().get(blockItem.getDeclaration().getDeclarationSpecifiers().getDeclarationSpecifiers().size() - 1).getTypeSpecifier().equals(((VarDecSymbolTableItem)si).getVarDec()) ||
                                 (blockItem.getDeclaration().getInitDeclaratorList() != null &&
                                         !blockItem.getDeclaration().getInitDeclaratorList().getInitDeclarators().get(0).getDeclarator().getDirectDec().getIdentifier().equals(((VarDecSymbolTableItem)si).getVarDec().getType()))) {
-                            boolean temp = compoundStatement.removeBI(blockItem);
+                            boolean temp = compoundStatement.removeBlockItem(blockItem);
                             if (temp)
                                 i--;
                             changed = changed | temp;
@@ -397,8 +397,8 @@ public class Optimizer extends Visitor<Void>{
 
 
         funcCall.getExpression().accept(this);
-        if (funcCall.getArgExpression() != null)
-            funcCall.getArgExpression().accept(this);
+        if (funcCall.getArgumentExpression() != null)
+            funcCall.getArgumentExpression().accept(this);
         return null;
     }
 
@@ -463,8 +463,8 @@ public class Optimizer extends Visitor<Void>{
             prefixExpression.getCastExpression().accept(this);
         if (prefixExpression.getTypeName() != null)
             prefixExpression.getTypeName().accept(this);
-        if (prefixExpression.getTIExpression() != null)
-            prefixExpression.getTIExpression().accept(this);
+        if (prefixExpression.getTypeInitExpression() != null)
+            prefixExpression.getTypeInitExpression().accept(this);
         if (prefixExpression.getUnaryOp() != null)
             prefixExpression.getUnaryOp().accept(this);
         return null;

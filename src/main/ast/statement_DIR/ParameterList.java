@@ -1,6 +1,7 @@
 package main.ast.statement_DIR;
 
 import main.ast.baseNodes_DIR.Node;
+import main.ast.literal_DIR.TypeSpecifier;
 import main.visitor.IVisitor;
 
 import java.util.ArrayList;
@@ -11,6 +12,17 @@ public class ParameterList extends Node {
     public ParameterList(ParameterDec parameterDec) {
         parameterDecs = new ArrayList<>();
         parameterDecs.add(parameterDec);
+    }
+
+    public boolean removeParamDec(TypeSpecifier typeSpecifier) {
+        for (ParameterDec parameterDec : parameterDecs) {
+            if (parameterDec.getDeclarationSpecifier() instanceof DeclarationSpecifiers
+                    && parameterDec.getDeclarationSpecifier().getDeclarationSpecifiers().get(parameterDec.getDeclarationSpecifier().getDeclarationSpecifiers().size() - 1).getTypeSpecifier().equals(typeSpecifier)) {
+                parameterDecs.remove(parameterDec);
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override
