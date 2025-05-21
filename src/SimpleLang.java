@@ -35,9 +35,9 @@ public class SimpleLang {
         NameAnalyzer nameAnalyzer = new NameAnalyzer();
         nameAnalyzer.visit(program);
 
-        if (nameAnalyzer.analysisSucceeded()) {
-            TestVisitor my_visitor = new TestVisitor();
-            my_visitor.visit(program);
-        }
+//        if (nameAnalyzer.noError) {
+//            TestVisitor my_visitor = new TestVisitor();
+//            my_visitor.visit(program);
+//        }
     }
 }
