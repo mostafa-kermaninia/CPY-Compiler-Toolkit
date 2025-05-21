@@ -170,9 +170,9 @@ public class Optimizer extends Visitor<Void>{
     }
 
     public Void visit(ParameterList parameterList) {
-        for (SymbolTableItem si : symbolTableMain.top.items.values()) {
-            if (si instanceof VarDecSymbolTableItem && !si.isUsed()) {
-                changed = changed | parameterList.removeParamDec((TypeSpecifier)((VarDecSymbolTableItem) si).getVarDec());
+        for (SymbolTableItem symbolTableItem : symbolTableMain.top.items.values()) {
+            if (symbolTableItem instanceof VarDecSymbolTableItem && !symbolTableItem.isUsed()) {
+                changed = changed | parameterList.removeParamDec((TypeSpecifier)((VarDecSymbolTableItem) symbolTableItem).getVarDec());
             }
         }
         return null;
