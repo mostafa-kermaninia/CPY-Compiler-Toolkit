@@ -7,7 +7,7 @@ import main.ast.declaration_DIR.Declaration;
 import main.ast.declaration_DIR.ExternalDeclaration;
 import main.ast.declaration_DIR.FunctionDefinition;
 import main.ast.declaration_DIR.ForDec;
-import main.ast.expression_DIR.ForExpr;
+import main.ast.expression_DIR.ForExpression;
 import main.ast.statement_DIR.*;
 import main.ast.expression_DIR.*;
 
@@ -48,25 +48,25 @@ public class TestVisitor extends Visitor<Void>{
     public Void visit(FunctionDefinition functionDefinition) {
         System.out.print("Line ");
         System.out.print(functionDefinition.getDeclarator().getDirectDec().getDirectDec().getLine());
-        System.out.print(": Stmt function " + functionDefinition.getDeclarator().getDirectDec().getDirectDec().getIdentifier() + " = ");
-        System.out.println(functionDefinition.getCompoundStmt().getBlockItems().size());
+        System.out.print(": Statement function " + functionDefinition.getDeclarator().getDirectDec().getDirectDec().getIdentifier() + " = ");
+        System.out.println(functionDefinition.getCompoundStatement().getBlockItems().size());
         if (functionDefinition.getDecSpecifiers() != null)
             functionDefinition.getDecSpecifiers().accept(this);
         functionDefinition.getDeclarator().accept(this);
         if (functionDefinition.getDecList() != null)
             functionDefinition.getDecList().accept(this);
-        functionDefinition.getCompoundStmt().accept(this);
+        functionDefinition.getCompoundStatement().accept(this);
 
         return null;
     }
 
-    public Void visit(CastExpr castExpr) {
-        if (castExpr.getCastExpr() != null)
-            castExpr.getCastExpr().accept(this);
-        if (castExpr.getExpr() != null)
-            castExpr.getExpr().accept(this);
-        if (castExpr.getTypeName() != null)
-            castExpr.getTypeName().accept(this);
+    public Void visit(CastExpression castExpression) {
+        if (castExpression.getCastExpression() != null)
+            castExpression.getCastExpression().accept(this);
+        if (castExpression.getExpression() != null)
+            castExpression.getExpression().accept(this);
+        if (castExpression.getTypeName() != null)
+            castExpression.getTypeName().accept(this);
         return null;
     }
 
@@ -119,10 +119,10 @@ public class TestVisitor extends Visitor<Void>{
         return null;
     }
 
-    public Void visit(ArgExpr argExpr) {
-        for (Expr expr : argExpr.getExprs())
-            if (expr != null)
-                expr.accept(this);
+    public Void visit(ArgumentExpression argumentExpression) {
+        for (Expression expression : argumentExpression.getExpressions())
+            if (expression != null)
+                expression.accept(this);
         return null;
     }
 
@@ -164,8 +164,8 @@ public class TestVisitor extends Visitor<Void>{
             directDec.getDirectDec().accept(this);
         if (directDec.getIdentifierList() != null)
             directDec.getIdentifierList().accept(this);
-        if (directDec.getExpr() != null)
-            directDec.getExpr().accept(this);
+        if (directDec.getExpression() != null)
+            directDec.getExpression().accept(this);
         if (directDec.getParameterList() != null)
             directDec.getParameterList().accept(this);
         return null;
@@ -201,8 +201,8 @@ public class TestVisitor extends Visitor<Void>{
 
 
     public Void visit(DirectAbsDec directAbsDec) {
-        if (directAbsDec.getExpr() != null)
-            directAbsDec.getExpr().accept(this);
+        if (directAbsDec.getExpression() != null)
+            directAbsDec.getExpression().accept(this);
         if (directAbsDec.getAbstractDec() != null)
             directAbsDec.getAbstractDec().accept(this);
         if (directAbsDec.getParameterList() != null)
@@ -220,8 +220,8 @@ public class TestVisitor extends Visitor<Void>{
     }
 
     public Void visit(Initializer initializer) {
-        if (initializer.getExpr() != null)
-            initializer.getExpr().accept(this);
+        if (initializer.getExpression() != null)
+            initializer.getExpression().accept(this);
         else
             initializer.getInitList().accept(this);
         return null;
@@ -242,182 +242,182 @@ public class TestVisitor extends Visitor<Void>{
     }
 
     public Void visit(Designator designator) {
-        if (designator.getExpr() != null)
-            designator.getExpr().accept(this);
+        if (designator.getExpression() != null)
+            designator.getExpression().accept(this);
         return null;
     }
 
-    public Void visit(CompoundStmt compoundStmt) {
-        for (BlockItem blockItem : compoundStmt.getBlockItems()){
+    public Void visit(CompoundStatement compoundStatement) {
+        for (BlockItem blockItem : compoundStatement.getBlockItems()){
             blockItem.accept(this);
         }
         return null;
     }
 
     public Void visit(BlockItem blockItem) {
-        if (blockItem.getStmt() != null)
-            blockItem.getStmt().accept(this);
+        if (blockItem.getStatement() != null)
+            blockItem.getStatement().accept(this);
         else
             blockItem.getDeclaration().accept(this);
         return null;
     }
 
-    public Void visit(ExprStmt exprStmt) {
-        if (exprStmt.getExpr() != null)
-            exprStmt.getExpr().accept(this);
+    public Void visit(ExpressionStatement expressionStatement) {
+        if (expressionStatement.getExpression() != null)
+            expressionStatement.getExpression().accept(this);
         return null;
     }
 
-    public Void visit(SelectionStmt selectionStmt) {
-        selectionStmt.getExpr().accept(this);
+    public Void visit(SelectionStatement selectionStatement) {
+        selectionStatement.getExpression().accept(this);
         System.out.print("Line ");
-        System.out.print(selectionStmt.getLine());
-        System.out.print(": Stmt selection = ");
-        if (selectionStmt.getMainStmt() instanceof CompoundStmt) {
-            CompoundStmt compoundStmt = (CompoundStmt) selectionStmt.getMainStmt();
-            System.out.println(compoundStmt.getBlockItems().size());
+        System.out.print(selectionStatement.getLine());
+        System.out.print(": Statement selection = ");
+        if (selectionStatement.getMainStatement() instanceof CompoundStatement) {
+            CompoundStatement compoundStatement = (CompoundStatement) selectionStatement.getMainStatement();
+            System.out.println(compoundStatement.getBlockItems().size());
         }
         else
             System.out.println(0);
-        selectionStmt.getMainStmt().accept(this);
-        if (selectionStmt.getElseStmt() instanceof CompoundStmt) {
-            CompoundStmt compoundStmt = (CompoundStmt) selectionStmt.getElseStmt();
-            if (compoundStmt.getBlockItems().size() > 0) {
+        selectionStatement.getMainStatement().accept(this);
+        if (selectionStatement.getElseStatement() instanceof CompoundStatement) {
+            CompoundStatement compoundStatement = (CompoundStatement) selectionStatement.getElseStatement();
+            if (compoundStatement.getBlockItems().size() > 0) {
                 System.out.print("Line ");
-                System.out.print(selectionStmt.getElseLine());
-                System.out.print(": Stmt selection = ");
-                System.out.println(compoundStmt.getBlockItems().size());
+                System.out.print(selectionStatement.getElseLine());
+                System.out.print(": Statement selection = ");
+                System.out.println(compoundStatement.getBlockItems().size());
             }
         }
-        else if (selectionStmt.getElseStmt() != null && !(selectionStmt.getElseStmt() instanceof SelectionStmt)) {
+        else if (selectionStatement.getElseStatement() != null && !(selectionStatement.getElseStatement() instanceof SelectionStatement)) {
             System.out.print("Line ");
-            System.out.print(selectionStmt.getElseLine());
-            System.out.print(": Stmt selection = ");
+            System.out.print(selectionStatement.getElseLine());
+            System.out.print(": Statement selection = ");
             System.out.println(0);
         }
-        if (selectionStmt.getElseStmt() != null)
-            selectionStmt.getElseStmt().accept(this);
+        if (selectionStatement.getElseStatement() != null)
+            selectionStatement.getElseStatement().accept(this);
         return null;
     }
 
 
-    public Void visit(IterStmt iterStmt) {
-        if (iterStmt.getExpr() != null)
-            iterStmt.getExpr().accept(this);
+    public Void visit(IterStatement iterStatement) {
+        if (iterStatement.getExpression() != null)
+            iterStatement.getExpression().accept(this);
         System.out.print("Line ");
-        System.out.print(iterStmt.getLine());
-        System.out.print(": Stmt " + iterStmt.getType() + " = ");
-        if (iterStmt.getStmt() instanceof CompoundStmt) {
-            CompoundStmt compoundStmt = (CompoundStmt) iterStmt.getStmt();
-            System.out.println(compoundStmt.getBlockItems().size());
+        System.out.print(iterStatement.getLine());
+        System.out.print(": Statement " + iterStatement.getType() + " = ");
+        if (iterStatement.getStatement() instanceof CompoundStatement) {
+            CompoundStatement compoundStatement = (CompoundStatement) iterStatement.getStatement();
+            System.out.println(compoundStatement.getBlockItems().size());
         }
         else
             System.out.println(0);
-        if (iterStmt.getStmt() != null)
-            iterStmt.getStmt().accept(this);
-        if (iterStmt.getForCondition() != null)
-            iterStmt.getForCondition().accept(this);
+        if (iterStatement.getStatement() != null)
+            iterStatement.getStatement().accept(this);
+        if (iterStatement.getForCondition() != null)
+            iterStatement.getForCondition().accept(this);
         return null;
     }
 
     public Void visit(ForCondition forCondition) {
         if (forCondition.getForDec() != null)
             forCondition.getForDec().accept(this);
-        if (forCondition.getExpr() != null)
-            forCondition.getExpr().accept(this);
-        if (forCondition.getForExpr1() != null)
-            forCondition.getForExpr1().accept(this);
-        if (forCondition.getForExpr2() != null)
-            forCondition.getForExpr2().accept(this);
+        if (forCondition.getExpression() != null)
+            forCondition.getExpression().accept(this);
+        if (forCondition.getForExpression1() != null)
+            forCondition.getForExpression1().accept(this);
+        if (forCondition.getForExpression2() != null)
+            forCondition.getForExpression2().accept(this);
         return null;
     }
 
-    public Void visit(ForExpr forExpr) {
-        for (Expr expr : forExpr.getExprs()) {
-            if (expr != null)
-                expr.accept(this);
+    public Void visit(ForExpression forExpression) {
+        for (Expression expression : forExpression.getExpressions()) {
+            if (expression != null)
+                expression.accept(this);
         }
         return null;
     }
 
-    public Void visit(JumpStmt jumpStmt) {
-        if (jumpStmt.getCondition() != null)
-            jumpStmt.getCondition().accept(this);
+    public Void visit(JumpStatement jumpStatement) {
+        if (jumpStatement.getCondition() != null)
+            jumpStatement.getCondition().accept(this);
         return null;
     }
 
-    public Void visit(FuncCall funcCall) {
-        funcCall.getExpr().accept(this);
-        if (funcCall.getArgExpr() != null)
-            funcCall.getArgExpr().accept(this);
+    public Void visit(FunctionCall functionCall) {
+        functionCall.getExpression().accept(this);
+        if (functionCall.getArgumentExpression() != null)
+            functionCall.getArgumentExpression().accept(this);
         return null;
     }
 
-    public Void visit(UnaryExpr unaryExpr) {
-        if (unaryExpr.getFirst()) {
+    public Void visit(UnaryExpression unaryExpression) {
+        if (unaryExpression.getFirst()) {
             System.out.print("Line ");
-            System.out.print(unaryExpr.getLine());
-            System.out.print(": Expr ");
-            System.out.println(unaryExpr.getOp());
+            System.out.print(unaryExpression.getLine());
+            System.out.print(": Expression ");
+            System.out.println(unaryExpression.getOperation());
         }
-        unaryExpr.getExpr().accept(this);
+        unaryExpression.getExpression().accept(this);
         return null;
     }
 
-    public Void visit(ExprCast exprCast) {
-        exprCast.getCastExpr().accept(this);
-        exprCast.getTypeName().accept(this);
+    public Void visit(ExpressionCast expressionCast) {
+        expressionCast.getCastExpression().accept(this);
+        expressionCast.getTypeName().accept(this);
         return null;
     }
 
-    public Void visit(BinaryExpr binaryExpr) {
-        if (binaryExpr.getFirst()){
+    public Void visit(BinaryExpression binaryExpression) {
+        if (binaryExpression.getFirst()){
             System.out.print("Line ");
-            System.out.print(binaryExpr.getLine());
-            System.out.print(": Expr ");
-            if (binaryExpr.getAssignmentOp() != null)
-                System.out.println(binaryExpr.getAssignmentOp().getOpType());
+            System.out.print(binaryExpression.getLine());
+            System.out.print(": Expression ");
+            if (binaryExpression.getAssignmentOp() != null)
+                System.out.println(binaryExpression.getAssignmentOp().getOpType());
             else
-                System.out.println(binaryExpr.getOperator());
+                System.out.println(binaryExpression.getOperator());
         }
-        binaryExpr.getExpr1().accept(this);
-        binaryExpr.getExpr2().accept(this);
-        if (binaryExpr.getAssignmentOp() != null)
-            binaryExpr.getAssignmentOp().accept(this);
+        binaryExpression.getExpression1().accept(this);
+        binaryExpression.getExpression2().accept(this);
+        if (binaryExpression.getAssignmentOp() != null)
+            binaryExpression.getAssignmentOp().accept(this);
         return null;
     }
 
-    public Void visit(CondExpr condExpr) {
-        if (condExpr.getFirst()){
+    public Void visit(CondExpression condExpression) {
+        if (condExpression.getFirst()){
             System.out.print("Line ");
-            System.out.print(condExpr.getLine());
-            System.out.print(": Expr ");
+            System.out.print(condExpression.getLine());
+            System.out.print(": Expression ");
             System.out.println("?");
         }
-        condExpr.getExpr1().accept(this);
-        condExpr.getExpr2().accept(this);
-        condExpr.getExpr3().accept(this);
+        condExpression.getExpression1().accept(this);
+        condExpression.getExpression2().accept(this);
+        condExpression.getExpression3().accept(this);
         return null;
     }
 
-    public Void visit(CommaExpr commaExpr) {
-        if (commaExpr.getFirst()){
-            if (commaExpr.getLine() != 0) {
+    public Void visit(CommaExpression commaExpression) {
+        if (commaExpression.getFirst()){
+            if (commaExpression.getLine() != 0) {
                 System.out.print("Line ");
-                System.out.print(commaExpr.getLine());
-                System.out.print(": Expr ");
+                System.out.print(commaExpression.getLine());
+                System.out.print(": Expression ");
                 System.out.println(",");
             }
         }
-        for (Expr expr : commaExpr.getExprs())
-            if (expr != null)
-                expr.accept(this);
+        for (Expression expression : commaExpression.getExpressions())
+            if (expression != null)
+                expression.accept(this);
         return null;
     }
 
     public Void visit(ArrayIndexing arrayIndexing) {
-        arrayIndexing.getExpr1().accept(this);
-        arrayIndexing.getExpr2().accept(this);
+        arrayIndexing.getExpression1().accept(this);
+        arrayIndexing.getExpression2().accept(this);
         return null;
     }
 
@@ -425,7 +425,7 @@ public class TestVisitor extends Visitor<Void>{
         if (identifier.getFirst()) {
             System.out.print("Line ");
             System.out.print(identifier.getLine());
-            System.out.print(": Expr ");
+            System.out.print(": Expression ");
             System.out.println(identifier.getIdentifier());
         }
         return null;
@@ -435,30 +435,30 @@ public class TestVisitor extends Visitor<Void>{
         if (constant.getFirst()) {
             System.out.print("Line ");
             System.out.print(constant.getLine());
-            System.out.print(": Expr ");
+            System.out.print(": Expression ");
             System.out.println(constant.getConstant());
         }
         return null;
     }
 
-    public Void visit(TIExpr tiExpr) {
-        tiExpr.getInitializerList().accept(this);
-        tiExpr.getTypeName().accept(this);
+    public Void visit(TypeInitExpression tiExpression) {
+        tiExpression.getInitializerList().accept(this);
+        tiExpression.getTypeName().accept(this);
         return null;
     }
 
 
-    public Void visit(PrefixExpr prefixExpr) {
-        if (prefixExpr.getExpr() != null)
-            prefixExpr.getExpr().accept(this);
-        if (prefixExpr.getCastExpr() != null)
-            prefixExpr.getCastExpr().accept(this);
-        if (prefixExpr.getTypeName() != null)
-            prefixExpr.getTypeName().accept(this);
-        if (prefixExpr.getTIExpr() != null)
-            prefixExpr.getTIExpr().accept(this);
-        if (prefixExpr.getUnaryOp() != null)
-            prefixExpr.getUnaryOp().accept(this);
+    public Void visit(PrefixExpression prefixExpression) {
+        if (prefixExpression.getExpression() != null)
+            prefixExpression.getExpression().accept(this);
+        if (prefixExpression.getCastExpression() != null)
+            prefixExpression.getCastExpression().accept(this);
+        if (prefixExpression.getTypeName() != null)
+            prefixExpression.getTypeName().accept(this);
+        if (prefixExpression.getTypeInitExpression() != null)
+            prefixExpression.getTypeInitExpression().accept(this);
+        if (prefixExpression.getUnaryOp() != null)
+            prefixExpression.getUnaryOp().accept(this);
         return null;
     }
 

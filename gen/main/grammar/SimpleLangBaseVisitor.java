@@ -69,7 +69,7 @@ public class SimpleLangBaseVisitor<T> extends AbstractParseTreeVisitor<T> implem
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitArgumentExpressionList(SimpleLangParser.ArgumentExpressionListContext ctx) { return visitChildren(ctx); }
+	@Override public T visitArgumentexpressionList(SimpleLangParser.ArgumentexpressionListContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -293,7 +293,7 @@ public class SimpleLangBaseVisitor<T> extends AbstractParseTreeVisitor<T> implem
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitForExpression(SimpleLangParser.ForExpressionContext ctx) { return visitChildren(ctx); }
+	@Override public T visitForexpression(SimpleLangParser.ForexpressionContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *

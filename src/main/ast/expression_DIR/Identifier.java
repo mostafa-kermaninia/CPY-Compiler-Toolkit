@@ -2,7 +2,7 @@ package main.ast.expression_DIR;
 
 import main.visitor.IVisitor;
 
-public class Identifier extends Expr{
+public class Identifier extends Expression {
     private String identifier;
     private boolean func = false;
 

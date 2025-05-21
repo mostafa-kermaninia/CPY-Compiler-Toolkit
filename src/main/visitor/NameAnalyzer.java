@@ -17,7 +17,7 @@ public class NameAnalyzer extends Visitor<Void> {
     public SymbolTable getRootTable() { return rootTable; }
     public boolean hasNoErrors() { return !errorReporter.hasErrors(); }
 
-    // ------------------ Entrypoint ------------------
+    // Entrypoint
     @Override
     public Void visit(Program program) {
         initRootSymbolTable(program);
@@ -32,7 +32,7 @@ public class NameAnalyzer extends Visitor<Void> {
         program.setSymbolTable(SymbolTable.top);
     }
 
-    // ------------------ Translation Unit ------------------
+    //  Translation Unit
     @Override
     public Void visit(TranslationUnit n) {
         n.getExternalDeclaration().forEach(this::acceptIfNotNull);
@@ -46,7 +46,7 @@ public class NameAnalyzer extends Visitor<Void> {
         return null;
     }
 
-    // ------------------ Function Definition ------------------
+    //  Function Definition
     @Override
     public Void visit(FunctionDefinition n) {
         setFunctionNumArgs(n);
@@ -55,7 +55,7 @@ public class NameAnalyzer extends Visitor<Void> {
         acceptIfNotNull(n.getDecSpecifiers());
         acceptIfNotNull(n.getDeclarator());
         acceptIfNotNull(n.getDecList());
-        acceptIfNotNull(n.getCompoundStmt());
+        acceptIfNotNull(n.getCompoundStatement());
         exitScope();
         return null;
     }
@@ -86,7 +86,7 @@ public class NameAnalyzer extends Visitor<Void> {
         SymbolTable.pop();
     }
 
-    // ------------------ Declarations ------------------
+    //  Declarations
     @Override
     public Void visit(Declaration n) {
         acceptIfNotNull(n.getDeclarationSpecifiers());
@@ -181,7 +181,7 @@ public class NameAnalyzer extends Visitor<Void> {
         return null;
     }
 
-    // ------------------ Parameters ------------------
+    //  Parameters
     @Override
     public Void visit(ParameterList n) {
         n.getParameterDecs().forEach(this::acceptIfNotNull);
@@ -196,7 +196,7 @@ public class NameAnalyzer extends Visitor<Void> {
         return null;
     }
 
-    // ------------------ Declarators ------------------
+    //  Declarators
     @Override
     public Void visit(Declarator n) {
         acceptIfNotNull(n.getDirectDec());
@@ -209,47 +209,47 @@ public class NameAnalyzer extends Visitor<Void> {
         acceptIfNotNull(n.getDeclarator());
         acceptIfNotNull(n.getDirectDec());
         acceptIfNotNull(n.getIdentifierList());
-        acceptIfNotNull(n.getExpr());
+        acceptIfNotNull(n.getExpression());
         acceptIfNotNull(n.getParameterList());
         return null;
     }
 
-    // ------------------ Statements ------------------
+    //  Statements
     @Override
-    public Void visit(CompoundStmt n) {
+    public Void visit(CompoundStatement n) {
         n.getBlockItems().forEach(this::acceptIfNotNull);
         return null;
     }
 
     @Override
     public Void visit(BlockItem n) {
-        acceptIfNotNull(n.getStmt());
+        acceptIfNotNull(n.getStatement());
         acceptIfNotNull(n.getDeclaration());
         return null;
     }
 
     @Override
-    public Void visit(ExprStmt n) {
-        acceptIfNotNull(n.getExpr());
+    public Void visit(ExpressionStatement n) {
+        acceptIfNotNull(n.getExpression());
         return null;
     }
 
     @Override
-    public Void visit(SelectionStmt n) {
+    public Void visit(SelectionStatement n) {
         enterScope(n);
-        acceptIfNotNull(n.getExpr());
-        acceptIfNotNull(n.getMainStmt());
-        acceptIfNotNull(n.getElseStmt());
+        acceptIfNotNull(n.getExpression());
+        acceptIfNotNull(n.getMainStatement());
+        acceptIfNotNull(n.getElseStatement());
         exitScope();
         return null;
     }
 
     @Override
-    public Void visit(IterStmt n) {
+    public Void visit(IterStatement n) {
         enterScope(n);
         acceptIfNotNull(n.getForCondition());
-        acceptIfNotNull(n.getExpr());
-        acceptIfNotNull(n.getStmt());
+        acceptIfNotNull(n.getExpression());
+        acceptIfNotNull(n.getStatement());
         exitScope();
         return null;
     }
@@ -257,25 +257,25 @@ public class NameAnalyzer extends Visitor<Void> {
     @Override
     public Void visit(ForCondition n) {
         acceptIfNotNull(n.getForDec());
-        acceptIfNotNull(n.getExpr());
-        acceptIfNotNull(n.getForExpr1());
-        acceptIfNotNull(n.getForExpr2());
+        acceptIfNotNull(n.getExpression());
+        acceptIfNotNull(n.getForExpression1());
+        acceptIfNotNull(n.getForExpression2());
         return null;
     }
 
-    // ------------------ Expressions ------------------
+    //  Expressions
     @Override
-    public Void visit(FuncCall n) {
+    public Void visit(FunctionCall n) {
         checkFunctionCall(n);
-        acceptIfNotNull(n.getExpr());
-        acceptIfNotNull(n.getArgExpr());
+        acceptIfNotNull(n.getExpression());
+        acceptIfNotNull(n.getArgumentExpression());
         return null;
     }
 
-    private void checkFunctionCall(FuncCall n) {
-        String funcName = ((Identifier) n.getExpr()).getIdentifier();
-        int line = ((Identifier) n.getExpr()).getLine();
-        ((Identifier) n.getExpr()).setFunc();
+    private void checkFunctionCall(FunctionCall n) {
+        String funcName = ((Identifier) n.getExpression()).getIdentifier();
+        int line = ((Identifier) n.getExpression()).getLine();
+        ((Identifier) n.getExpression()).setFunc();
 
         if (!("scanf".equals(funcName) || "printf".equals(funcName))) {
             try {
@@ -298,34 +298,33 @@ public class NameAnalyzer extends Visitor<Void> {
         return null;
     }
 
-    // ------------------ Helper: Accept If Not Null ------------------
+    //  Helper: Accept If Not Null
     private void acceptIfNotNull(Node n) {
         if (n != null) n.accept(this);
     }
 
-    // ------------------ Catch-All for Simple/Recursive Nodes ------------------
-    @Override public Void visit(CastExpr n) { acceptIfNotNull(n.getCastExpr()); acceptIfNotNull(n.getExpr()); acceptIfNotNull(n.getTypeName()); return null; }
-    @Override public Void visit(ArgExpr n) { n.getExprs().forEach(this::acceptIfNotNull); return null; }
+    @Override public Void visit(CastExpression n) { acceptIfNotNull(n.getCastExpression()); acceptIfNotNull(n.getExpression()); acceptIfNotNull(n.getTypeName()); return null; }
+    @Override public Void visit(ArgumentExpression n) { n.getExpressions().forEach(this::acceptIfNotNull); return null; }
     @Override public Void visit(UnaryOperator n) { return null; }
     @Override public Void visit(AssignmentOp n) { return null; }
     @Override public Void visit(Pointer n) { return null; }
     @Override public Void visit(IdentifierList n) { return null; }
     @Override public Void visit(TypeName n) { acceptIfNotNull(n.getSpecifierQualifierList()); acceptIfNotNull(n.getAbstractDec()); return null; }
-    @Override public Void visit(DirectAbsDec n) { acceptIfNotNull(n.getExpr()); acceptIfNotNull(n.getAbstractDec()); acceptIfNotNull(n.getParameterList()); acceptIfNotNull(n.getDirectAbsDec()); return null; }
+    @Override public Void visit(DirectAbsDec n) { acceptIfNotNull(n.getExpression()); acceptIfNotNull(n.getAbstractDec()); acceptIfNotNull(n.getParameterList()); acceptIfNotNull(n.getDirectAbsDec()); return null; }
     @Override public Void visit(AbstractDec n) { acceptIfNotNull(n.getPointer()); acceptIfNotNull(n.getDirectAbsDec()); return null; }
-    @Override public Void visit(Initializer n) { acceptIfNotNull(n.getExpr()); acceptIfNotNull(n.getInitList()); return null; }
+    @Override public Void visit(Initializer n) { acceptIfNotNull(n.getExpression()); acceptIfNotNull(n.getInitList()); return null; }
     @Override public Void visit(InitializerList n) { n.getInitializers().forEach(this::acceptIfNotNull); n.getDesignations().forEach(this::acceptIfNotNull); return null; }
     @Override public Void visit(Designation n) { n.getDesignators().forEach(this::acceptIfNotNull); return null; }
-    @Override public Void visit(Designator n) { acceptIfNotNull(n.getExpr()); return null; }
+    @Override public Void visit(Designator n) { acceptIfNotNull(n.getExpression()); return null; }
     @Override public Void visit(SpecifierQualifierList n) { acceptIfNotNull(n.getTypeSpecifier()); acceptIfNotNull(n.getSpecifierQualifierList()); return null; }
-    @Override public Void visit(JumpStmt n) { acceptIfNotNull(n.getCondition()); return null; }
-    @Override public Void visit(UnaryExpr n) { acceptIfNotNull(n.getExpr()); return null; }
-    @Override public Void visit(ExprCast n) { acceptIfNotNull(n.getCastExpr()); acceptIfNotNull(n.getTypeName()); return null; }
-    @Override public Void visit(BinaryExpr n) { acceptIfNotNull(n.getExpr1()); acceptIfNotNull(n.getExpr2()); acceptIfNotNull(n.getAssignmentOp()); return null; }
-    @Override public Void visit(CondExpr n) { acceptIfNotNull(n.getExpr1()); acceptIfNotNull(n.getExpr2()); acceptIfNotNull(n.getExpr3()); return null; }
-    @Override public Void visit(CommaExpr n) { n.getExprs().forEach(this::acceptIfNotNull); return null; }
-    @Override public Void visit(ArrayIndexing n) { acceptIfNotNull(n.getExpr1()); acceptIfNotNull(n.getExpr2()); return null; }
+    @Override public Void visit(JumpStatement n) { acceptIfNotNull(n.getCondition()); return null; }
+    @Override public Void visit(UnaryExpression n) { acceptIfNotNull(n.getExpression()); return null; }
+    @Override public Void visit(ExpressionCast n) { acceptIfNotNull(n.getCastExpression()); acceptIfNotNull(n.getTypeName()); return null; }
+    @Override public Void visit(BinaryExpression n) { acceptIfNotNull(n.getExpression1()); acceptIfNotNull(n.getExpression2()); acceptIfNotNull(n.getAssignmentOp()); return null; }
+    @Override public Void visit(CondExpression n) { acceptIfNotNull(n.getExpression1()); acceptIfNotNull(n.getExpression2()); acceptIfNotNull(n.getExpression3()); return null; }
+    @Override public Void visit(CommaExpression n) { n.getExpressions().forEach(this::acceptIfNotNull); return null; }
+    @Override public Void visit(ArrayIndexing n) { acceptIfNotNull(n.getExpression1()); acceptIfNotNull(n.getExpression2()); return null; }
     @Override public Void visit(Constant n) { return null; }
-    @Override public Void visit(TIExpr n) { acceptIfNotNull(n.getInitializerList()); acceptIfNotNull(n.getTypeName()); return null; }
-    @Override public Void visit(PrefixExpr n) { acceptIfNotNull(n.getExpr()); acceptIfNotNull(n.getCastExpr()); acceptIfNotNull(n.getTypeName()); acceptIfNotNull(n.getTIExpr()); acceptIfNotNull(n.getUnaryOp()); return null; }
+    @Override public Void visit(TypeInitExpression n) { acceptIfNotNull(n.getInitializerList()); acceptIfNotNull(n.getTypeName()); return null; }
+    @Override public Void visit(PrefixExpression n) { acceptIfNotNull(n.getExpression()); acceptIfNotNull(n.getCastExpression()); acceptIfNotNull(n.getTypeName()); acceptIfNotNull(n.getTypeInitExpression()); acceptIfNotNull(n.getUnaryOp()); return null; }
 }

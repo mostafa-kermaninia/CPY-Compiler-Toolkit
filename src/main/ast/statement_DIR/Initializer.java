@@ -1,13 +1,13 @@
 package main.ast.statement_DIR;
 
 import main.ast.baseNodes_DIR.Node;
-import main.ast.expression_DIR.Expr;
+import main.ast.expression_DIR.Expression;
 import main.visitor.IVisitor;
 
 public class Initializer extends Node {
-    private Expr expr;
+    private Expression expression;
     private InitializerList initList;
-    public Initializer() { expr = null;  initList = null; }
+    public Initializer() { expression = null;  initList = null; }
 
     @Override
     public <T> T accept(IVisitor<T> visitor) {
@@ -15,11 +15,11 @@ public class Initializer extends Node {
     }
 
 
-    public Expr getExpr() {
-        return expr;
+    public Expression getExpression() {
+        return expression;
     }
-    public void setExpr(Expr expr) {
-        this.expr = expr;
+    public void setExpression(Expression expression) {
+        this.expression = expression;
     }
 
     public InitializerList getInitList() { return initList; }

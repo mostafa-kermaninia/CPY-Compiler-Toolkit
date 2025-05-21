@@ -1,8 +1,8 @@
 package main.ast.statement_DIR;
 
+import main.ast.expression_DIR.Expression;
 import main.ast.expression_DIR.IdentifierList;
 import main.ast.baseNodes_DIR.Node;
-import main.ast.expression_DIR.Expr;
 import main.ast.literal_DIR.TypeSpecifier;
 import main.visitor.IVisitor;
 
@@ -10,7 +10,7 @@ public class DirectDec extends Node{
     private String identifier = "";
     private Declarator declarator;
     private DirectDec directDec;
-    private Expr expr;
+    private Expression expression;
     private ParameterList parameterList;
     private IdentifierList identifierList;
     private TypeSpecifier typeSpecifier;
@@ -18,7 +18,7 @@ public class DirectDec extends Node{
     public DirectDec() {
         declarator = null;
         directDec = null;
-        expr = null;
+        expression = null;
         parameterList = null;
         identifierList = null;
         typeSpecifier = null;
@@ -38,8 +38,8 @@ public class DirectDec extends Node{
     public String getIdentifier() { return identifier; }
     public void setIdentifier(String identifier) { this.identifier = identifier; }
 
-    public Expr getExpr() { return expr; }
-    public void setExpr(Expr expr) { this.expr = expr; }
+    public Expression getExpression() { return expression; }
+    public void setExpression(Expression expression) { this.expression = expression; }
 
     public ParameterList getParameterList() { return parameterList; }
     public void setParameterList(ParameterList parameterList) { this.parameterList = parameterList; }

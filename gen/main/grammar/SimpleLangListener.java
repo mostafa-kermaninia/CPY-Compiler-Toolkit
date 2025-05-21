@@ -77,15 +77,15 @@ public interface SimpleLangListener extends ParseTreeListener {
 	 */
 	void exitExpression(SimpleLangParser.ExpressionContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link SimpleLangParser#argumentExpressionList}.
+	 * Enter a parse tree produced by {@link SimpleLangParser#argumentexpressionList}.
 	 * @param ctx the parse tree
 	 */
-	void enterArgumentExpressionList(SimpleLangParser.ArgumentExpressionListContext ctx);
+	void enterArgumentexpressionList(SimpleLangParser.ArgumentexpressionListContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link SimpleLangParser#argumentExpressionList}.
+	 * Exit a parse tree produced by {@link SimpleLangParser#argumentexpressionList}.
 	 * @param ctx the parse tree
 	 */
-	void exitArgumentExpressionList(SimpleLangParser.ArgumentExpressionListContext ctx);
+	void exitArgumentexpressionList(SimpleLangParser.ArgumentexpressionListContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link SimpleLangParser#unaryOperator}.
 	 * @param ctx the parse tree
@@ -397,15 +397,15 @@ public interface SimpleLangListener extends ParseTreeListener {
 	 */
 	void exitForDeclaration(SimpleLangParser.ForDeclarationContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link SimpleLangParser#forExpression}.
+	 * Enter a parse tree produced by {@link SimpleLangParser#forexpression}.
 	 * @param ctx the parse tree
 	 */
-	void enterForExpression(SimpleLangParser.ForExpressionContext ctx);
+	void enterForexpression(SimpleLangParser.ForexpressionContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link SimpleLangParser#forExpression}.
+	 * Exit a parse tree produced by {@link SimpleLangParser#forexpression}.
 	 * @param ctx the parse tree
 	 */
-	void exitForExpression(SimpleLangParser.ForExpressionContext ctx);
+	void exitForexpression(SimpleLangParser.ForexpressionContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link SimpleLangParser#jumpStatement}.
 	 * @param ctx the parse tree

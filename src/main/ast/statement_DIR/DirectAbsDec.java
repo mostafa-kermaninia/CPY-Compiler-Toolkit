@@ -1,17 +1,17 @@
 package main.ast.statement_DIR;
 
 import main.ast.baseNodes_DIR.Node;
-import main.ast.expression_DIR.Expr;
+import main.ast.expression_DIR.Expression;
 import main.visitor.IVisitor;
 
 public class DirectAbsDec extends Node {
-    private Expr expr;
+    private Expression expression;
     private AbstractDec abstractDec;
     private ParameterList parameterList;
     private DirectAbsDec directAbsDec;
 
     public DirectAbsDec(){
-        expr = null;
+        expression = null;
         abstractDec = null;
         parameterList = null;
         directAbsDec = null;
@@ -23,11 +23,11 @@ public class DirectAbsDec extends Node {
     }
 
 
-    public Expr getExpr() {
-        return expr;
+    public Expression getExpression() {
+        return expression;
     }
-    public void setExpr(Expr expr) {
-        this.expr = expr;
+    public void setExpression(Expression expression) {
+        this.expression = expression;
     }
 
     public AbstractDec getAbstractDec() { return abstractDec;}

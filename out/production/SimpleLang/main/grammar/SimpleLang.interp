@@ -165,7 +165,7 @@ externalDeclaration
 functionDefinition
 declarationList
 expression
-argumentExpressionList
+argumentexpressionList
 unaryOperator
 castExpression
 assignmentOperator
@@ -197,7 +197,7 @@ selectionStatement
 iterationStatement
 forCondition
 forDeclaration
-forExpression
+forexpression
 jumpStatement
 
 

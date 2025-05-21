@@ -56,11 +56,11 @@ public interface SimpleLangVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitExpression(SimpleLangParser.ExpressionContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link SimpleLangParser#argumentExpressionList}.
+	 * Visit a parse tree produced by {@link SimpleLangParser#argumentexpressionList}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitArgumentExpressionList(SimpleLangParser.ArgumentExpressionListContext ctx);
+	T visitArgumentexpressionList(SimpleLangParser.ArgumentexpressionListContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link SimpleLangParser#unaryOperator}.
 	 * @param ctx the parse tree
@@ -248,11 +248,11 @@ public interface SimpleLangVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitForDeclaration(SimpleLangParser.ForDeclarationContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link SimpleLangParser#forExpression}.
+	 * Visit a parse tree produced by {@link SimpleLangParser#forexpression}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitForExpression(SimpleLangParser.ForExpressionContext ctx);
+	T visitForexpression(SimpleLangParser.ForexpressionContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link SimpleLangParser#jumpStatement}.
 	 * @param ctx the parse tree

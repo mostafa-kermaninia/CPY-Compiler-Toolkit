@@ -2,7 +2,7 @@ package main.ast.expression_DIR;
 
 import main.visitor.IVisitor;
 
-public class Constant extends Expr{
+public class Constant extends Expression {
     private String constant;
 
     public Constant(String constant){
