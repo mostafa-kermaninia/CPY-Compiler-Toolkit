@@ -8,25 +8,32 @@ import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 
-
 import java.io.IOException;
 
 public class SimpleLang {
     public static void main(String[] args) throws IOException {
+
+//        PART 1 : convert to C
         CPYtoC CPYtoC = new CPYtoC(args[0]);
 //        System.out.print(CPYtoC.finalC);
+
+//        PART 2 : Lexical analysis
         CharStream reader = CharStreams.fromString(CPYtoC.finalC);
         SimpleLangLexer simpleLangLexer = new SimpleLangLexer(reader);
         CommonTokenStream tokens = new CommonTokenStream(simpleLangLexer);
+
+//        PART 3 : parser
         SimpleLangParser flParser = new SimpleLangParser(tokens);
         Program program = flParser.program().programRet;
+
+//        PART 4 : Phase 1 output
         System.out.println();
 
+//        PART 5 : Name analysis and with visitors
+        NameAnalyzer nameAnalyzer = new NameAnalyzer();
+        nameAnalyzer.visit(program);
 
-        NameAnalyzer my_name_analyzer = new NameAnalyzer();
-        my_name_analyzer.visit(program);
-
-        if (my_name_analyzer.noError) {
+        if (nameAnalyzer.noError) {
             TestVisitor my_visitor = new TestVisitor();
             my_visitor.visit(program);
         }
