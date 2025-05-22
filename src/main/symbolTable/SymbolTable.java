@@ -7,8 +7,6 @@ import main.symbolTable.item.SymbolTableItem;
 
 public class SymbolTable {
 
-    // Start of static members
-
     public static SymbolTable top;
     public static SymbolTable root;
     private static Stack<SymbolTable> stack = new Stack<>();
@@ -60,5 +58,26 @@ public class SymbolTable {
 
     public int getItemsSize() {
         return this.items.size();
+    }
+
+    public SymbolTable getPre() {
+        return pre;
+    }
+
+    public void setPre(SymbolTable pre) {
+        this.pre = pre;
+    }
+
+    public Map<String, SymbolTableItem> getItems() {
+        return this.items;
+    }
+
+    public void setItems(Map<String, SymbolTableItem> items) {
+        this.items = items;
+    }
+
+    @Override
+    public String toString() {
+        return "SymbolTable{itemsSize=" + items.size() + ", hasPre=" + (pre != null) + "}";
     }
 }

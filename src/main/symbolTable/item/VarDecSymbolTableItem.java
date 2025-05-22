@@ -19,17 +19,14 @@ public class VarDecSymbolTableItem extends SymbolTableItem {
         this.varDec = varDec;
     }
 
-    // Additional method to retrieve just the type name
     public String getVarTypeName() {
         return varDec.getType();
     }
 
-    // New setter to change the underlying type name (demonstration only)
     public void setVarTypeName(String newTypeName) {
         this.varDec.setType(newTypeName);
     }
 
-    // New toString method
     @Override
     public String toString() {
         return "VarDecSymbolTableItem{" +

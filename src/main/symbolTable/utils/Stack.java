@@ -25,4 +25,21 @@ public class Stack<T> {
         elements.remove(this.top + 1);
         return popped;
     }
+
+    public int getTop() {
+        return top;
+    }
+
+    public void setTop(int newTop) {
+        this.top = newTop;
+    }
+
+    public T peek() {
+        return (this.top == -1) ? null : elements.get(this.top);
+    }
+
+    @Override
+    public String toString() {
+        return "Stack{top=" + top + ", elements=" + elements + "}";
+    }
 }

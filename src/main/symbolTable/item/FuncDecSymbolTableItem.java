@@ -19,12 +19,10 @@ public class FuncDecSymbolTableItem extends SymbolTableItem {
         this.funcDec = funcDec;
     }
 
-    // Additional method
     public int getFunctionArgumentCount() {
         return this.funcDec.getNumArgs();
     }
 
-    // toString method
     @Override
     public String toString() {
         return "FuncDecSymbolTableItem{" +
