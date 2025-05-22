@@ -8,47 +8,53 @@ grammar SimpleLang;
     import main.ast.statement_DIR.*;
 }
 
+// Entry point of the grammar, defines a program structure.
 program
 	returns[Program programRet]:
 	{$programRet = new Program();} (
-		id = translationUnit {$programRet.setTranslationUnit($id.translationUnitRet);}
+		tu = translationUnit {$programRet.setTranslationUnit($tu.translationUnitRet);}
 	)? EOF;
 
+// A translation unit consists of one or more external declarations.
 translationUnit
 	returns[TranslationUnit translationUnitRet]:
 	{$translationUnitRet = new TranslationUnit();} (
-		id = externalDeclaration {$translationUnitRet.addExternalDeclaration($id.externalDeclarationRet);
+		extDecl = externalDeclaration {$translationUnitRet.addExternalDeclaration($extDecl.externalDeclarationRet);
 			}
 	)+;
 
+// An external declaration can be a function definition, a global declaration, or a stray semicolon.
 externalDeclaration
 	returns[ExternalDeclaration externalDeclarationRet]:
-	a = functionDefinition {
+	funcDef = functionDefinition {
             $externalDeclarationRet = new ExternalDeclaration();
-            $externalDeclarationRet.setFunctionDefinition($a.functionDefinitionRet);
+            $externalDeclarationRet.setFunctionDefinition($funcDef.functionDefinitionRet);
         }
-	| b = declaration {
+	| decl = declaration {
             $externalDeclarationRet = new ExternalDeclaration();
-            $externalDeclarationRet.setDeclaration($b.declarationRet);
-            $externalDeclarationRet.setLine($b.declarationRet.getLine());
+            $externalDeclarationRet.setDeclaration($decl.declarationRet);
+            $externalDeclarationRet.setLine($decl.declarationRet.getLine());
         }
 	| {$externalDeclarationRet = new ExternalDeclaration();} Semi; // stray ;
+
+// Defines a function, including optional declaration specifiers, a declarator, optional C89-style
+// K&R declaration list, and a compound statement (body).
 functionDefinition
 	returns[FunctionDefinition functionDefinitionRet]:
 	{$functionDefinitionRet = new FunctionDefinition();} (
-		ds = declarationSpecifiers {$functionDefinitionRet.setDecSpecifiers($ds.declarationSpecifiersRet);
+		declSpecs = declarationSpecifiers {$functionDefinitionRet.setDecSpecifiers($declSpecs.declarationSpecifiersRet);
 			}
-	)? d = declarator {$functionDefinitionRet.setDeclarator($d.declaratorRet); $functionDefinitionRet.setLine($d.declaratorRet.getLine());
+	)? declaratorNode = declarator {$functionDefinitionRet.setDeclarator($declaratorNode.declaratorRet); $functionDefinitionRet.setLine($declaratorNode.declaratorRet.getLine());
 		} (
-		dl = declarationList {$functionDefinitionRet.setDecList($dl.decListRet);}
-	)? c = compoundStatement {$functionDefinitionRet.setCompoundStatement($c.compoundStatementRet);}
+		k_and_r_decls = declarationList {$functionDefinitionRet.setDecList($k_and_r_decls.decListRet);}
+	)? body = compoundStatement {$functionDefinitionRet.setCompoundStatement($body.compoundStatementRet);}
 		;
-// az in be bala ham zadam
 
+// A list of declarations, typically used for K&R style function parameter declarations.
 declarationList
 	returns[DecList decListRet]:
 	{$decListRet = new DecList();} (
-		d = declaration {$decListRet.addDeclaration($d.declarationRet);}
+		decl = declaration {$decListRet.addDeclaration($decl.declarationRet);}
 	)+;
 
 expression

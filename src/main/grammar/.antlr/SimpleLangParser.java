@@ -150,7 +150,7 @@ public class SimpleLangParser extends Parser {
 	@SuppressWarnings("CheckReturnValue")
 	public static class ProgramContext extends ParserRuleContext {
 		public Program programRet;
-		public TranslationUnitContext id;
+		public TranslationUnitContext tu;
 		public TerminalNode EOF() { return getToken(SimpleLangParser.EOF, 0); }
 		public TranslationUnitContext translationUnit() {
 			return getRuleContext(TranslationUnitContext.class,0);
@@ -175,8 +175,8 @@ public class SimpleLangParser extends Parser {
 			if ((((_la) & ~0x3f) == 0 && ((1L << _la) & 2252349583972684L) != 0) || _la==Identifier) {
 				{
 				setState(81);
-				((ProgramContext)_localctx).id = translationUnit();
-				_localctx.programRet.setTranslationUnit(((ProgramContext)_localctx).id.translationUnitRet);
+				((ProgramContext)_localctx).tu = translationUnit();
+				_localctx.programRet.setTranslationUnit(((ProgramContext)_localctx).tu.translationUnitRet);
 				}
 			}
 
@@ -198,7 +198,7 @@ public class SimpleLangParser extends Parser {
 	@SuppressWarnings("CheckReturnValue")
 	public static class TranslationUnitContext extends ParserRuleContext {
 		public TranslationUnit translationUnitRet;
-		public ExternalDeclarationContext id;
+		public ExternalDeclarationContext extDecl;
 		public List<ExternalDeclarationContext> externalDeclaration() {
 			return getRuleContexts(ExternalDeclarationContext.class);
 		}
@@ -226,8 +226,8 @@ public class SimpleLangParser extends Parser {
 				{
 				{
 				setState(89);
-				((TranslationUnitContext)_localctx).id = externalDeclaration();
-				_localctx.translationUnitRet.addExternalDeclaration(((TranslationUnitContext)_localctx).id.externalDeclarationRet);
+				((TranslationUnitContext)_localctx).extDecl = externalDeclaration();
+				_localctx.translationUnitRet.addExternalDeclaration(((TranslationUnitContext)_localctx).extDecl.externalDeclarationRet);
 							
 				}
 				}
@@ -251,8 +251,8 @@ public class SimpleLangParser extends Parser {
 	@SuppressWarnings("CheckReturnValue")
 	public static class ExternalDeclarationContext extends ParserRuleContext {
 		public ExternalDeclaration externalDeclarationRet;
-		public FunctionDefinitionContext a;
-		public DeclarationContext b;
+		public FunctionDefinitionContext funcDef;
+		public DeclarationContext decl;
 		public FunctionDefinitionContext functionDefinition() {
 			return getRuleContext(FunctionDefinitionContext.class,0);
 		}
@@ -277,10 +277,10 @@ public class SimpleLangParser extends Parser {
 				enterOuterAlt(_localctx, 1);
 				{
 				setState(96);
-				((ExternalDeclarationContext)_localctx).a = functionDefinition();
+				((ExternalDeclarationContext)_localctx).funcDef = functionDefinition();
 
 				            ((ExternalDeclarationContext)_localctx).externalDeclarationRet =  new ExternalDeclaration();
-				            _localctx.externalDeclarationRet.setFunctionDefinition(((ExternalDeclarationContext)_localctx).a.functionDefinitionRet);
+				            _localctx.externalDeclarationRet.setFunctionDefinition(((ExternalDeclarationContext)_localctx).funcDef.functionDefinitionRet);
 				        
 				}
 				break;
@@ -288,11 +288,11 @@ public class SimpleLangParser extends Parser {
 				enterOuterAlt(_localctx, 2);
 				{
 				setState(99);
-				((ExternalDeclarationContext)_localctx).b = declaration();
+				((ExternalDeclarationContext)_localctx).decl = declaration();
 
 				            ((ExternalDeclarationContext)_localctx).externalDeclarationRet =  new ExternalDeclaration();
-				            _localctx.externalDeclarationRet.setDeclaration(((ExternalDeclarationContext)_localctx).b.declarationRet);
-				            _localctx.externalDeclarationRet.setLine(((ExternalDeclarationContext)_localctx).b.declarationRet.getLine());
+				            _localctx.externalDeclarationRet.setDeclaration(((ExternalDeclarationContext)_localctx).decl.declarationRet);
+				            _localctx.externalDeclarationRet.setLine(((ExternalDeclarationContext)_localctx).decl.declarationRet.getLine());
 				        
 				}
 				break;
@@ -320,10 +320,10 @@ public class SimpleLangParser extends Parser {
 	@SuppressWarnings("CheckReturnValue")
 	public static class FunctionDefinitionContext extends ParserRuleContext {
 		public FunctionDefinition functionDefinitionRet;
-		public DeclarationSpecifiersContext ds;
-		public DeclaratorContext d;
-		public DeclarationListContext dl;
-		public CompoundStatementContext c;
+		public DeclarationSpecifiersContext declSpecs;
+		public DeclaratorContext declaratorNode;
+		public DeclarationListContext k_and_r_decls;
+		public CompoundStatementContext body;
 		public DeclaratorContext declarator() {
 			return getRuleContext(DeclaratorContext.class,0);
 		}
@@ -356,15 +356,15 @@ public class SimpleLangParser extends Parser {
 			case 1:
 				{
 				setState(107);
-				((FunctionDefinitionContext)_localctx).ds = declarationSpecifiers();
-				_localctx.functionDefinitionRet.setDecSpecifiers(((FunctionDefinitionContext)_localctx).ds.declarationSpecifiersRet);
+				((FunctionDefinitionContext)_localctx).declSpecs = declarationSpecifiers();
+				_localctx.functionDefinitionRet.setDecSpecifiers(((FunctionDefinitionContext)_localctx).declSpecs.declarationSpecifiersRet);
 							
 				}
 				break;
 			}
 			setState(112);
-			((FunctionDefinitionContext)_localctx).d = declarator();
-			_localctx.functionDefinitionRet.setDeclarator(((FunctionDefinitionContext)_localctx).d.declaratorRet); _localctx.functionDefinitionRet.setLine(((FunctionDefinitionContext)_localctx).d.declaratorRet.getLine());
+			((FunctionDefinitionContext)_localctx).declaratorNode = declarator();
+			_localctx.functionDefinitionRet.setDeclarator(((FunctionDefinitionContext)_localctx).declaratorNode.declaratorRet); _localctx.functionDefinitionRet.setLine(((FunctionDefinitionContext)_localctx).declaratorNode.declaratorRet.getLine());
 					
 			setState(117);
 			_errHandler.sync(this);
@@ -372,14 +372,14 @@ public class SimpleLangParser extends Parser {
 			if ((((_la) & ~0x3f) == 0 && ((1L << _la) & 6084940L) != 0) || _la==Identifier) {
 				{
 				setState(114);
-				((FunctionDefinitionContext)_localctx).dl = declarationList();
-				_localctx.functionDefinitionRet.setDecList(((FunctionDefinitionContext)_localctx).dl.decListRet);
+				((FunctionDefinitionContext)_localctx).k_and_r_decls = declarationList();
+				_localctx.functionDefinitionRet.setDecList(((FunctionDefinitionContext)_localctx).k_and_r_decls.decListRet);
 				}
 			}
 
 			setState(119);
-			((FunctionDefinitionContext)_localctx).c = compoundStatement();
-			_localctx.functionDefinitionRet.setCompoundStatement(((FunctionDefinitionContext)_localctx).c.compoundStatementRet);
+			((FunctionDefinitionContext)_localctx).body = compoundStatement();
+			_localctx.functionDefinitionRet.setCompoundStatement(((FunctionDefinitionContext)_localctx).body.compoundStatementRet);
 			}
 		}
 		catch (RecognitionException re) {
@@ -396,7 +396,7 @@ public class SimpleLangParser extends Parser {
 	@SuppressWarnings("CheckReturnValue")
 	public static class DeclarationListContext extends ParserRuleContext {
 		public DecList decListRet;
-		public DeclarationContext d;
+		public DeclarationContext decl;
 		public List<DeclarationContext> declaration() {
 			return getRuleContexts(DeclarationContext.class);
 		}
@@ -424,8 +424,8 @@ public class SimpleLangParser extends Parser {
 				{
 				{
 				setState(123);
-				((DeclarationListContext)_localctx).d = declaration();
-				_localctx.decListRet.addDeclaration(((DeclarationListContext)_localctx).d.declarationRet);
+				((DeclarationListContext)_localctx).decl = declaration();
+				_localctx.decListRet.addDeclaration(((DeclarationListContext)_localctx).decl.declarationRet);
 				}
 				}
 				setState(128); 
