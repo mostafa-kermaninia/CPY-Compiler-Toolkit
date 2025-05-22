@@ -11,11 +11,11 @@ import main.symbolTable.exceptions.ItemAlreadyExistsException;
 import main.symbolTable.exceptions.ItemNotFoundException;
 import main.symbolTable.item.FuncDecSymbolTableItem;
 import main.symbolTable.item.VarDecSymbolTableItem;
+import java.util.Arrays;
+import java.util.List;
 
-/**
- * Holds the original NameAnalyzer visit method implementations.
- * References the parent NameAnalyzer's fields for "noError" and "symbolTableMain."
- */
+
+
 public class NameAnalyzerVisitorUtils {
     private final NameAnalyzer parent;
 
@@ -23,9 +23,8 @@ public class NameAnalyzerVisitorUtils {
         this.parent = parent;
     }
 
-    // --------------------------------------------------------------------------------
+
     // visit(Program program)
-    // --------------------------------------------------------------------------------
     public Void visitProgram(Program program) {
         SymbolTable.top = new SymbolTable();
         SymbolTable.root = SymbolTable.top;
