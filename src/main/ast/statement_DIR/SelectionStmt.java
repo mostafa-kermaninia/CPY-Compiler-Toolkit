@@ -1,18 +1,18 @@
 package main.ast.statement_DIR;
 
-import main.ast.expression_DIR.Expr;
+import main.ast.expression_DIR.Expression;
 import main.symbolTable.SymbolTable;
 import main.visitor.IVisitor;
 
 public class SelectionStmt extends Stmt {
     private final Stmt mainStmt;
     private Stmt elseStmt;
-    private final Expr expr;
+    private final Expression expression;
     private int elseLine;
     private SymbolTable symbolTable;
 
-    public SelectionStmt(Expr expr, Stmt mainStmt) {
-        this.expr = expr;
+    public SelectionStmt(Expression expression, Stmt mainStmt) {
+        this.expression = expression;
         this.mainStmt = mainStmt;
         this.elseStmt = null;
     }
@@ -22,8 +22,8 @@ public class SelectionStmt extends Stmt {
         return visitor.visit(this);
     }
 
-    public Expr getExpr() {
-        return expr;
+    public Expression getExpression() {
+        return expression;
     }
 
     public Stmt getMainStmt() {

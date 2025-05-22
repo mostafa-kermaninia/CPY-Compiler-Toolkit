@@ -3,13 +3,13 @@ package main.ast.expression_DIR;
 import main.ast.literal_DIR.TypeName;
 import main.visitor.IVisitor;
 
-public class ExprCast extends Expr {
+public class ExpressionCast extends Expression {
     private TypeName typeName;
-    private CastExpr castExpr;
+    private CastExpression castExpression;
 
-    public ExprCast(TypeName typeName, CastExpr castExpr) {
+    public ExpressionCast(TypeName typeName, CastExpression castExpression) {
         this.typeName = typeName;
-        this.castExpr = castExpr;
+        this.castExpression = castExpression;
     }
 
     @Override
@@ -17,8 +17,8 @@ public class ExprCast extends Expr {
         return visitor.visit(this);
     }
 
-    public CastExpr getCastExpr() {
-        return castExpr;
+    public CastExpression getCastExpression() {
+        return castExpression;
     }
 
     public TypeName getTypeName() {

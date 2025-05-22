@@ -4,11 +4,11 @@ import main.ast.literal_DIR.TypeName;
 import main.ast.statement_DIR.InitializerList;
 import main.visitor.IVisitor;
 
-public class TIExpr extends Expr {
+public class TIExpression extends Expression {
     private InitializerList initializerList;
     private TypeName typeName;
 
-    public TIExpr(TypeName typeName, InitializerList initializerList) {
+    public TIExpression(TypeName typeName, InitializerList initializerList) {
         this.typeName = typeName;
         this.initializerList = initializerList;
     }

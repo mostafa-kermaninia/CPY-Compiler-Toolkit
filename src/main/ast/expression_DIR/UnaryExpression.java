@@ -2,12 +2,12 @@ package main.ast.expression_DIR;
 
 import main.visitor.IVisitor;
 
-public class UnaryExpr extends Expr {
-    private Expr expr;
+public class UnaryExpression extends Expression {
+    private Expression expression;
     private String Op;
 
-    public UnaryExpr(Expr expr, String Op) {
-        this.expr = expr;
+    public UnaryExpression(Expression expression, String Op) {
+        this.expression = expression;
         this.Op = Op;
     }
 
@@ -16,8 +16,8 @@ public class UnaryExpr extends Expr {
         return visitor.visit(this);
     }
 
-    public Expr getExpr() {
-        return expr;
+    public Expression getExpression() {
+        return expression;
     }
 
     public String getOp() {

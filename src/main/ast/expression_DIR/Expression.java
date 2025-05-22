@@ -2,13 +2,13 @@ package main.ast.expression_DIR;
 
 import main.ast.baseNodes_DIR.Node;
 
-public abstract class Expr extends Node {
+public abstract class Expression extends Node {
     private boolean isFirst = true;
 
-    public void addExpr(Expr expr) {
+    public void addExpression(Expression expression) {
     }
 
-    public void setArgExpr(ArgExpr argExpr) {
+    public void setArgExpression(ArgExpression argExpression) {
     }
 
     public void notFirst() {

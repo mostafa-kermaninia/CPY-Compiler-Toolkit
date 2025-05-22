@@ -93,7 +93,7 @@ public abstract class Visitor<T> implements IVisitor<T> {
         return null;
     }
 
-    public T visit(ArgExpr argExpr) {
+    public T visit(ArgExpression argExpression) {
         return null;
     }
 
@@ -129,7 +129,7 @@ public abstract class Visitor<T> implements IVisitor<T> {
         return null;
     }
 
-    public T visit(ExprStmt exprStmt) {
+    public T visit(ExpressionStmt expressionStmt) {
         return null;
     }
 
@@ -145,7 +145,7 @@ public abstract class Visitor<T> implements IVisitor<T> {
         return null;
     }
 
-    public T visit(ForExpr forExpr) {
+    public T visit(ForExpression forExpression) {
         return null;
     }
 
@@ -158,27 +158,27 @@ public abstract class Visitor<T> implements IVisitor<T> {
         return null;
     }
 
-    public T visit(UnaryExpr unaryExpr) {
+    public T visit(UnaryExpression unaryExpression) {
         return null;
     }
 
-    public T visit(CastExpr castExpr) {
+    public T visit(CastExpression castExpression) {
         return null;
     }
 
-    public T visit(ExprCast exprCast) {
+    public T visit(ExpressionCast expressionCast) {
         return null;
     }
 
-    public T visit(BinaryExpr binaryExpr) {
+    public T visit(BinaryExpression binaryExpression) {
         return null;
     }
 
-    public T visit(CondExpr condExpr) {
+    public T visit(CondExpression condExpression) {
         return null;
     }
 
-    public T visit(CommaExpr commaExpr) {
+    public T visit(CommaExpression commaExpression) {
         return null;
     }
 
@@ -194,11 +194,11 @@ public abstract class Visitor<T> implements IVisitor<T> {
         return null;
     }
 
-    public T visit(TIExpr tiExpr) {
+    public T visit(TIExpression tiExpression) {
         return null;
     }
 
-    public T visit(PrefixExpr prefixExpr) {
+    public T visit(PrefixExpression prefixExpression) {
         return null;
     }
 

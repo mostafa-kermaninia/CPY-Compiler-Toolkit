@@ -4,15 +4,15 @@ import main.ast.baseNodes_DIR.Node;
 import main.ast.literal_DIR.TypeName;
 import main.visitor.IVisitor;
 
-public class CastExpr extends Node {
-    private CastExpr castExpr;
-    private Expr expr;
+public class CastExpression extends Node {
+    private CastExpression castExpression;
+    private Expression expression;
     private TypeName typeName;
     private String number;
 
-    public CastExpr() {
-        castExpr = null;
-        expr = null;
+    public CastExpression() {
+        castExpression = null;
+        expression = null;
         typeName = null;
     }
 
@@ -21,12 +21,12 @@ public class CastExpr extends Node {
         return visitor.visit(this);
     }
 
-    public Expr getExpr() {
-        return expr;
+    public Expression getExpression() {
+        return expression;
     }
 
-    public void setExpr(Expr expr) {
-        this.expr = expr;
+    public void setExpression(Expression expression) {
+        this.expression = expression;
     }
 
     public TypeName getTypeName() {
@@ -45,11 +45,11 @@ public class CastExpr extends Node {
         this.number = number;
     }
 
-    public CastExpr getCastExpr() {
-        return castExpr;
+    public CastExpression getCastExpression() {
+        return castExpression;
     }
 
-    public void setCastExpr(CastExpr castExpr) {
-        this.castExpr = castExpr;
+    public void setCastExpression(CastExpression castExpression) {
+        this.castExpression = castExpression;
     }
 }

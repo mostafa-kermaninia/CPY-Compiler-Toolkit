@@ -5,20 +5,20 @@ import main.ast.literal_DIR.TypeName;
 import main.ast.literal_DIR.UnaryOperator;
 import main.visitor.IVisitor;
 
-public class PrefixExpr extends Expr {
+public class PrefixExpression extends Expression {
     private ArrayList<String> Ops = new ArrayList<>();
     private String identifier;
     private String constant;
-    private Expr expr;
-    private TIExpr tiExpr;
-    private CastExpr castExpr;
+    private Expression expression;
+    private TIExpression tiExpression;
+    private CastExpression castExpression;
     private UnaryOperator unaryOp;
     private TypeName typeName;
 
-    public PrefixExpr() {
-        expr = null;
-        tiExpr = null;
-        castExpr = null;
+    public PrefixExpression() {
+        expression = null;
+        tiExpression = null;
+        castExpression = null;
         unaryOp = null;
         typeName = null;
     }
@@ -52,28 +52,28 @@ public class PrefixExpr extends Expr {
         this.constant = constant;
     }
 
-    public Expr getExpr() {
-        return expr;
+    public Expression getExpression() {
+        return expression;
     }
 
-    public void setExpr(Expr expr) {
-        this.expr = expr;
+    public void setExpression(Expression expression) {
+        this.expression = expression;
     }
 
-    public TIExpr getTIExpr() {
-        return tiExpr;
+    public TIExpression getTIExpression() {
+        return tiExpression;
     }
 
-    public void setTIExpr(TIExpr tiExpr) {
-        this.tiExpr = tiExpr;
+    public void setTIExpression(TIExpression tiExpression) {
+        this.tiExpression = tiExpression;
     }
 
-    public CastExpr getCastExpr() {
-        return castExpr;
+    public CastExpression getCastExpression() {
+        return castExpression;
     }
 
-    public void setCastExpr(CastExpr castExpr) {
-        this.castExpr = castExpr;
+    public void setCastExpression(CastExpression castExpression) {
+        this.castExpression = castExpression;
     }
 
     public UnaryOperator getUnaryOp() {

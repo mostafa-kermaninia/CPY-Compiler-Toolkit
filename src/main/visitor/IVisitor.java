@@ -21,9 +21,9 @@ public interface IVisitor<T> {
 
     T visit(ForDec forDec);
 
-    T visit(ArgExpr argExpr);
+    T visit(ArgExpression argExpression);
 
-    T visit(CastExpr castExpr);
+    T visit(CastExpression castExpression);
 
     T visit(DecList decList);
 
@@ -73,7 +73,7 @@ public interface IVisitor<T> {
 
     T visit(BlockItem blockItem);
 
-    T visit(ExprStmt exprStmt);
+    T visit(ExpressionStmt expressionStmt);
 
     T visit(SelectionStmt selectionStmt);
 
@@ -81,22 +81,22 @@ public interface IVisitor<T> {
 
     T visit(ForCondition forCondition);
 
-    T visit(ForExpr forExpr);
+    T visit(ForExpression forExpression);
 
     T visit(JumpStmt jumpStmt);
 
-    // az inja be baad male expr ha
+    // az inja be baad male expression ha
     T visit(FuncCall funcCall);
 
-    T visit(UnaryExpr unaryExpr);
+    T visit(UnaryExpression unaryExpression);
 
-    T visit(ExprCast exprCast);
+    T visit(ExpressionCast expressionCast);
 
-    T visit(BinaryExpr binaryExpr);
+    T visit(BinaryExpression binaryExpression);
 
-    T visit(CondExpr condExpr);
+    T visit(CondExpression condExpression);
 
-    T visit(CommaExpr commaExpr);
+    T visit(CommaExpression commaExpression);
 
     T visit(ArrayIndexing arrayIndexing);
 
@@ -104,8 +104,8 @@ public interface IVisitor<T> {
 
     T visit(Constant constant);
 
-    T visit(TIExpr tiExpr);
+    T visit(TIExpression tiExpression);
 
-    T visit(PrefixExpr prefixExpr);
+    T visit(PrefixExpression prefixExpression);
 
 }

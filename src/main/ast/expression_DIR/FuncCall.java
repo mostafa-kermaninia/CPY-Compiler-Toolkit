@@ -2,13 +2,13 @@ package main.ast.expression_DIR;
 
 import main.visitor.IVisitor;
 
-public class FuncCall extends Expr {
-    private Expr expr;
-    private ArgExpr argExpr;
+public class FuncCall extends Expression {
+    private Expression expression;
+    private ArgExpression argExpression;
 
-    public FuncCall(Expr expr) {
-        this.expr = expr;
-        argExpr = null;
+    public FuncCall(Expression expression) {
+        this.expression = expression;
+        argExpression = null;
     }
 
     @Override
@@ -16,27 +16,27 @@ public class FuncCall extends Expr {
         return visitor.visit(this);
     }
 
-    public Expr getExpr() {
-        return expr;
+    public Expression getExpression() {
+        return expression;
     }
 
-    public ArgExpr getArgExpr() {
-        return argExpr;
+    public ArgExpression getArgExpression() {
+        return argExpression;
     }
 
     @Override
-    public void setArgExpr(ArgExpr argExpr) {
-        this.argExpr = argExpr;
+    public void setArgExpression(ArgExpression argExpression) {
+        this.argExpression = argExpression;
     }
 
     public int getNumArgs() {
-        if (argExpr == null)
+        if (argExpression == null)
             return 0;
         else
-            return argExpr.getExprs().size();
+            return argExpression.getExpressions().size();
     }
 
     public void removeArg() {
-        argExpr.removeLastExpr();
+        argExpression.removeLastExpression();
     }
 }

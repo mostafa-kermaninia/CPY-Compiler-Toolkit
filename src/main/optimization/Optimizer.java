@@ -81,11 +81,11 @@ public class Optimizer extends Visitor<Void> {
         return null;
     }
 
-    public Void visit(CastExpr castExpr) {
-        if (castExpr.getCastExpr() != null)
-            castExpr.getCastExpr().accept(this);
-        if (castExpr.getExpr() != null)
-            castExpr.getExpr().accept(this);
+    public Void visit(CastExpression castExpr) {
+        if (castExpr.getCastExpression() != null)
+            castExpr.getCastExpression().accept(this);
+        if (castExpr.getExpression() != null)
+            castExpr.getExpression().accept(this);
         if (castExpr.getTypeName() != null)
             castExpr.getTypeName().accept(this);
         return null;
@@ -138,10 +138,10 @@ public class Optimizer extends Visitor<Void> {
         return null;
     }
 
-    public Void visit(ArgExpr argExpr) {
-        for (Expr expr : argExpr.getExprs())
-            if (expr != null)
-                expr.accept(this);
+    public Void visit(ArgExpression argExpr) {
+        for (Expression expression : argExpr.getExpressions())
+            if (expression != null)
+                expression.accept(this);
         return null;
     }
 
@@ -185,8 +185,8 @@ public class Optimizer extends Visitor<Void> {
             directDec.getDirectDec().accept(this);
         if (directDec.getIdentifierList() != null)
             directDec.getIdentifierList().accept(this);
-        if (directDec.getExpr() != null)
-            directDec.getExpr().accept(this);
+        if (directDec.getExpression() != null)
+            directDec.getExpression().accept(this);
         if (directDec.getParameterList() != null)
             directDec.getParameterList().accept(this);
         return null;
@@ -221,8 +221,8 @@ public class Optimizer extends Visitor<Void> {
     }
 
     public Void visit(DirectAbsDec directAbsDec) {
-        if (directAbsDec.getExpr() != null)
-            directAbsDec.getExpr().accept(this);
+        if (directAbsDec.getExpression() != null)
+            directAbsDec.getExpression().accept(this);
         if (directAbsDec.getAbstractDec() != null)
             directAbsDec.getAbstractDec().accept(this);
         if (directAbsDec.getParameterList() != null)
@@ -240,8 +240,8 @@ public class Optimizer extends Visitor<Void> {
     }
 
     public Void visit(Initializer initializer) {
-        if (initializer.getExpr() != null)
-            initializer.getExpr().accept(this);
+        if (initializer.getExpression() != null)
+            initializer.getExpression().accept(this);
         else
             initializer.getInitList().accept(this);
         return null;
@@ -262,8 +262,8 @@ public class Optimizer extends Visitor<Void> {
     }
 
     public Void visit(Designator designator) {
-        if (designator.getExpr() != null)
-            designator.getExpr().accept(this);
+        if (designator.getExpression() != null)
+            designator.getExpression().accept(this);
         return null;
     }
 
@@ -275,13 +275,15 @@ public class Optimizer extends Visitor<Void> {
                     (blockItem.getStmt() != null && blockItem.getStmt() instanceof SelectionStmt &&
                             ((SelectionStmt) blockItem.getStmt()).allReturn()))
                 changed = changed | compoundStmt.removeNextBIs(blockItem);
-            if (blockItem.getStmt() != null && blockItem.getStmt() instanceof ExprStmt) {
-                ExprStmt exprStmt = (ExprStmt) blockItem.getStmt();
-                if (exprStmt.getExpr() != null && ((exprStmt.getExpr() instanceof BinaryExpr
-                        && ((BinaryExpr) exprStmt.getExpr()).getAssignmentOp() == null) ||
-                        exprStmt.getExpr() instanceof Constant || exprStmt.getExpr() instanceof Identifier ||
-                        exprStmt.getExpr() instanceof ArrayIndexing || exprStmt.getExpr() instanceof CondExpr ||
-                        exprStmt.getExpr() instanceof CommaExpr)) {
+            if (blockItem.getStmt() != null && blockItem.getStmt() instanceof ExpressionStmt) {
+                ExpressionStmt expressionStmt = (ExpressionStmt) blockItem.getStmt();
+                if (expressionStmt.getExpression() != null && ((expressionStmt.getExpression() instanceof BinaryExpression
+                        && ((BinaryExpression) expressionStmt.getExpression()).getAssignmentOp() == null) ||
+                        expressionStmt.getExpression() instanceof Constant || expressionStmt.getExpression() instanceof Identifier
+                        ||
+                        expressionStmt.getExpression() instanceof ArrayIndexing
+                        || expressionStmt.getExpression() instanceof CondExpression ||
+                        expressionStmt.getExpression() instanceof CommaExpression)) {
                     boolean temp = compoundStmt.removeBI(blockItem);
                     if (temp)
                         i--;
@@ -317,15 +319,15 @@ public class Optimizer extends Visitor<Void> {
         return null;
     }
 
-    public Void visit(ExprStmt exprStmt) {
-        if (exprStmt.getExpr() != null)
-            exprStmt.getExpr().accept(this);
+    public Void visit(ExpressionStmt expressionStmt) {
+        if (expressionStmt.getExpression() != null)
+            expressionStmt.getExpression().accept(this);
         return null;
     }
 
     public Void visit(SelectionStmt selectionStmt) {
         SymbolTable.push(selectionStmt.getSymbolTable());
-        selectionStmt.getExpr().accept(this);
+        selectionStmt.getExpression().accept(this);
         selectionStmt.getMainStmt().accept(this);
         if (selectionStmt.getElseStmt() != null)
             selectionStmt.getElseStmt().accept(this);
@@ -335,8 +337,8 @@ public class Optimizer extends Visitor<Void> {
 
     public Void visit(IterStmt iterStmt) {
         SymbolTable.push(iterStmt.getSymbolTable());
-        if (iterStmt.getExpr() != null)
-            iterStmt.getExpr().accept(this);
+        if (iterStmt.getExpression() != null)
+            iterStmt.getExpression().accept(this);
         if (iterStmt.getStmt() != null)
             iterStmt.getStmt().accept(this);
         if (iterStmt.getForCondition() != null)
@@ -348,19 +350,19 @@ public class Optimizer extends Visitor<Void> {
     public Void visit(ForCondition forCondition) {
         if (forCondition.getForDec() != null)
             forCondition.getForDec().accept(this);
-        if (forCondition.getExpr() != null)
-            forCondition.getExpr().accept(this);
-        if (forCondition.getForExpr1() != null)
-            forCondition.getForExpr1().accept(this);
-        if (forCondition.getForExpr2() != null)
-            forCondition.getForExpr2().accept(this);
+        if (forCondition.getExpression() != null)
+            forCondition.getExpression().accept(this);
+        if (forCondition.getForExpression1() != null)
+            forCondition.getForExpression1().accept(this);
+        if (forCondition.getForExpression2() != null)
+            forCondition.getForExpression2().accept(this);
         return null;
     }
 
-    public Void visit(ForExpr forExpr) {
-        for (Expr expr : forExpr.getExprs()) {
-            if (expr != null)
-                expr.accept(this);
+    public Void visit(ForExpression forExpr) {
+        for (Expression expression : forExpr.getExpressions()) {
+            if (expression != null)
+                expression.accept(this);
         }
         return null;
     }
@@ -373,8 +375,8 @@ public class Optimizer extends Visitor<Void> {
 
     public Void visit(FuncCall funcCall) {
 
-        String funcName = ((Identifier) funcCall.getExpr()).getIdentifier();
-        int line = ((Identifier) funcCall.getExpr()).getLine();
+        String funcName = ((Identifier) funcCall.getExpression()).getIdentifier();
+        int line = ((Identifier) funcCall.getExpression()).getLine();
         FuncDecSymbolTableItem funcDec = null;
         if (funcName.equals("scanf") || funcName.equals("printf")) {
         } else {
@@ -390,48 +392,48 @@ public class Optimizer extends Visitor<Void> {
             }
         }
 
-        funcCall.getExpr().accept(this);
-        if (funcCall.getArgExpr() != null)
-            funcCall.getArgExpr().accept(this);
+        funcCall.getExpression().accept(this);
+        if (funcCall.getArgExpression() != null)
+            funcCall.getArgExpression().accept(this);
         return null;
     }
 
-    public Void visit(UnaryExpr unaryExpr) {
-        unaryExpr.getExpr().accept(this);
+    public Void visit(UnaryExpression unaryExpression) {
+        unaryExpression.getExpression().accept(this);
         return null;
     }
 
-    public Void visit(ExprCast exprCast) {
-        exprCast.getCastExpr().accept(this);
-        exprCast.getTypeName().accept(this);
+    public Void visit(ExpressionCast expressionCast) {
+        expressionCast.getCastExpression().accept(this);
+        expressionCast.getTypeName().accept(this);
         return null;
     }
 
-    public Void visit(BinaryExpr binaryExpr) {
-        binaryExpr.getExpr1().accept(this);
-        binaryExpr.getExpr2().accept(this);
-        if (binaryExpr.getAssignmentOp() != null)
-            binaryExpr.getAssignmentOp().accept(this);
+    public Void visit(BinaryExpression binaryExpression) {
+        binaryExpression.getExpression1().accept(this);
+        binaryExpression.getExpression2().accept(this);
+        if (binaryExpression.getAssignmentOp() != null)
+            binaryExpression.getAssignmentOp().accept(this);
         return null;
     }
 
-    public Void visit(CondExpr condExpr) {
-        condExpr.getExpr1().accept(this);
-        condExpr.getExpr2().accept(this);
-        condExpr.getExpr3().accept(this);
+    public Void visit(CondExpression condExpr) {
+        condExpr.getExpression1().accept(this);
+        condExpr.getExpression2().accept(this);
+        condExpr.getExpression3().accept(this);
         return null;
     }
 
-    public Void visit(CommaExpr commaExpr) {
-        for (Expr expr : commaExpr.getExprs())
-            if (expr != null)
-                expr.accept(this);
+    public Void visit(CommaExpression commaExpr) {
+        for (Expression expression : commaExpr.getExpressions())
+            if (expression != null)
+                expression.accept(this);
         return null;
     }
 
     public Void visit(ArrayIndexing arrayIndexing) {
-        arrayIndexing.getExpr1().accept(this);
-        arrayIndexing.getExpr2().accept(this);
+        arrayIndexing.getExpression1().accept(this);
+        arrayIndexing.getExpression2().accept(this);
         return null;
     }
 
@@ -443,21 +445,21 @@ public class Optimizer extends Visitor<Void> {
         return null;
     }
 
-    public Void visit(TIExpr tiExpr) {
+    public Void visit(TIExpression tiExpr) {
         tiExpr.getInitializerList().accept(this);
         tiExpr.getTypeName().accept(this);
         return null;
     }
 
-    public Void visit(PrefixExpr prefixExpr) {
-        if (prefixExpr.getExpr() != null)
-            prefixExpr.getExpr().accept(this);
-        if (prefixExpr.getCastExpr() != null)
-            prefixExpr.getCastExpr().accept(this);
+    public Void visit(PrefixExpression prefixExpr) {
+        if (prefixExpr.getExpression() != null)
+            prefixExpr.getExpression().accept(this);
+        if (prefixExpr.getCastExpression() != null)
+            prefixExpr.getCastExpression().accept(this);
         if (prefixExpr.getTypeName() != null)
             prefixExpr.getTypeName().accept(this);
-        if (prefixExpr.getTIExpr() != null)
-            prefixExpr.getTIExpr().accept(this);
+        if (prefixExpr.getTIExpression() != null)
+            prefixExpr.getTIExpression().accept(this);
         if (prefixExpr.getUnaryOp() != null)
             prefixExpr.getUnaryOp().accept(this);
         return null;

@@ -1,20 +1,20 @@
 package main.ast.statement_DIR;
 
-import main.ast.expression_DIR.Expr;
+import main.ast.expression_DIR.Expression;
 import main.ast.literal_DIR.ForCondition;
 import main.symbolTable.SymbolTable;
 import main.visitor.IVisitor;
 
 public class IterStmt extends Stmt {
     private Stmt stmt;
-    private Expr expr;
+    private Expression expression;
     private ForCondition forCondition;
     private String type;
     private SymbolTable symbolTable;
 
     public IterStmt() {
         stmt = null;
-        expr = null;
+        expression = null;
         forCondition = null;
     }
 
@@ -23,12 +23,12 @@ public class IterStmt extends Stmt {
         return visitor.visit(this);
     }
 
-    public Expr getExpr() {
-        return expr;
+    public Expression getExpression() {
+        return expression;
     }
 
-    public void setExpr(Expr expr) {
-        this.expr = expr;
+    public void setExpression(Expression expression) {
+        this.expression = expression;
     }
 
     public Stmt getStmt() {
