@@ -374,12 +374,14 @@ public class SimpleLangParser extends Parser {
 				setState(114);
 				((FunctionDefinitionContext)_localctx).k_and_r_decls = declarationList();
 				_localctx.functionDefinitionRet.setDecList(((FunctionDefinitionContext)_localctx).k_and_r_decls.decListRet);
+							
 				}
 			}
 
 			setState(119);
 			((FunctionDefinitionContext)_localctx).body = compoundStatement();
 			_localctx.functionDefinitionRet.setCompoundStatement(((FunctionDefinitionContext)_localctx).body.compoundStatementRet);
+					
 			}
 		}
 		catch (RecognitionException re) {
@@ -575,6 +577,7 @@ public class SimpleLangParser extends Parser {
 				setState(131);
 				((ExpressionContext)_localctx).identifierToken = match(Identifier);
 				((ExpressionContext)_localctx).expressionRet =  new Identifier((((ExpressionContext)_localctx).identifierToken!=null?((ExpressionContext)_localctx).identifierToken.getText():null)); _localctx.expressionRet.setLine((((ExpressionContext)_localctx).identifierToken!=null?((ExpressionContext)_localctx).identifierToken.getLine():0));
+						
 				}
 				break;
 			case 2:
@@ -582,6 +585,7 @@ public class SimpleLangParser extends Parser {
 				setState(133);
 				((ExpressionContext)_localctx).constantToken = match(Constant);
 				((ExpressionContext)_localctx).expressionRet =  new Constant((((ExpressionContext)_localctx).constantToken!=null?((ExpressionContext)_localctx).constantToken.getText():null)); _localctx.expressionRet.setLine((((ExpressionContext)_localctx).constantToken!=null?((ExpressionContext)_localctx).constantToken.getLine():0));
+						
 				}
 				break;
 			case 3:
@@ -607,6 +611,7 @@ public class SimpleLangParser extends Parser {
 					_alt = getInterpreter().adaptivePredict(_input,6,_ctx);
 				} while ( _alt!=2 && _alt!=org.antlr.v4.runtime.atn.ATN.INVALID_ALT_NUMBER );
 				((ExpressionContext)_localctx).expressionRet =  new Identifier((((ExpressionContext)_localctx).stringLiteralSequence!=null?((ExpressionContext)_localctx).stringLiteralSequence.getText():null)); _localctx.expressionRet.notFirst();
+						
 				}
 				break;
 			case 4:
@@ -1175,8 +1180,8 @@ public class SimpleLangParser extends Parser {
 	@SuppressWarnings("CheckReturnValue")
 	public static class ArgumentExpressionListContext extends ParserRuleContext {
 		public ArgExpression argExpressionRet;
-		public ExpressionContext e;
-		public ExpressionContext e1;
+		public ExpressionContext firstExpr;
+		public ExpressionContext nextExpr;
 		public List<ExpressionContext> expression() {
 			return getRuleContexts(ExpressionContext.class);
 		}
@@ -1201,8 +1206,8 @@ public class SimpleLangParser extends Parser {
 			enterOuterAlt(_localctx, 1);
 			{
 			setState(315);
-			((ArgumentExpressionListContext)_localctx).e = expression(0);
-			((ArgumentExpressionListContext)_localctx).argExpressionRet =  new ArgExpression(((ArgumentExpressionListContext)_localctx).e.expressionRet);
+			((ArgumentExpressionListContext)_localctx).firstExpr = expression(0);
+			((ArgumentExpressionListContext)_localctx).argExpressionRet =  new ArgExpression(((ArgumentExpressionListContext)_localctx).firstExpr.expressionRet);
 			setState(323);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
@@ -1212,8 +1217,8 @@ public class SimpleLangParser extends Parser {
 				setState(317);
 				match(Comma);
 				setState(318);
-				((ArgumentExpressionListContext)_localctx).e1 = expression(0);
-				_localctx.argExpressionRet.addExpression(((ArgumentExpressionListContext)_localctx).e1.expressionRet);
+				((ArgumentExpressionListContext)_localctx).nextExpr = expression(0);
+				_localctx.argExpressionRet.addExpression(((ArgumentExpressionListContext)_localctx).nextExpr.expressionRet);
 				}
 				}
 				setState(325);
@@ -1322,10 +1327,10 @@ public class SimpleLangParser extends Parser {
 	@SuppressWarnings("CheckReturnValue")
 	public static class CastExpressionContext extends ParserRuleContext {
 		public CastExpression castExpressionRet;
-		public TypeNameContext t;
-		public CastExpressionContext c;
-		public ExpressionContext e;
-		public Token n;
+		public TypeNameContext targetType;
+		public CastExpressionContext nestedCastExpr;
+		public ExpressionContext simpleExpression;
+		public Token numericLiteral;
 		public TerminalNode LeftParen() { return getToken(SimpleLangParser.LeftParen, 0); }
 		public TerminalNode RightParen() { return getToken(SimpleLangParser.RightParen, 0); }
 		public TypeNameContext typeName() {
@@ -1354,37 +1359,38 @@ public class SimpleLangParser extends Parser {
 			case 1:
 				enterOuterAlt(_localctx, 1);
 				{
-				((CastExpressionContext)_localctx).castExpressionRet =  new CastExpression();
+				 ((CastExpressionContext)_localctx).castExpressionRet =  new CastExpression(); 
 				setState(341);
 				match(LeftParen);
 				setState(342);
-				((CastExpressionContext)_localctx).t = typeName();
-				_localctx.castExpressionRet.setTypeName(((CastExpressionContext)_localctx).t.typeNameRet);
+				((CastExpressionContext)_localctx).targetType = typeName();
+				 _localctx.castExpressionRet.setTypeName(((CastExpressionContext)_localctx).targetType.typeNameRet); 
 						
 				setState(344);
 				match(RightParen);
 				setState(345);
-				((CastExpressionContext)_localctx).c = castExpression();
-				_localctx.castExpressionRet.setCastExpression(((CastExpressionContext)_localctx).c.castExpressionRet);
+				((CastExpressionContext)_localctx).nestedCastExpr = castExpression();
+				 _localctx.castExpressionRet.setCastExpression(((CastExpressionContext)_localctx).nestedCastExpr.castExpressionRet); 
+						
 				}
 				break;
 			case 2:
 				enterOuterAlt(_localctx, 2);
 				{
-				((CastExpressionContext)_localctx).castExpressionRet =  new CastExpression();
+				 ((CastExpressionContext)_localctx).castExpressionRet =  new CastExpression(); 
 				setState(349);
-				((CastExpressionContext)_localctx).e = expression(0);
-				_localctx.castExpressionRet.setExpression(((CastExpressionContext)_localctx).e.expressionRet);
+				((CastExpressionContext)_localctx).simpleExpression = expression(0);
+				 _localctx.castExpressionRet.setExpression(((CastExpressionContext)_localctx).simpleExpression.expressionRet); 
 						
 				}
 				break;
 			case 3:
 				enterOuterAlt(_localctx, 3);
 				{
-				((CastExpressionContext)_localctx).castExpressionRet =  new CastExpression();
+				 ((CastExpressionContext)_localctx).castExpressionRet =  new CastExpression(); 
 				setState(353);
-				((CastExpressionContext)_localctx).n = match(DigitSequence);
-				_localctx.castExpressionRet.setNum((((CastExpressionContext)_localctx).n!=null?((CastExpressionContext)_localctx).n.getText():null));
+				((CastExpressionContext)_localctx).numericLiteral = match(DigitSequence);
+				 _localctx.castExpressionRet.setNum((((CastExpressionContext)_localctx).numericLiteral!=null?((CastExpressionContext)_localctx).numericLiteral.getText():null)); 
 						
 				}
 				break;
@@ -1404,7 +1410,7 @@ public class SimpleLangParser extends Parser {
 	@SuppressWarnings("CheckReturnValue")
 	public static class AssignmentOperatorContext extends ParserRuleContext {
 		public AssignmentOp assignmentOpRet;
-		public Token t;
+		public Token opToken;
 		public TerminalNode Assign() { return getToken(SimpleLangParser.Assign, 0); }
 		public TerminalNode StarAssign() { return getToken(SimpleLangParser.StarAssign, 0); }
 		public TerminalNode DivAssign() { return getToken(SimpleLangParser.DivAssign, 0); }
@@ -1433,16 +1439,17 @@ public class SimpleLangParser extends Parser {
 				enterOuterAlt(_localctx, 1);
 				{
 				setState(357);
-				((AssignmentOperatorContext)_localctx).t = match(Assign);
-				((AssignmentOperatorContext)_localctx).assignmentOpRet =  new AssignmentOp((((AssignmentOperatorContext)_localctx).t!=null?((AssignmentOperatorContext)_localctx).t.getText():null)); _localctx.assignmentOpRet.setLine((((AssignmentOperatorContext)_localctx).t!=null?((AssignmentOperatorContext)_localctx).t.getLine():0));
+				((AssignmentOperatorContext)_localctx).opToken = match(Assign);
+				 ((AssignmentOperatorContext)_localctx).assignmentOpRet =  new AssignmentOp((((AssignmentOperatorContext)_localctx).opToken!=null?((AssignmentOperatorContext)_localctx).opToken.getText():null)); _localctx.assignmentOpRet.setLine((((AssignmentOperatorContext)_localctx).opToken!=null?((AssignmentOperatorContext)_localctx).opToken.getLine():0)); 
+						
 				}
 				break;
 			case StarAssign:
 				enterOuterAlt(_localctx, 2);
 				{
 				setState(359);
-				((AssignmentOperatorContext)_localctx).t = match(StarAssign);
-				((AssignmentOperatorContext)_localctx).assignmentOpRet =  new AssignmentOp((((AssignmentOperatorContext)_localctx).t!=null?((AssignmentOperatorContext)_localctx).t.getText():null)); _localctx.assignmentOpRet.setLine((((AssignmentOperatorContext)_localctx).t!=null?((AssignmentOperatorContext)_localctx).t.getLine():0));
+				((AssignmentOperatorContext)_localctx).opToken = match(StarAssign);
+				 ((AssignmentOperatorContext)_localctx).assignmentOpRet =  new AssignmentOp((((AssignmentOperatorContext)_localctx).opToken!=null?((AssignmentOperatorContext)_localctx).opToken.getText():null)); _localctx.assignmentOpRet.setLine((((AssignmentOperatorContext)_localctx).opToken!=null?((AssignmentOperatorContext)_localctx).opToken.getLine():0)); 
 						
 				}
 				break;
@@ -1450,8 +1457,8 @@ public class SimpleLangParser extends Parser {
 				enterOuterAlt(_localctx, 3);
 				{
 				setState(361);
-				((AssignmentOperatorContext)_localctx).t = match(DivAssign);
-				((AssignmentOperatorContext)_localctx).assignmentOpRet =  new AssignmentOp((((AssignmentOperatorContext)_localctx).t!=null?((AssignmentOperatorContext)_localctx).t.getText():null)); _localctx.assignmentOpRet.setLine((((AssignmentOperatorContext)_localctx).t!=null?((AssignmentOperatorContext)_localctx).t.getLine():0));
+				((AssignmentOperatorContext)_localctx).opToken = match(DivAssign);
+				 ((AssignmentOperatorContext)_localctx).assignmentOpRet =  new AssignmentOp((((AssignmentOperatorContext)_localctx).opToken!=null?((AssignmentOperatorContext)_localctx).opToken.getText():null)); _localctx.assignmentOpRet.setLine((((AssignmentOperatorContext)_localctx).opToken!=null?((AssignmentOperatorContext)_localctx).opToken.getLine():0)); 
 						
 				}
 				break;
@@ -1459,8 +1466,8 @@ public class SimpleLangParser extends Parser {
 				enterOuterAlt(_localctx, 4);
 				{
 				setState(363);
-				((AssignmentOperatorContext)_localctx).t = match(ModAssign);
-				((AssignmentOperatorContext)_localctx).assignmentOpRet =  new AssignmentOp((((AssignmentOperatorContext)_localctx).t!=null?((AssignmentOperatorContext)_localctx).t.getText():null)); _localctx.assignmentOpRet.setLine((((AssignmentOperatorContext)_localctx).t!=null?((AssignmentOperatorContext)_localctx).t.getLine():0));
+				((AssignmentOperatorContext)_localctx).opToken = match(ModAssign);
+				 ((AssignmentOperatorContext)_localctx).assignmentOpRet =  new AssignmentOp((((AssignmentOperatorContext)_localctx).opToken!=null?((AssignmentOperatorContext)_localctx).opToken.getText():null)); _localctx.assignmentOpRet.setLine((((AssignmentOperatorContext)_localctx).opToken!=null?((AssignmentOperatorContext)_localctx).opToken.getLine():0)); 
 						
 				}
 				break;
@@ -1468,8 +1475,8 @@ public class SimpleLangParser extends Parser {
 				enterOuterAlt(_localctx, 5);
 				{
 				setState(365);
-				((AssignmentOperatorContext)_localctx).t = match(PlusAssign);
-				((AssignmentOperatorContext)_localctx).assignmentOpRet =  new AssignmentOp((((AssignmentOperatorContext)_localctx).t!=null?((AssignmentOperatorContext)_localctx).t.getText():null)); _localctx.assignmentOpRet.setLine((((AssignmentOperatorContext)_localctx).t!=null?((AssignmentOperatorContext)_localctx).t.getLine():0));
+				((AssignmentOperatorContext)_localctx).opToken = match(PlusAssign);
+				 ((AssignmentOperatorContext)_localctx).assignmentOpRet =  new AssignmentOp((((AssignmentOperatorContext)_localctx).opToken!=null?((AssignmentOperatorContext)_localctx).opToken.getText():null)); _localctx.assignmentOpRet.setLine((((AssignmentOperatorContext)_localctx).opToken!=null?((AssignmentOperatorContext)_localctx).opToken.getLine():0)); 
 						
 				}
 				break;
@@ -1477,8 +1484,8 @@ public class SimpleLangParser extends Parser {
 				enterOuterAlt(_localctx, 6);
 				{
 				setState(367);
-				((AssignmentOperatorContext)_localctx).t = match(MinusAssign);
-				((AssignmentOperatorContext)_localctx).assignmentOpRet =  new AssignmentOp((((AssignmentOperatorContext)_localctx).t!=null?((AssignmentOperatorContext)_localctx).t.getText():null)); _localctx.assignmentOpRet.setLine((((AssignmentOperatorContext)_localctx).t!=null?((AssignmentOperatorContext)_localctx).t.getLine():0));
+				((AssignmentOperatorContext)_localctx).opToken = match(MinusAssign);
+				 ((AssignmentOperatorContext)_localctx).assignmentOpRet =  new AssignmentOp((((AssignmentOperatorContext)_localctx).opToken!=null?((AssignmentOperatorContext)_localctx).opToken.getText():null)); _localctx.assignmentOpRet.setLine((((AssignmentOperatorContext)_localctx).opToken!=null?((AssignmentOperatorContext)_localctx).opToken.getLine():0)); 
 						
 				}
 				break;
@@ -1486,8 +1493,8 @@ public class SimpleLangParser extends Parser {
 				enterOuterAlt(_localctx, 7);
 				{
 				setState(369);
-				((AssignmentOperatorContext)_localctx).t = match(LeftShiftAssign);
-				((AssignmentOperatorContext)_localctx).assignmentOpRet =  new AssignmentOp((((AssignmentOperatorContext)_localctx).t!=null?((AssignmentOperatorContext)_localctx).t.getText():null)); _localctx.assignmentOpRet.setLine((((AssignmentOperatorContext)_localctx).t!=null?((AssignmentOperatorContext)_localctx).t.getLine():0));
+				((AssignmentOperatorContext)_localctx).opToken = match(LeftShiftAssign);
+				 ((AssignmentOperatorContext)_localctx).assignmentOpRet =  new AssignmentOp((((AssignmentOperatorContext)_localctx).opToken!=null?((AssignmentOperatorContext)_localctx).opToken.getText():null)); _localctx.assignmentOpRet.setLine((((AssignmentOperatorContext)_localctx).opToken!=null?((AssignmentOperatorContext)_localctx).opToken.getLine():0)); 
 						
 				}
 				break;
@@ -1495,8 +1502,8 @@ public class SimpleLangParser extends Parser {
 				enterOuterAlt(_localctx, 8);
 				{
 				setState(371);
-				((AssignmentOperatorContext)_localctx).t = match(RightShiftAssign);
-				((AssignmentOperatorContext)_localctx).assignmentOpRet =  new AssignmentOp((((AssignmentOperatorContext)_localctx).t!=null?((AssignmentOperatorContext)_localctx).t.getText():null)); _localctx.assignmentOpRet.setLine((((AssignmentOperatorContext)_localctx).t!=null?((AssignmentOperatorContext)_localctx).t.getLine():0));
+				((AssignmentOperatorContext)_localctx).opToken = match(RightShiftAssign);
+				 ((AssignmentOperatorContext)_localctx).assignmentOpRet =  new AssignmentOp((((AssignmentOperatorContext)_localctx).opToken!=null?((AssignmentOperatorContext)_localctx).opToken.getText():null)); _localctx.assignmentOpRet.setLine((((AssignmentOperatorContext)_localctx).opToken!=null?((AssignmentOperatorContext)_localctx).opToken.getLine():0)); 
 						
 				}
 				break;
@@ -1504,8 +1511,8 @@ public class SimpleLangParser extends Parser {
 				enterOuterAlt(_localctx, 9);
 				{
 				setState(373);
-				((AssignmentOperatorContext)_localctx).t = match(AndAssign);
-				((AssignmentOperatorContext)_localctx).assignmentOpRet =  new AssignmentOp((((AssignmentOperatorContext)_localctx).t!=null?((AssignmentOperatorContext)_localctx).t.getText():null)); _localctx.assignmentOpRet.setLine((((AssignmentOperatorContext)_localctx).t!=null?((AssignmentOperatorContext)_localctx).t.getLine():0));
+				((AssignmentOperatorContext)_localctx).opToken = match(AndAssign);
+				 ((AssignmentOperatorContext)_localctx).assignmentOpRet =  new AssignmentOp((((AssignmentOperatorContext)_localctx).opToken!=null?((AssignmentOperatorContext)_localctx).opToken.getText():null)); _localctx.assignmentOpRet.setLine((((AssignmentOperatorContext)_localctx).opToken!=null?((AssignmentOperatorContext)_localctx).opToken.getLine():0)); 
 						
 				}
 				break;
@@ -1513,8 +1520,8 @@ public class SimpleLangParser extends Parser {
 				enterOuterAlt(_localctx, 10);
 				{
 				setState(375);
-				((AssignmentOperatorContext)_localctx).t = match(XorAssign);
-				((AssignmentOperatorContext)_localctx).assignmentOpRet =  new AssignmentOp((((AssignmentOperatorContext)_localctx).t!=null?((AssignmentOperatorContext)_localctx).t.getText():null)); _localctx.assignmentOpRet.setLine((((AssignmentOperatorContext)_localctx).t!=null?((AssignmentOperatorContext)_localctx).t.getLine():0));
+				((AssignmentOperatorContext)_localctx).opToken = match(XorAssign);
+				 ((AssignmentOperatorContext)_localctx).assignmentOpRet =  new AssignmentOp((((AssignmentOperatorContext)_localctx).opToken!=null?((AssignmentOperatorContext)_localctx).opToken.getText():null)); _localctx.assignmentOpRet.setLine((((AssignmentOperatorContext)_localctx).opToken!=null?((AssignmentOperatorContext)_localctx).opToken.getLine():0)); 
 						
 				}
 				break;
@@ -1522,8 +1529,8 @@ public class SimpleLangParser extends Parser {
 				enterOuterAlt(_localctx, 11);
 				{
 				setState(377);
-				((AssignmentOperatorContext)_localctx).t = match(OrAssign);
-				((AssignmentOperatorContext)_localctx).assignmentOpRet =  new AssignmentOp((((AssignmentOperatorContext)_localctx).t!=null?((AssignmentOperatorContext)_localctx).t.getText():null)); _localctx.assignmentOpRet.setLine((((AssignmentOperatorContext)_localctx).t!=null?((AssignmentOperatorContext)_localctx).t.getLine():0));
+				((AssignmentOperatorContext)_localctx).opToken = match(OrAssign);
+				 ((AssignmentOperatorContext)_localctx).assignmentOpRet =  new AssignmentOp((((AssignmentOperatorContext)_localctx).opToken!=null?((AssignmentOperatorContext)_localctx).opToken.getText():null)); _localctx.assignmentOpRet.setLine((((AssignmentOperatorContext)_localctx).opToken!=null?((AssignmentOperatorContext)_localctx).opToken.getLine():0)); 
 						
 				}
 				break;
@@ -1545,8 +1552,8 @@ public class SimpleLangParser extends Parser {
 	@SuppressWarnings("CheckReturnValue")
 	public static class DeclarationContext extends ParserRuleContext {
 		public Declaration declarationRet;
-		public DeclarationSpecifiersContext d;
-		public InitDeclaratorListContext i;
+		public DeclarationSpecifiersContext specs;
+		public InitDeclaratorListContext initList;
 		public TerminalNode Semi() { return getToken(SimpleLangParser.Semi, 0); }
 		public DeclarationSpecifiersContext declarationSpecifiers() {
 			return getRuleContext(DeclarationSpecifiersContext.class,0);
@@ -1568,16 +1575,18 @@ public class SimpleLangParser extends Parser {
 			enterOuterAlt(_localctx, 1);
 			{
 			setState(381);
-			((DeclarationContext)_localctx).d = declarationSpecifiers();
-			((DeclarationContext)_localctx).declarationRet =  new Declaration(((DeclarationContext)_localctx).d.declarationSpecifiersRet);
+			((DeclarationContext)_localctx).specs = declarationSpecifiers();
+			 ((DeclarationContext)_localctx).declarationRet =  new Declaration(((DeclarationContext)_localctx).specs.declarationSpecifiersRet); 
+					
 			setState(386);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
 			if (((((_la - 23)) & ~0x3f) == 0 && ((1L << (_la - 23)) & 35184372154369L) != 0)) {
 				{
 				setState(383);
-				((DeclarationContext)_localctx).i = initDeclaratorList();
-				_localctx.declarationRet.setInitDecList(((DeclarationContext)_localctx).i.initDeclaratorListRet);
+				((DeclarationContext)_localctx).initList = initDeclaratorList();
+				 _localctx.declarationRet.setInitDecList(((DeclarationContext)_localctx).initList.initDeclaratorListRet); 
+							
 				}
 			}
 
