@@ -2079,8 +2079,8 @@ public class SimpleLangParser extends Parser {
 	@SuppressWarnings("CheckReturnValue")
 	public static class DeclaratorContext extends ParserRuleContext {
 		public Declarator declaratorRet;
-		public PointerContext p;
-		public DirectDeclaratorContext d;
+		public PointerContext pointerNode;
+		public DirectDeclaratorContext coreDeclarator;
 		public DirectDeclaratorContext directDeclarator() {
 			return getRuleContext(DirectDeclaratorContext.class,0);
 		}
@@ -2100,22 +2100,24 @@ public class SimpleLangParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			((DeclaratorContext)_localctx).declaratorRet =  new Declarator();
+			 ((DeclaratorContext)_localctx).declaratorRet =  new Declarator(); 
 			setState(469);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
 			if (_la==Star) {
 				{
 				setState(466);
-				((DeclaratorContext)_localctx).p = pointer();
-				_localctx.declaratorRet.setPointer(((DeclaratorContext)_localctx).p.pointerRet);
+				((DeclaratorContext)_localctx).pointerNode = pointer();
+				 _localctx.declaratorRet.setPointer(((DeclaratorContext)_localctx).pointerNode.pointerRet); 
 				}
 			}
 
 			setState(471);
-			((DeclaratorContext)_localctx).d = directDeclarator(0);
-			_localctx.declaratorRet.setDirectDec(((DeclaratorContext)_localctx).d.directDecRet); _localctx.declaratorRet.setLine(((DeclaratorContext)_localctx).d.directDecRet.getLine());
-					
+			((DeclaratorContext)_localctx).coreDeclarator = directDeclarator(0);
+
+			        _localctx.declaratorRet.setDirectDec(((DeclaratorContext)_localctx).coreDeclarator.directDecRet);
+			        _localctx.declaratorRet.setLine(((DeclaratorContext)_localctx).coreDeclarator.directDecRet.getLine());
+			    
 			}
 		}
 		catch (RecognitionException re) {

@@ -293,64 +293,104 @@ specifierQualifierList
 		recursiveSpecQualList = specifierQualifierList { $specifierQualifierListRet.setSpecifierQualifierList($recursiveSpecQualList.specifierQualifierListRet); 
 			}
 	)?;
-    
+
+// Rule for a declarator, which names an entity; can include an optional pointer part and a direct declarator.
 declarator
-	returns[Declarator declaratorRet]:
-	{$declaratorRet = new Declarator();} (
-		p = pointer {$declaratorRet.setPointer($p.pointerRet);}
-	)? d = directDeclarator {$declaratorRet.setDirectDec($d.directDecRet); $declaratorRet.setLine($d.directDecRet.getLine());
-		};
-
+    returns[Declarator declaratorRet]
+    :
+    { $declaratorRet = new Declarator(); }
+    (
+        pointerNode = pointer { $declaratorRet.setPointer($pointerNode.pointerRet); }
+    )?
+    coreDeclarator = directDeclarator
+    {
+        $declaratorRet.setDirectDec($coreDeclarator.directDecRet);
+        $declaratorRet.setLine($coreDeclarator.directDecRet.getLine());
+    }
+    ;
+  
+// Rule for the core part of a declarator: an identifier, a parenthesized declarator, an array, or a function.
 directDeclarator
-	returns[DirectDec directDecRet]:
-	{$directDecRet = new DirectDec();} id = Identifier {$directDecRet.setIdentifier($id.text); $directDecRet.setLine($id.line);
-		}
-	| {$directDecRet = new DirectDec();} l = LeftParen d = declarator {$directDecRet.setDeclarator($d.declaratorRet); $directDecRet.setLine($l.line);
-		} RightParen
-	| d1 = directDeclarator {$directDecRet = new DirectDec();} {$directDecRet.setDirectDec($d1.directDecRet);
-		} LeftBracket (
-		e = expression {$directDecRet.setExpression($e.expressionRet);}
-	)? RightBracket
-	| d2 = directDeclarator {$directDecRet = new DirectDec();} {$directDecRet.setDirectDec($d2.directDecRet);
-		} l = LeftParen (
-		p = parameterList {$directDecRet.setParameterList($p.parameterListRet); $directDecRet.setLine($l.line);
-			}
-		| (
-			i = identifierList {$directDecRet.setIdentifierList($i.identifierListRet);}
-		)?
-	) RightParen;
+    returns[DirectDec directDecRet]
+    :
+    { $directDecRet = new DirectDec(); }
+    identifierToken = Identifier
+    { $directDecRet.setIdentifier($identifierToken.text); $directDecRet.setLine($identifierToken.line); }
+    |
+    { $directDecRet = new DirectDec(); }
+    leftParenToken = LeftParen nestedDeclarator = declarator RightParen
+    { $directDecRet.setDeclarator($nestedDeclarator.declaratorRet); $directDecRet.setLine($leftParenToken.line); }
+    |
+    { $directDecRet = new DirectDec(); } // Array declarator
+    arrayBaseDeclarator = directDeclarator
+    { $directDecRet.setDirectDec($arrayBaseDeclarator.directDecRet); }
+    LeftBracket (arraySizeExpr = expression { $directDecRet.setExpression($arraySizeExpr.expressionRet); })? RightBracket
+    |
+    { $directDecRet = new DirectDec(); } // Function declarator
+    funcBaseDeclarator = directDeclarator
+    { $directDecRet.setDirectDec($funcBaseDeclarator.directDecRet); }
+    funcLeftParen = LeftParen
+    (
+        paramList = parameterList { $directDecRet.setParameterList($paramList.parameterListRet); $directDecRet.setLine($funcLeftParen.line); }
+        | (identList = identifierList { $directDecRet.setIdentifierList($identList.identifierListRet); })? // K&R style
+    )
+    RightParen
+    ;
 
+// Rule for a pointer declaration, like '*' or '* const'.
 pointer
-	returns[Pointer pointerRet]:
-	{$pointerRet = new Pointer();} ((Star) (Const+)?)+;
+    returns[Pointer pointerRet]
+    :
+    { $pointerRet = new Pointer(); }
+    (Star Const*)+ // One or more '*' optionally followed by 'const'
+    ;
 
+// Rule for a comma-separated list of parameter declarations.
 parameterList
-	returns[ParameterList parameterListRet]:
-	p = parameterDeclaration {$parameterListRet = new ParameterList($p.parameterDecRet);} (
-		Comma p1 = parameterDeclaration {$parameterListRet.addParameterDec($p1.parameterDecRet);}
-	)*;
+    returns[ParameterList parameterListRet]
+    :
+    firstParameter = parameterDeclaration
+    { $parameterListRet = new ParameterList($firstParameter.parameterDecRet); }
+    (
+        Comma nextParameter = parameterDeclaration
+        { $parameterListRet.addParameterDec($nextParameter.parameterDecRet); }
+    )*
+    ;
 
+
+// Rule for a single parameter declaration within a function signature.
 parameterDeclaration
-	returns[ParameterDec parameterDecRet]:
-	d = declarationSpecifiers {$parameterDecRet = new ParameterDec($d.declarationSpecifiersRet);} (
-		d2 = declarator {$parameterDecRet.setDeclarator($d2.declaratorRet);}
-		| (
-			a = abstractDeclarator {$parameterDecRet.setAbstractDec($a.abstractDecRet);}
-		)?
-	);
+    returns[ParameterDec parameterDecRet]
+    :
+    paramTypeSpecs = declarationSpecifiers
+    { $parameterDecRet = new ParameterDec($paramTypeSpecs.declarationSpecifiersRet); }
+    (
+        paramDeclarator = declarator { $parameterDecRet.setDeclarator($paramDeclarator.declaratorRet); }
+        | (paramAbstractDeclarator = abstractDeclarator { $parameterDecRet.setAbstractDec($paramAbstractDeclarator.abstractDecRet); })?
+    )
+    ;
 
+// Rule for a comma-separated list of identifiers, used in K&R C function declarations.
 identifierList
-	returns[IdentifierList identifierListRet]:
-	id = Identifier {$identifierListRet = new IdentifierList($id.text);} (
-		Comma id1 = Identifier {$identifierListRet.addIdentifier($id1.text);}
-	)*;
+    returns[IdentifierList identifierListRet]
+    :
+    firstIdentifier = Identifier { $identifierListRet = new IdentifierList($firstIdentifier.text); }
+    (
+        Comma nextIdentifier = Identifier { $identifierListRet.addIdentifier($nextIdentifier.text); }
+    )*
+    ;
 
+// Rule for a type name, typically used in casts or with sizeof operator.
 typeName
-	returns[TypeName typeNameRet]:
-	s = specifierQualifierList {$typeNameRet = new TypeName($s.specifierQualifierListRet);} (
-		a = abstractDeclarator {$typeNameRet.setAbstractDec($a.abstractDecRet);}
-	)?;
-
+    returns[TypeName typeNameRet]
+    :
+    specQuals = specifierQualifierList
+    { $typeNameRet = new TypeName($specQuals.specifierQualifierListRet); }
+    (
+        absDeclarator = abstractDeclarator { $typeNameRet.setAbstractDec($absDeclarator.abstractDecRet); }
+    )?
+    ;
+    
 abstractDeclarator
 	returns[AbstractDec abstractDecRet]:
 	{$abstractDecRet = new AbstractDec();} p = pointer {$abstractDecRet.setPointer($p.pointerRet);}
