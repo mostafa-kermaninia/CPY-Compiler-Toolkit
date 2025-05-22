@@ -279,14 +279,14 @@ public class Optimizer extends Visitor<Void> {
                 ExpressionStatement expressionStatement = (ExpressionStatement) blockItem.getStatement();
                 if (expressionStatement.getExpression() != null
                         && ((expressionStatement.getExpression() instanceof BinaryExpression
-                                && ((BinaryExpression) expressionStatement.getExpression()).getAssignmentOp() == null)
-                                ||
-                                expressionStatement.getExpression() instanceof Constant
-                                || expressionStatement.getExpression() instanceof Identifier
-                                ||
-                                expressionStatement.getExpression() instanceof ArrayIndexing
-                                || expressionStatement.getExpression() instanceof CondExpression ||
-                                expressionStatement.getExpression() instanceof CommaExpression)) {
+                        && ((BinaryExpression) expressionStatement.getExpression()).getAssignmentOp() == null)
+                        ||
+                        expressionStatement.getExpression() instanceof Constant
+                        || expressionStatement.getExpression() instanceof Identifier
+                        ||
+                        expressionStatement.getExpression() instanceof ArrayIndexing
+                        || expressionStatement.getExpression() instanceof CondExpression ||
+                        expressionStatement.getExpression() instanceof CommaExpression)) {
                     boolean temp = compoundStatement.removeBI(blockItem);
                     if (temp)
                         i--;
