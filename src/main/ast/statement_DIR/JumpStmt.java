@@ -1,12 +1,12 @@
 package main.ast.statement_DIR;
 
-import main.ast.expression_DIR.Expr;
+import main.ast.Expressionession_DIR.Expression;
 import main.visitor.IVisitor;
 
 public class JumpStmt extends Stmt {
-    private Expr returnExpr;
+    private Expression returnExpression;
 
-    public JumpStmt() { returnExpr = null; }
+    public JumpStmt() { returnExpression = null; }
 
     @Override
     public <T> T accept(IVisitor<T> visitor) {
@@ -14,11 +14,11 @@ public class JumpStmt extends Stmt {
     }
 
 
-    public Expr getCondition() {
-        return returnExpr;
+    public Expression getCondition() {
+        return returnExpression;
     }
 
-    public void setReturnExpr(Expr returnExpr) {
-        this.returnExpr = returnExpr;
+    public void setReturnExpression(Expression returnExpression) {
+        this.returnExpression = returnExpression;
     }
 }
