@@ -88,22 +88,22 @@ public class Optimizer extends Visitor<Void> {
 
     @Override
     public Void visit(UnaryOperator unaryOperator) {
-        return visitorUtils.visitUnaryOperator(unaryOperator);
+        return visitorUtils.visitUnaryOperator();
     }
 
     @Override
     public Void visit(TypeSpecifier typeSpecifier) {
-        return visitorUtils.visitTypeSpecifier(typeSpecifier);
+        return visitorUtils.visitTypeSpecifier();
     }
 
     @Override
     public Void visit(AssignmentOp assignmentOp) {
-        return visitorUtils.visitAssignmentOp(assignmentOp);
+        return visitorUtils.visitAssignmentOp();
     }
 
     @Override
     public Void visit(Pointer pointer) {
-        return visitorUtils.visitPointer(pointer);
+        return visitorUtils.visitPointer();
     }
 
     @Override
@@ -133,7 +133,7 @@ public class Optimizer extends Visitor<Void> {
 
     @Override
     public Void visit(IdentifierList identifierList) {
-        return visitorUtils.visitIdentifierList(identifierList);
+        return visitorUtils.visitIdentifierList();
     }
 
     @Override
@@ -248,12 +248,12 @@ public class Optimizer extends Visitor<Void> {
 
     @Override
     public Void visit(Identifier identifier) {
-        return visitorUtils.visitIdentifier(identifier);
+        return visitorUtils.visitIdentifier();
     }
 
     @Override
     public Void visit(Constant constant) {
-        return visitorUtils.visitConstant(constant);
+        return visitorUtils.visitConstant();
     }
 
     @Override

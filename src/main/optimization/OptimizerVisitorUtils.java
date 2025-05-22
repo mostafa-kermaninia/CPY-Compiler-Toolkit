@@ -34,8 +34,8 @@ public class OptimizerVisitorUtils {
                         .getDirectDec().getDirectDec().getIdentifier();
                 if (funcName.equals("main")) {
                     SymbolTable symbolTable = externalDeclaration.getFunctionDefinition().getSymbolTable();
-                    parent.symbolTableMain.push(symbolTable);
-                    symbolTable = parent.symbolTableMain.top;
+                    SymbolTable.push(symbolTable);
+                    symbolTable = SymbolTable.top;
                     while (symbolTable != null) {
                         for (SymbolTableItem si : symbolTable.items.values()) {
                             if (si instanceof FuncDecSymbolTableItem && !si.isUsed()) {
@@ -45,7 +45,7 @@ public class OptimizerVisitorUtils {
                         }
                         symbolTable = symbolTable.pre;
                     }
-                    parent.symbolTableMain.pop();
+                    SymbolTable.pop();
                 }
             }
         }
@@ -65,7 +65,7 @@ public class OptimizerVisitorUtils {
     }
 
     public Void visitFunctionDefinition(FunctionDefinition functionDefinition) {
-        parent.symbolTableMain.push(functionDefinition.getSymbolTable());
+        SymbolTable.push(functionDefinition.getSymbolTable());
         if (functionDefinition.getDecSpecifiers() != null) {
             functionDefinition.getDecSpecifiers().accept(parent);
         }
@@ -81,7 +81,7 @@ public class OptimizerVisitorUtils {
         } else {
             functionDefinition.setNumArgs(plist.getParameterDecs().size());
         }
-        parent.symbolTableMain.pop();
+        SymbolTable.pop();
         return null;
     }
 
@@ -159,27 +159,27 @@ public class OptimizerVisitorUtils {
         return null;
     }
 
-    public Void visitUnaryOperator(UnaryOperator unaryOperator) {
+    public Void visitUnaryOperator() {
         return null;
     }
 
-    public Void visitTypeSpecifier(TypeSpecifier typeSpecifier) {
+    public Void visitTypeSpecifier() {
         return null;
     }
 
-    public Void visitAssignmentOp(AssignmentOp assignmentOp) {
+    public Void visitAssignmentOp() {
         return null;
     }
 
-    public Void visitPointer(Pointer pointer) {
+    public Void visitPointer() {
         return null;
     }
 
     public Void visitParameterList(ParameterList parameterList) {
-        for (SymbolTableItem si : parent.symbolTableMain.top.items.values()) {
+        for (SymbolTableItem si : SymbolTable.top.items.values()) {
             if (si instanceof VarDecSymbolTableItem && !si.isUsed()) {
                 parent.changed = parent.changed
-                        | parameterList.removeParamDec((TypeSpecifier) ((VarDecSymbolTableItem) si).getVarDec());
+                        | parameterList.removeParamDec(((VarDecSymbolTableItem) si).getVarDec());
             }
         }
         return null;
@@ -233,7 +233,7 @@ public class OptimizerVisitorUtils {
         return null;
     }
 
-    public Void visitIdentifierList(IdentifierList identifierList) {
+    public Void visitIdentifierList() {
         return null;
     }
 
@@ -313,8 +313,7 @@ public class OptimizerVisitorUtils {
                     && ((SelectionStatement) blockItem.getStatement()).allReturn())) {
                 parent.changed = parent.changed | compoundStatement.removeNextBIs(blockItem);
             }
-            if (blockItem.getStatement() != null && blockItem.getStatement() instanceof ExpressionStatement) {
-                ExpressionStatement expressionStatement = (ExpressionStatement) blockItem.getStatement();
+            if (blockItem.getStatement() != null && blockItem.getStatement() instanceof ExpressionStatement expressionStatement) {
                 if (expressionStatement.getExpression() != null
                         && ((expressionStatement.getExpression() instanceof BinaryExpression
                         && ((BinaryExpression) expressionStatement.getExpression()).getAssignmentOp() == null)
@@ -331,7 +330,7 @@ public class OptimizerVisitorUtils {
                 }
             }
             if (blockItem.getDeclaration() != null) {
-                for (SymbolTableItem si : parent.symbolTableMain.top.items.values()) {
+                for (SymbolTableItem si : SymbolTable.top.items.values()) {
                     if (si instanceof VarDecSymbolTableItem && !si.isUsed()) {
                         if (blockItem.getDeclaration().getDeclarationSpecifiers().getDeclarationSpecifiers()
                                 .get(blockItem.getDeclaration().getDeclarationSpecifiers()
@@ -430,7 +429,7 @@ public class OptimizerVisitorUtils {
 
     public Void visitFuncCall(FuncCall funcCall) {
         String funcName = ((Identifier) funcCall.getExpression()).getIdentifier();
-        int line = ((Identifier) funcCall.getExpression()).getLine();
+        int line = funcCall.getExpression().getLine();
         FuncDecSymbolTableItem funcDec = null;
         if (funcName.equals("scanf") || funcName.equals("printf")) {
             // do nothing here
@@ -441,7 +440,9 @@ public class OptimizerVisitorUtils {
             } catch (ItemNotFoundException e) {
                 System.out.println("Line:" + line + "-> " + funcName + " not declared");
             }
-            while (funcCall.getNumArgs() != funcDec.getFuncDec().getNumArgs()) {
+            while (true) {
+                assert funcDec != null;
+                if (funcCall.getNumArgs() == funcDec.getFuncDec().getNumArgs()) break;
                 funcCall.removeArg();
                 parent.changed = true;
             }
@@ -496,11 +497,11 @@ public class OptimizerVisitorUtils {
         return null;
     }
 
-    public Void visitIdentifier(Identifier identifier) {
+    public Void visitIdentifier() {
         return null;
     }
 
-    public Void visitConstant(Constant constant) {
+    public Void visitConstant() {
         return null;
     }
 
