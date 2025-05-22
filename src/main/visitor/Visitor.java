@@ -10,14 +10,6 @@ import main.ast.declaration_DIR.ForDec;
 import main.ast.expression_DIR.ForExpression;
 import main.ast.statement_DIR.*;
 import main.ast.expression_DIR.*;
-/*GOALs:
-*   1. print out scope changes each time a new scope starts
-*   2. print the identifier if it is initialized
-*   3. print the identifier if it is used
-*   4. print out the name of the function when it is defined
-*   5. print out the name of the function when it is used
-*
-* */
 
 public abstract class Visitor<T> implements IVisitor<T> {
     @Override
@@ -65,7 +57,6 @@ public abstract class Visitor<T> implements IVisitor<T> {
 
     public T visit(ForExpression forExpression) { return null; }
     public T visit(JumpStatement jumpStmt) { return null; }
-    // ta inja male mane
 
     public T visit(FunctionCall functionCall) { return null; }
     public T visit(UnaryExpression unaryExpr) { return null; }
@@ -79,9 +70,4 @@ public abstract class Visitor<T> implements IVisitor<T> {
     public T visit(Constant constant) { return null; }
     public T visit(TypeInitExpression tiExpr) { return null; }
     public T visit(PrefixExpression prefixExpr) { return null; }
-
-
-
-
-
 }

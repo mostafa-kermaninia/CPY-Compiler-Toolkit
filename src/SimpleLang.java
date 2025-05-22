@@ -43,8 +43,8 @@ public class SimpleLang {
                 OptimizedCode.visit(program);
                 needChange = OptimizedCode.changed;
             }
-            TestVisitor my_visitor = new TestVisitor();
-            my_visitor.visit(program);
+            TestVisitor visitor = new TestVisitor();
+            visitor.visit(program);
         }
     }
 }

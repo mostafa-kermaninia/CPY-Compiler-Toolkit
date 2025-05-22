@@ -48,8 +48,9 @@ public class TestVisitor extends Visitor<Void>{
     public Void visit(FunctionDefinition functionDefinition) {
         System.out.print("Line ");
         System.out.print(functionDefinition.getDeclarator().getDirectDec().getDirectDec().getLine());
-        System.out.print(": Statement function " + functionDefinition.getDeclarator().getDirectDec().getDirectDec().getIdentifier() + " = ");
-        System.out.println(functionDefinition.getCompoundStatement().getBlockItems().size());
+        System.out.print(": Stmt function " + functionDefinition.getDeclarator().getDirectDec().getDirectDec().getIdentifier() + " = ");
+        System.out.print(functionDefinition.getCompoundStatement().getBlockItems().size());
+        System.out.println(" " + functionDefinition.getNumArgs());
         if (functionDefinition.getDecSpecifiers() != null)
             functionDefinition.getDecSpecifiers().accept(this);
         functionDefinition.getDeclarator().accept(this);
@@ -144,8 +145,6 @@ public class TestVisitor extends Visitor<Void>{
     }
 
     public Void visit(ParameterList parameterList) {
-        for (ParameterDec parameterDec : parameterList.getParameterDecs())
-            parameterDec.accept(this);
         return null;
     }
 
@@ -272,7 +271,7 @@ public class TestVisitor extends Visitor<Void>{
         selectionStatement.getExpression().accept(this);
         System.out.print("Line ");
         System.out.print(selectionStatement.getLine());
-        System.out.print(": Statement selection = ");
+        System.out.print(": Stmt selection = ");
         if (selectionStatement.getMainStatement() instanceof CompoundStatement) {
             CompoundStatement compoundStatement = (CompoundStatement) selectionStatement.getMainStatement();
             System.out.println(compoundStatement.getBlockItems().size());
@@ -285,14 +284,14 @@ public class TestVisitor extends Visitor<Void>{
             if (compoundStatement.getBlockItems().size() > 0) {
                 System.out.print("Line ");
                 System.out.print(selectionStatement.getElseLine());
-                System.out.print(": Statement selection = ");
+                System.out.print(": Stmt selection = ");
                 System.out.println(compoundStatement.getBlockItems().size());
             }
         }
         else if (selectionStatement.getElseStatement() != null && !(selectionStatement.getElseStatement() instanceof SelectionStatement)) {
             System.out.print("Line ");
             System.out.print(selectionStatement.getElseLine());
-            System.out.print(": Statement selection = ");
+            System.out.print(": Stmt selection = ");
             System.out.println(0);
         }
         if (selectionStatement.getElseStatement() != null)
@@ -306,7 +305,7 @@ public class TestVisitor extends Visitor<Void>{
             iterStatement.getExpression().accept(this);
         System.out.print("Line ");
         System.out.print(iterStatement.getLine());
-        System.out.print(": Statement " + iterStatement.getType() + " = ");
+        System.out.print(": Stmt " + iterStatement.getType() + " = ");
         if (iterStatement.getStatement() instanceof CompoundStatement) {
             CompoundStatement compoundStatement = (CompoundStatement) iterStatement.getStatement();
             System.out.println(compoundStatement.getBlockItems().size());
@@ -354,12 +353,6 @@ public class TestVisitor extends Visitor<Void>{
     }
 
     public Void visit(UnaryExpression unaryExpression) {
-        if (unaryExpression.getFirst()) {
-            System.out.print("Line ");
-            System.out.print(unaryExpression.getLine());
-            System.out.print(": Expression ");
-            System.out.println(unaryExpression.getOperation());
-        }
         unaryExpression.getExpression().accept(this);
         return null;
     }
@@ -371,15 +364,6 @@ public class TestVisitor extends Visitor<Void>{
     }
 
     public Void visit(BinaryExpression binaryExpression) {
-        if (binaryExpression.getFirst()){
-            System.out.print("Line ");
-            System.out.print(binaryExpression.getLine());
-            System.out.print(": Expression ");
-            if (binaryExpression.getAssignmentOp() != null)
-                System.out.println(binaryExpression.getAssignmentOp().getOpType());
-            else
-                System.out.println(binaryExpression.getOperator());
-        }
         binaryExpression.getExpression1().accept(this);
         binaryExpression.getExpression2().accept(this);
         if (binaryExpression.getAssignmentOp() != null)
@@ -388,12 +372,6 @@ public class TestVisitor extends Visitor<Void>{
     }
 
     public Void visit(CondExpression condExpression) {
-        if (condExpression.getFirst()){
-            System.out.print("Line ");
-            System.out.print(condExpression.getLine());
-            System.out.print(": Expression ");
-            System.out.println("?");
-        }
         condExpression.getExpression1().accept(this);
         condExpression.getExpression2().accept(this);
         condExpression.getExpression3().accept(this);
@@ -401,14 +379,6 @@ public class TestVisitor extends Visitor<Void>{
     }
 
     public Void visit(CommaExpression commaExpression) {
-        if (commaExpression.getFirst()){
-            if (commaExpression.getLine() != 0) {
-                System.out.print("Line ");
-                System.out.print(commaExpression.getLine());
-                System.out.print(": Expression ");
-                System.out.println(",");
-            }
-        }
         for (Expression expression : commaExpression.getExpressions())
             if (expression != null)
                 expression.accept(this);
@@ -422,22 +392,10 @@ public class TestVisitor extends Visitor<Void>{
     }
 
     public Void visit(Identifier identifier) {
-        if (identifier.getFirst()) {
-            System.out.print("Line ");
-            System.out.print(identifier.getLine());
-            System.out.print(": Expression ");
-            System.out.println(identifier.getIdentifier());
-        }
         return null;
     }
 
     public Void visit(Constant constant) {
-        if (constant.getFirst()) {
-            System.out.print("Line ");
-            System.out.print(constant.getLine());
-            System.out.print(": Expression ");
-            System.out.println(constant.getConstant());
-        }
         return null;
     }
 

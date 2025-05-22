@@ -118,7 +118,7 @@ jobs:
         setup-command: ''
         command: javac -cp utilities/antlr-4.13.1-complete.jar -d out $(find src gen
           -name "*.java") && java -cp out:utilities/antlr-4.13.1-complete.jar SimpleLang
-          "tests/Optimization/6-Main Access.cpy" | sort -t':' -k1.6n -k2
+          "tests/Optimization/6-MainAccess.cpy" | sort -t':' -k1.6n -k2
         input: ''
         expected-output: |-
           Line 1: Stmt function startEngine = 1 0
