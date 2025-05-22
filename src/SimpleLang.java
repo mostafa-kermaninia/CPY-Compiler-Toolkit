@@ -27,13 +27,12 @@ public class SimpleLang {
         NameAnalyzer nameAnalyzer = new NameAnalyzer();
         nameAnalyzer.visit(program);
 
-        boolean needChange = true;
         if (nameAnalyzer.noError) {
-            while(needChange) {
+            while(true) {
                 Optimizer finalOptimizedCode = new Optimizer(nameAnalyzer.symbolTableMain);
                 finalOptimizedCode.visit(program);
                 nameAnalyzer.visit(program);
-                needChange = finalOptimizedCode.hasChanged();
+                if(!finalOptimizedCode.hasChanged()){break;}
             }
             TestVisitor my_visitor = new TestVisitor();
             my_visitor.visit(program);
