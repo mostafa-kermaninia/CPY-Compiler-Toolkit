@@ -13,17 +13,19 @@ jobs:
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
-    - name: 'Vuln: Uninitialized Variable 1'
-      id: vuln-uninitialized-variable-1
+    - name: 'Type: Argument Mismatch 1'
+      id: type-argument-mismatch-1
       uses: classroom-resources/autograding-io-grader@v1
       with:
-        test-name: 'Vuln: Uninitialized Variable 1'
+        test-name: 'Type: Argument Mismatch 1'
         setup-command: ''
         command: javac -cp utilities/antlr-4.13.1-complete.jar -d out $(find src gen
           -name "*.java") && java -cp out:utilities/antlr-4.13.1-complete.jar SimpleLang
-          "tests/vuln/UninitializedVariable-1.cpy" | sort -t':' -k1.6n -k2
+          "tests/type/ArgumentMismatch-1.cpy" | sort -t':' -k1.6n -k2
         input: ''
-        expected-output: Line:3 -> uninitialized variable used
+        expected-output: |-
+          Line:7 -> argument type mismatch
+          Line:14 -> argument type mismatch
         comparison-method: contains
         timeout: 10
         max-score: 1
@@ -133,10 +135,7 @@ jobs:
         setup-command: ''
         command: javac -cp utilities/antlr-4.13.1-complete.jar -d out $(find src gen
           -name "*.java") && java -cp out:utilities/antlr-4.13.1-complete.jar SimpleLang
-          "tests/vuln/javac -cp utilities/antlr-4.13.1-complete.jar -d out $(find
-          src gen -name "*.java") && java -cp out:utilities/antlr-4.13.1-complete.jar
-          SimpleLang "tests/vuln/UninitializedVariable-1.cpy" | sort -t':' -k1.6n
-          -k2" | sort -t':' -k1.6n -k2
+          "tests/vuln/UninitializedVariable-1.cpy" | sort -t':' -k1.6n -k2
         input: ''
         expected-output: Line:3 -> uninitialized variable used
         comparison-method: contains
@@ -150,10 +149,7 @@ jobs:
         setup-command: ''
         command: javac -cp utilities/antlr-4.13.1-complete.jar -d out $(find src gen
           -name "*.java") && java -cp out:utilities/antlr-4.13.1-complete.jar SimpleLang
-          "tests/vuln/javac -cp utilities/antlr-4.13.1-complete.jar -d out $(find
-          src gen -name "*.java") && java -cp out:utilities/antlr-4.13.1-complete.jar
-          SimpleLang "tests/vuln/UninitializedVariable-2.cpy" | sort -t':' -k1.6n
-          -k2" | sort -t':' -k1.6n -k2
+          "tests/vuln/UninitializedVariable-2.cpy" | sort -t':' -k1.6n -k2
         input: ''
         expected-output: Line:3 -> uninitialized variable used
         comparison-method: contains
@@ -167,14 +163,21 @@ jobs:
         setup-command: ''
         command: javac -cp utilities/antlr-4.13.1-complete.jar -d out $(find src gen
           -name "*.java") && java -cp out:utilities/antlr-4.13.1-complete.jar SimpleLang
-          "tests/vuln/javac -cp utilities/antlr-4.13.1-complete.jar -d out $(find
-          src gen -name "*.java") && java -cp out:utilities/antlr-4.13.1-complete.jar
-          SimpleLang "tests/vuln/javac -cp utilities/antlr-4.13.1-complete.jar -d
-          out $(find src gen -name "*.java") && java -cp out:utilities/antlr-4.13.1-complete.jar
-          SimpleLang "tests/vuln/javac -cp utilities/antlr-4.13.1-complete.jar -d
-          out $(find src gen -name "*.java") && java -cp out:utilities/antlr-4.13.1-complete.jar
-          SimpleLang "tests/vuln/UserControlledMalloc-1.cpy" | sort -t':' -k1.6n -k2"
-          | sort -t':' -k1.6n -k2" | sort -t':' -k1.6n -k2" | sort -t':' -k1.6n -k2
+          "tests/vuln/UserControlledMalloc-1.cpy" | sort -t':' -k1.6n -k2
+        input: ''
+        expected-output: Line:4 -> user-controlled value used in malloc
+        comparison-method: contains
+        timeout: 10
+        max-score: 1
+    - name: 'Vuln: User Controlled Malloc 2'
+      id: vuln-user-controlled-malloc-2
+      uses: classroom-resources/autograding-io-grader@v1
+      with:
+        test-name: 'Vuln: User Controlled Malloc 2'
+        setup-command: ''
+        command: javac -cp utilities/antlr-4.13.1-complete.jar -d out $(find src gen
+          -name "*.java") && java -cp out:utilities/antlr-4.13.1-complete.jar SimpleLang
+          "tests/vuln/UserControlledMalloc-2.cpy" | sort -t':' -k1.6n -k2
         input: ''
         expected-output: Line:4 -> user-controlled value used in malloc
         comparison-method: contains
@@ -183,7 +186,7 @@ jobs:
     - name: Autograding Reporter
       uses: classroom-resources/autograding-grading-reporter@v1
       env:
-        VULN-UNINITIALIZED-VARIABLE-1_RESULTS: "${{steps.vuln-uninitialized-variable-1.outputs.result}}"
+        TYPE-ARGUMENT-MISMATCH-1_RESULTS: "${{steps.type-argument-mismatch-1.outputs.result}}"
         TYPE-ARGUMENT-MISMATCH-2_RESULTS: "${{steps.type-argument-mismatch-2.outputs.result}}"
         TYPE-EXPRESSION-NOT-MATCHING-TYPES-1_RESULTS: "${{steps.type-expression-not-matching-types-1.outputs.result}}"
         TYPE-EXPRESSION-NOT-MATCHING-TYPES-2_RESULTS: "${{steps.type-expression-not-matching-types-2.outputs.result}}"
@@ -191,7 +194,9 @@ jobs:
         TYPE-UNMATCHED-RETURN-TYPE-2_RESULTS: "${{steps.type-unmatched-return-type-2.outputs.result}}"
         VULN-NOT-DEALLOCATING-POINTER-1_RESULTS: "${{steps.vuln-not-deallocating-pointer-1.outputs.result}}"
         VULN-NOT-DEALLOCATING-POINTER-2_RESULTS: "${{steps.vuln-not-deallocating-pointer-2.outputs.result}}"
+        VULN-UNINITIALIZED-VARIABLE-1_RESULTS: "${{steps.vuln-uninitialized-variable-1.outputs.result}}"
         VULN-UNINITIALIZED-VARIABLE-2_RESULTS: "${{steps.vuln-uninitialized-variable-2.outputs.result}}"
         VULN-USER-CONTROLLED-MALLOC-1_RESULTS: "${{steps.vuln-user-controlled-malloc-1.outputs.result}}"
+        VULN-USER-CONTROLLED-MALLOC-2_RESULTS: "${{steps.vuln-user-controlled-malloc-2.outputs.result}}"
       with:
-        runners: vuln-uninitialized-variable-1,type-argument-mismatch-2,type-expression-not-matching-types-1,type-expression-not-matching-types-2,type-unmatched-return-type-1,type-unmatched-return-type-2,vuln-not-deallocating-pointer-1,vuln-not-deallocating-pointer-2,vuln-uninitialized-variable-1,vuln-uninitialized-variable-2,vuln-user-controlled-malloc-1
+        runners: type-argument-mismatch-1,type-argument-mismatch-2,type-expression-not-matching-types-1,type-expression-not-matching-types-2,type-unmatched-return-type-1,type-unmatched-return-type-2,vuln-not-deallocating-pointer-1,vuln-not-deallocating-pointer-2,vuln-uninitialized-variable-1,vuln-uninitialized-variable-2,vuln-user-controlled-malloc-1,vuln-user-controlled-malloc-2
