@@ -1,21 +1,22 @@
-package main.ast.CPY_DIR;
+package main.convertor;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.regex.Pattern;
 
-public class CPYtoC {
+public class Convertor {
     private static final Pattern FUNCTION_PATTERN = Pattern.compile("^(\\w+\\s+)?\\w+\\s*\\(.*\\)\\s*:$");
     private static final Pattern CONTROL_FLOW_PATTERN = Pattern.compile("^(if|else if|while|for)\\s*\\(.*\\)\\s*:$");
     private static final Pattern ELSE_PATTERN = Pattern.compile("^else\\s*:$");
     private static final Pattern VAR_DECL_PATTERN = Pattern.compile("^\\w+\\s+\\w+\\s*(=\\s*.+)?$");
     private static final Pattern COMMENT_PATTERN = Pattern.compile("^//.*");
-    public String finalCcode;
+    public String converted;
 
-    public CPYtoC(String inputPath) throws IOException {
+    public Convertor(String inputPath) throws IOException {
         String input = Files.readString(Paths.get(inputPath));
-        finalCcode = convertSimpleLangToC(input);
+        converted = convertSimpleLangToC(input);
+//        System.out.println(converted);
     }
 
     private static String convertSimpleLangToC(String input) {
@@ -135,6 +136,7 @@ public class CPYtoC {
                     indentLevel--;
                 }
                 indentation = "    ".repeat(indentLevel);
+
 
                 if (totalBraces > 0) {
                     result.append(indentation).append("}").append("\n");
