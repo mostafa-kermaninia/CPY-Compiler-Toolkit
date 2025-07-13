@@ -1,5 +1,5 @@
-import main.ast.Program;
-import main.convertor.Convertor;
+import main.ast.baseNodes_DIR.Program;
+import main.ast.CPY_DIR.CPYtoC;
 import main.grammar.SimpleLangLexer;
 import main.grammar.SimpleLangParser;
 import main.visitor.*;
@@ -11,9 +11,8 @@ import java.io.IOException;
 
 public class SimpleLang {
     public static void main(String[] args) throws IOException {
-        Convertor convertor = new Convertor(args[0]);
-
-        CharStream reader = CharStreams.fromString(convertor.converted);
+        CPYtoC CPYtoC = new CPYtoC(args[0]);
+        CharStream reader = CharStreams.fromString(CPYtoC.converted);
         SimpleLangLexer simpleLangLexer = new SimpleLangLexer(reader);
         CommonTokenStream tokens = new CommonTokenStream(simpleLangLexer);
         SimpleLangParser flParser = new SimpleLangParser(tokens);

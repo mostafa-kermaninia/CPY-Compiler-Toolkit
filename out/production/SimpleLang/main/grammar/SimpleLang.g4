@@ -2,11 +2,12 @@ grammar SimpleLang;
 
 
 @header{
-    import main.ast.nodes.*;
-    import main.ast.nodes.Stmt.*;
-    import main.ast.nodes.expr.*;
-    import main.ast.nodes.ExternalDeclaration.*;
-    import main.ast.nodes.For.*;
+import main.ast.baseNodes_DIR.*;
+import main.ast.declaration_DIR.*;
+import main.ast.expression_DIR.*;
+import main.ast.literal_DIR.*;
+import main.ast.mainNodes_DIR.*;
+import main.ast.statement_DIR.*;
 }
 
 

@@ -1,31 +1,24 @@
 package main.visitor;
 
-import main.ast.*;
-import main.ast.ExternalDeclaration.Declaration;
-import main.ast.ExternalDeclaration.ExternalDeclaration;
-import main.ast.ExternalDeclaration.FunctionDefinition;
-import main.ast.For.ForCondition;
-import main.ast.For.ForDec;
-import main.ast.For.ForExpr;
-import main.ast.Stmt.*;
-import main.ast.expr.*;
+import main.ast.baseNodes_DIR.*;
+import main.ast.baseNodes_DIR.TranslationUnit;
+import main.ast.declaration_DIR.*;
+import main.ast.expression_DIR.*;
+import main.ast.expression_DIR.CastExpr;
+import main.ast.expression_DIR.IdentifierList;
+import main.ast.literal_DIR.*;
+import main.ast.mainNodes_DIR.*;
+import main.ast.mainNodes_DIR.Pointer;
+import main.ast.statement_DIR.Initializer;
+import main.ast.statement_DIR.*;
+import main.ast.statement_DIR.ParameterList;
 import main.symbolTable.SymbolTable;
 import main.symbolTable.exceptions.ItemNotFoundException;
 import main.symbolTable.item.FuncDecSymbolTableItem;
 import main.symbolTable.item.VarDecSymbolTableItem;
+import main.utils.ExpressionTypeEvaluator;
 
 import java.util.ArrayList;
-
-
-
-/*GOALs:
- *   1. print out scope changes each time a new scope starts
- *   2. print the identifier if it is initialized
- *   3. print the identifier if it is used
- *   4. print out the name of the function when it is defined
- *   5. print out the name of the function when it is used
- *
- * */
 
 
 public class TypeChecker extends Visitor<Void>{
