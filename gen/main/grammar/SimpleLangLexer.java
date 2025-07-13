@@ -1,21 +1,11 @@
 // Generated from F:/university/TA/plc/S04/5_type_check/miniProject-type_check/src/main/grammar/SimpleLang.g4 by ANTLR 4.13.2
 package main.grammar;
 
-    import main.ast.nodes.*;
-    import main.ast.nodes.declaration.*;
-    import main.ast.nodes.Stmt.*;
-    import main.ast.nodes.expr.*;
-    import main.ast.nodes.expr.primitives.*;
-    import main.ast.nodes.expr.operator.*;
-
-import org.antlr.v4.runtime.Lexer;
+    import org.antlr.v4.runtime.Lexer;
 import org.antlr.v4.runtime.CharStream;
-import org.antlr.v4.runtime.Token;
-import org.antlr.v4.runtime.TokenStream;
-import org.antlr.v4.runtime.*;
+    import org.antlr.v4.runtime.*;
 import org.antlr.v4.runtime.atn.*;
 import org.antlr.v4.runtime.dfa.DFA;
-import org.antlr.v4.runtime.misc.*;
 
 @SuppressWarnings({"all", "warnings", "unchecked", "unused", "cast", "CheckReturnValue", "this-escape"})
 public class SimpleLangLexer extends Lexer {

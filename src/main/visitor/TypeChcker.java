@@ -1,7 +1,7 @@
 package main.visitor;
 
-import main.ast.nodes.Program;
-import main.ast.nodes.Stmt.*;
+import main.ast.baseNodes_DIR.Program;
+import main.ast.Stmt.Stmt;
 import main.ast.nodes.declaration.FuncDec;
 import main.ast.nodes.declaration.Main;
 import main.symbolTable.SymbolTable;

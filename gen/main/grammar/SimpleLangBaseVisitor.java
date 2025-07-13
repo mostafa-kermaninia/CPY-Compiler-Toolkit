@@ -1,14 +1,7 @@
 // Generated from F:/university/TA/plc/S04/5_type_check/miniProject-type_check/src/main/grammar/SimpleLang.g4 by ANTLR 4.13.2
 package main.grammar;
 
-    import main.ast.nodes.*;
-    import main.ast.nodes.declaration.*;
-    import main.ast.nodes.Stmt.*;
-    import main.ast.nodes.expr.*;
-    import main.ast.nodes.expr.primitives.*;
-    import main.ast.nodes.expr.operator.*;
-
-import org.antlr.v4.runtime.tree.AbstractParseTreeVisitor;
+    import org.antlr.v4.runtime.tree.AbstractParseTreeVisitor;
 
 /**
  * This class provides an empty implementation of {@link SimpleLangVisitor},

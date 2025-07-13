@@ -1,4 +1,4 @@
-import main.ast.nodes.Program;
+import main.ast.baseNodes_DIR.Program;
 import main.grammar.SimpleLangLexer;
 import main.grammar.SimpleLangParser;
 import main.visitor.*;

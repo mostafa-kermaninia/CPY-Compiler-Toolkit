@@ -1,9 +1,11 @@
 package main.visitor;
 
 
-import main.ast.nodes.expr.*;
+import main.ast.expr.BinaryExpr;
+import main.ast.expr.Expr;
+import main.ast.expr.Identifier;
+import main.ast.expr.UnaryExpr;
 import main.ast.nodes.expr.operator.BinaryOperator;
-import main.ast.nodes.expr.primitives.*;
 import main.symbolTable.exceptions.ItemNotFoundException;
 import main.symbolTable.item.FuncDecSymbolTableItem;
 import main.symbolTable.item.VarDecSymbolTableItem;

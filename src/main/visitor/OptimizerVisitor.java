@@ -1,12 +1,13 @@
 
 package main.visitor;
 
-import main.ast.nodes.Program;
-import main.ast.nodes.Stmt.*;
-        import main.ast.nodes.declaration.FuncDec;
+import main.ast.baseNodes_DIR.Program;
+import main.ast.Stmt.Stmt;
+import main.ast.expr.BinaryExpr;
+import main.ast.expr.Identifier;
+import main.ast.expr.UnaryExpr;
+import main.ast.nodes.declaration.FuncDec;
 import main.ast.nodes.declaration.Main;
-import main.ast.nodes.expr.*;
-import main.ast.nodes.expr.primitives.*;
 
 import main.optimizerNodes.*;
 

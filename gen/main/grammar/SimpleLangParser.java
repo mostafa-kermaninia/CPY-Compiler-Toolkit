@@ -1,21 +1,19 @@
 // Generated from F:/university/TA/plc/S04/5_type_check/miniProject-type_check/src/main/grammar/SimpleLang.g4 by ANTLR 4.13.2
 package main.grammar;
 
-    import main.ast.nodes.*;
-    import main.ast.nodes.declaration.*;
-    import main.ast.nodes.Stmt.*;
-    import main.ast.nodes.expr.*;
-    import main.ast.nodes.expr.primitives.*;
-    import main.ast.nodes.expr.operator.*;
+    import main.ast.baseNodes_DIR.Program;
+    import main.ast.Stmt.Stmt;
+    import main.ast.UnaryOperator;
+    import main.ast.expr.BinaryExpr;
+    import main.ast.expr.Expr;
+    import main.ast.expr.Identifier;
+    import main.ast.expr.UnaryExpr;
 
-import org.antlr.v4.runtime.atn.*;
+    import org.antlr.v4.runtime.atn.*;
 import org.antlr.v4.runtime.dfa.DFA;
 import org.antlr.v4.runtime.*;
-import org.antlr.v4.runtime.misc.*;
-import org.antlr.v4.runtime.tree.*;
+    import org.antlr.v4.runtime.tree.*;
 import java.util.List;
-import java.util.Iterator;
-import java.util.ArrayList;
 
 @SuppressWarnings({"all", "warnings", "unchecked", "unused", "cast", "CheckReturnValue", "this-escape"})
 public class SimpleLangParser extends Parser {
@@ -936,7 +934,7 @@ public class SimpleLangParser extends Parser {
 							consume();
 						}
 
-						                      UnaryOperator  op = ((((ExprContext)_localctx).op1!=null?((ExprContext)_localctx).op1.getText():null).equals("--")) ? UnaryOperator.POST_DEC :  UnaryOperator.POST_INC;
+						                      UnaryOperator op = ((((ExprContext)_localctx).op1!=null?((ExprContext)_localctx).op1.getText():null).equals("--")) ? UnaryOperator.POST_DEC :  UnaryOperator.POST_INC;
 						                      ((ExprContext)_localctx).exprRet =  new UnaryExpr(((ExprContext)_localctx).e1.exprRet, op);
 						                      _localctx.exprRet.setLine((((ExprContext)_localctx).op1!=null?((ExprContext)_localctx).op1.getLine():0));
 						                  
