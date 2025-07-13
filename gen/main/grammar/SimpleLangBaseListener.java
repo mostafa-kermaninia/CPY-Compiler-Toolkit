@@ -1,6 +1,12 @@
 // Generated from D:/GitHub/phase-3-ce-mostafa-kermaninia/src/main/grammar/SimpleLang.g4 by ANTLR 4.13.2
 package main.grammar;
 
+    import main.ast.nodes.*;
+    import main.ast.nodes.Stmt.*;
+    import main.ast.nodes.expr.*;
+    import main.ast.nodes.ExternalDeclaration.*;
+    import main.ast.nodes.For.*;
+
 
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.tree.ErrorNode;

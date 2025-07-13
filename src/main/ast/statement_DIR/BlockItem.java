@@ -1,9 +1,8 @@
 package main.ast.statement_DIR;
 
 import main.ast.mainNodes_DIR.Stmt;
-import main.ast.nodes.ExternalDeclaration.Declaration;
-import main.ast.nodes.Node;
-import main.ast.nodes.expr.Expr;
+import main.ast.mainNodes_DIR.Declaration;
+import main.ast.baseNodes_DIR.Node;
 import main.visitor.IVisitor;
 
 public class BlockItem extends Node {

@@ -1,11 +1,14 @@
 package main.ast.literal_DIR;
 
 import main.ast.declaration_DIR.ForDec;
+
 import main.ast.expression_DIR.ForExpr;
-import main.ast.nodes.TranslationUnit;
-import main.ast.nodes.expr.Expr;
+
+import main.ast.mainNodes_DIR.Expr;
+
 import main.visitor.IVisitor;
-import main.ast.nodes.Node;
+
+import main.ast.baseNodes_DIR.Node;
 
 public class ForCondition extends Node{
     private Expr expr;

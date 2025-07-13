@@ -1,16 +1,11 @@
 package main.visitor;
 
-import main.ast.baseNodes_DIR.Program;
-import main.ast.baseNodes_DIR.TranslationUnit;
+import main.ast.baseNodes_DIR.*;
 import main.ast.declaration_DIR.*;
-import main.ast.expression_DIR.ArgExpr;
-import main.ast.expression_DIR.CastExpr;
-import main.ast.expression_DIR.IdentifierList;
+import main.ast.expression_DIR.*;
 import main.ast.literal_DIR.*;
-import main.ast.mainNodes_DIR.Pointer;
-import main.ast.statement_DIR.Initializer;
-import main.ast.statement_DIR.InitializerList;
-import main.ast.statement_DIR.ParameterList;
+import main.ast.mainNodes_DIR.*;
+import main.ast.statement_DIR.*;
 
 
 public interface IVisitor<T> {

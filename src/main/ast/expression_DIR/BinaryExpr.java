@@ -1,6 +1,9 @@
 package main.ast.expression_DIR;
 
 import main.ast.mainNodes_DIR.Expr;
+
+import main.ast.literal_DIR.AssignmentOp;
+
 import main.visitor.IVisitor;
 
 public class BinaryExpr extends Expr{

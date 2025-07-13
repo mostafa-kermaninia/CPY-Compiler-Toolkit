@@ -1,9 +1,14 @@
-package main.visitor;
+package main.utils;
 
 import main.symbolTable.SymbolTable;
 import main.symbolTable.exceptions.ItemNotFoundException;
 import main.symbolTable.item.FuncDecSymbolTableItem;
 import main.symbolTable.item.VarDecSymbolTableItem;
+
+
+import main.ast.expression_DIR.*;
+import main.ast.mainNodes_DIR.*;
+
 
 // int + int = int
 // double + int = double

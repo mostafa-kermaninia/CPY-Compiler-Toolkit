@@ -1,8 +1,10 @@
 package main.ast.expression_DIR;
 
-import main.ast.nodes.expr.Expr;
+import main.ast.mainNodes_DIR.Expr;
+
 import main.visitor.IVisitor;
-import main.ast.nodes.Node;
+
+import main.ast.baseNodes_DIR.Node;
 
 import java.util.ArrayList;
 

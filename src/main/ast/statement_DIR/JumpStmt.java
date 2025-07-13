@@ -1,8 +1,7 @@
 package main.ast.statement_DIR;
 
 import main.ast.mainNodes_DIR.Stmt;
-import main.ast.nodes.expr.Expr;
-import main.visitor.IVisitor;
+import main.ast.mainNodes_DIR.Expr;import main.visitor.IVisitor;
 
 public class JumpStmt extends Stmt {
     private Expr returnExpr;

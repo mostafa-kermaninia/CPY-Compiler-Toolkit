@@ -1,6 +1,11 @@
 package main.ast.expression_DIR;
 
 import main.ast.mainNodes_DIR.Expr;
+
+import main.ast.statement_DIR.InitializerList;
+
+import main.ast.literal_DIR.TypeName;
+
 import main.visitor.IVisitor;
 
 public class TIExpr extends Expr {

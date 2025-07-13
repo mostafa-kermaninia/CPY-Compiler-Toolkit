@@ -1,8 +1,8 @@
 package main.ast.statement_DIR;
 
 import main.ast.mainNodes_DIR.Stmt;
-import main.ast.nodes.For.ForCondition;
-import main.ast.nodes.expr.Expr;
+import main.ast.literal_DIR.ForCondition;
+import main.ast.mainNodes_DIR.Expr;
 import main.visitor.IVisitor;
 import main.symbolTable.SymbolTable;
 

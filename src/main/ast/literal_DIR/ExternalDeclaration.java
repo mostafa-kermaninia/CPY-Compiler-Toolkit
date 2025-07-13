@@ -1,8 +1,7 @@
 package main.ast.literal_DIR;
 
-import main.ast.declaration_DIR.Declaration;
-import main.ast.nodes.Node;
-import main.ast.nodes.TranslationUnit;
+import main.ast.mainNodes_DIR.Declaration;
+import main.ast.baseNodes_DIR.Node;
 import main.visitor.IVisitor;
 
 public class ExternalDeclaration extends Node {

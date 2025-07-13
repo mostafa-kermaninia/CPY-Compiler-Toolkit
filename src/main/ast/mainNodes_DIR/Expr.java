@@ -1,8 +1,8 @@
 package main.ast.mainNodes_DIR;
 
-import main.ast.nodes.ArgExpr;
-import main.ast.nodes.AssignmentOp;
-import main.ast.nodes.Node;
+import main.ast.expression_DIR.ArgExpr;
+import main.ast.literal_DIR.AssignmentOp;
+import main.ast.baseNodes_DIR.Node;
 
 public abstract class Expr extends Node {
     private boolean isFirst = true;

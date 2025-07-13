@@ -1,11 +1,8 @@
 package main.ast.declaration_DIR;
 
-import main.ast.nodes.DeclarationSpecifier;
-import main.ast.nodes.DeclarationSpecifiers;
-import main.ast.nodes.InitDeclaratorList;
-import main.ast.nodes.expr.Expr;
 import main.visitor.IVisitor;
-import main.ast.nodes.Node;
+
+import main.ast.baseNodes_DIR.Node;
 
 
 public class ForDec extends Node{

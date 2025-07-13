@@ -1,6 +1,9 @@
-package main.ast.declaration_DIR;
+package main.ast.mainNodes_DIR;
 
-import main.ast.nodes.DeclarationSpecifier;
+import main.ast.baseNodes_DIR.Node;
+
+import main.ast.declaration_DIR.DeclarationSpecifiers;
+import main.ast.declaration_DIR.InitDeclaratorList;
 import main.visitor.IVisitor;
 
 public class Declaration extends Node {

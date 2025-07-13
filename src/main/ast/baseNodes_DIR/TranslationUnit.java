@@ -1,5 +1,7 @@
 package main.ast.baseNodes_DIR;
-import main.ast.nodes.ExternalDeclaration.*;
+
+import main.ast.literal_DIR.ExternalDeclaration;
+import main.ast.literal_DIR.FunctionDefinition;
 
 import main.visitor.IVisitor;
 

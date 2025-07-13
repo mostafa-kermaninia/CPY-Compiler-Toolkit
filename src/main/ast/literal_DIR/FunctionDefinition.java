@@ -1,7 +1,15 @@
 package main.ast.literal_DIR;
 
-import main.ast.nodes.Stmt.CompoundStmt;
+import main.ast.statement_DIR.CompoundStmt;
+
+import main.ast.baseNodes_DIR.Node;
+
+import main.ast.declaration_DIR.Declarator;
+import main.ast.declaration_DIR.DecList;
+import main.ast.declaration_DIR.DeclarationSpecifiers;
+
 import main.visitor.IVisitor;
+
 import main.symbolTable.SymbolTable;
 
 public class FunctionDefinition extends Node {
