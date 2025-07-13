@@ -1,11 +1,10 @@
 package main.ast;
 
-import main.ast.baseNodes_DIR.Node;
 import main.visitor.IVisitor;
 
 import java.util.ArrayList;
 
-public class InitializerList extends Node {
+public class InitializerList extends Node{
     private ArrayList<Initializer> initializers;
     private ArrayList<Designation> designations;
 

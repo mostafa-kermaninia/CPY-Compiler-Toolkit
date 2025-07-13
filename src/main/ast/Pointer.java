@@ -1,9 +1,8 @@
 package main.ast;
 
-import main.ast.baseNodes_DIR.Node;
 import main.visitor.IVisitor;
 
-public class Pointer extends Node {
+public class Pointer extends Node{
 
     public Pointer() {}
 

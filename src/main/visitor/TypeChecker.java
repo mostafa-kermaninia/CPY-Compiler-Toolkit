@@ -9,6 +9,12 @@ import main.ast.For.ForDec;
 import main.ast.For.ForExpr;
 import main.ast.Stmt.*;
 import main.ast.expr.*;
+import main.symbolTable.SymbolTable;
+import main.symbolTable.exceptions.ItemNotFoundException;
+import main.symbolTable.item.FuncDecSymbolTableItem;
+import main.symbolTable.item.VarDecSymbolTableItem;
+
+import java.util.ArrayList;
 
 
 
@@ -22,7 +28,14 @@ import main.ast.expr.*;
  * */
 
 
-public class TestVisitor extends Visitor<Void>{
+public class TypeChecker extends Visitor<Void>{
+    public SymbolTable symbolTableMain;
+    public boolean changed = false;
+
+    public TypeChecker(SymbolTable symbolTableMain){
+        this.symbolTableMain = symbolTableMain;
+    }
+
     @Override
     public Void visit(Program program) {
         program.getTranslationUnit().accept(this);
@@ -30,9 +43,8 @@ public class TestVisitor extends Visitor<Void>{
     }
 
     public Void visit(TranslationUnit translationUnit) {
-        for (ExternalDeclaration externalDeclaration : translationUnit.getExternalDeclaration()){
+        for (ExternalDeclaration externalDeclaration : translationUnit.getExternalDeclaration())
             externalDeclaration.accept(this);
-        }
         return null;
     }
 
@@ -44,12 +56,12 @@ public class TestVisitor extends Visitor<Void>{
         return null;
     }
 
+    public String funcType = "void";
+    public boolean inFuncDecl = false;
     public Void visit(FunctionDefinition functionDefinition) {
-        System.out.print("Line ");
-        System.out.print(functionDefinition.getDeclarator().getDirectDec().getDirectDec().getLine());
-        System.out.print(": Stmt function " + functionDefinition.getDeclarator().getDirectDec().getDirectDec().getIdentifier() + " = ");
-        System.out.print(functionDefinition.getCompoundStmt().getBlockItems().size());
-        System.out.println(" " + functionDefinition.getNumArgs());
+        inFuncDecl = true;
+        symbolTableMain.push(functionDefinition.getSymbolTable());
+        funcType = functionDefinition.getDecSpecifiers().getDeclarationSpecifiers().get(0).getTypeSpecifier().getType();
         if (functionDefinition.getDecSpecifiers() != null)
             functionDefinition.getDecSpecifiers().accept(this);
         functionDefinition.getDeclarator().accept(this);
@@ -57,7 +69,13 @@ public class TestVisitor extends Visitor<Void>{
             functionDefinition.getDecList().accept(this);
         functionDefinition.getCompoundStmt().accept(this);
 
-
+        ParameterList plist = functionDefinition.getDeclarator().getDirectDec().getParameterList();
+        if (plist == null)
+            functionDefinition.setNumArgs(0);
+        else
+            functionDefinition.setNumArgs(plist.getParameterDecs().size());
+        symbolTableMain.pop();
+        inFuncDecl = false;
         return null;
     }
 
@@ -71,11 +89,16 @@ public class TestVisitor extends Visitor<Void>{
         return null;
     }
 
-
+    private boolean initDastan = false;
+    private String varType = "void";
     public Void visit(Declaration declaration) {
         declaration.getDeclarationSpecifiers().accept(this);
-        if (declaration.getInitDeclaratorList() != null)
+        if (declaration.getInitDeclaratorList() != null) {
+            initDastan = true;
+            varType = declaration.getDeclarationSpecifiers().getDeclarationSpecifiers().get(0).getTypeSpecifier().getType();
             declaration.getInitDeclaratorList().accept(this);
+            initDastan = false;
+        }
         return null;
     }
 
@@ -145,14 +168,17 @@ public class TestVisitor extends Visitor<Void>{
     }
 
     public Void visit(ParameterList parameterList) {
+        for (ParameterDec parameterDec : parameterList.getParameterDecs())
+            parameterDec.accept(this);
         return null;
     }
 
 
     public Void visit(Declarator declarator) {
         declarator.getDirectDec().accept(this);
-        if (declarator.getPointer() != null)
+        if (declarator.getPointer() != null) {
             declarator.getPointer().accept(this);
+        }
         return null;
     }
 
@@ -219,8 +245,17 @@ public class TestVisitor extends Visitor<Void>{
     }
 
     public Void visit(Initializer initializer) {
-        if (initializer.getExpr() != null)
+        if (initializer.getExpr() != null) {
+            if (initDastan){
+                ExpressionTypeEvaluator my_TEval = new ExpressionTypeEvaluator(SymbolTable.top);
+                boolean typeCheckError = !my_TEval.checkType(varType, my_TEval.getType(initializer.getExpr()));
+                if (typeCheckError) {
+                    System.out.println("Line:" + initializer.getLine() + " -> " + "type mismatch in expression");
+                    return null;
+                }
+            }
             initializer.getExpr().accept(this);
+        }
         else
             initializer.getInitList().accept(this);
         return null;
@@ -247,7 +282,8 @@ public class TestVisitor extends Visitor<Void>{
     }
 
     public Void visit(CompoundStmt compoundStmt) {
-        for (BlockItem blockItem : compoundStmt.getBlockItems()){
+        for (int i = 0; i < compoundStmt.getBlockItems().size(); i++){
+            BlockItem blockItem = compoundStmt.getBlockItems().get(i);
             blockItem.accept(this);
         }
         return null;
@@ -268,54 +304,25 @@ public class TestVisitor extends Visitor<Void>{
     }
 
     public Void visit(SelectionStmt selectionStmt) {
+        SymbolTable.push(selectionStmt.getSymbolTable());
         selectionStmt.getExpr().accept(this);
-        System.out.print("Line ");
-        System.out.print(selectionStmt.getLine());
-        System.out.print(": Stmt selection = ");
-        if (selectionStmt.getMainStmt() instanceof CompoundStmt) {
-            CompoundStmt compoundStmt = (CompoundStmt) selectionStmt.getMainStmt();
-            System.out.println(compoundStmt.getBlockItems().size());
-        }
-        else
-            System.out.println(0);
         selectionStmt.getMainStmt().accept(this);
-        if (selectionStmt.getElseStmt() instanceof CompoundStmt) {
-            CompoundStmt compoundStmt = (CompoundStmt) selectionStmt.getElseStmt();
-            if (compoundStmt.getBlockItems().size() > 0) {
-                System.out.print("Line ");
-                System.out.print(selectionStmt.getElseLine());
-                System.out.print(": Stmt selection = ");
-                System.out.println(compoundStmt.getBlockItems().size());
-            }
-        }
-        else if (selectionStmt.getElseStmt() != null && !(selectionStmt.getElseStmt() instanceof SelectionStmt)) {
-            System.out.print("Line ");
-            System.out.print(selectionStmt.getElseLine());
-            System.out.print(": Stmt selection = ");
-            System.out.println(0);
-        }
         if (selectionStmt.getElseStmt() != null)
             selectionStmt.getElseStmt().accept(this);
+        SymbolTable.pop();
         return null;
     }
 
 
     public Void visit(IterStmt iterStmt) {
+        SymbolTable.push(iterStmt.getSymbolTable());
         if (iterStmt.getExpr() != null)
             iterStmt.getExpr().accept(this);
-        System.out.print("Line ");
-        System.out.print(iterStmt.getLine());
-        System.out.print(": Stmt " + iterStmt.getType() + " = ");
-        if (iterStmt.getStmt() instanceof CompoundStmt) {
-            CompoundStmt compoundStmt = (CompoundStmt) iterStmt.getStmt();
-            System.out.println(compoundStmt.getBlockItems().size());
-        }
-        else
-            System.out.println(0);
         if (iterStmt.getStmt() != null)
             iterStmt.getStmt().accept(this);
         if (iterStmt.getForCondition() != null)
             iterStmt.getForCondition().accept(this);
+        SymbolTable.pop();
         return null;
     }
 
@@ -340,12 +347,72 @@ public class TestVisitor extends Visitor<Void>{
     }
 
     public Void visit(JumpStmt jumpStmt) {
-        if (jumpStmt.getCondition() != null)
+        ExpressionTypeEvaluator my_TEval = new ExpressionTypeEvaluator(SymbolTable.top);
+        if (jumpStmt.getCondition() != null) {
             jumpStmt.getCondition().accept(this);
+            if (jumpStmt.isReturn() && inFuncDecl &&
+                    !my_TEval.checkType(funcType, my_TEval.getType(jumpStmt.getCondition()))) //type check she ba assignment
+                System.out.println( "Line:" + jumpStmt.getLine() + " -> " + "return type mismatch");
+//            System.out.println(funcType + "................." + my_TEval.getType(jumpStmt.getCondition()));
+        }
+        else if (jumpStmt.isReturn() && inFuncDecl && !(funcType.equals("void")))
+            System.out.println( "Line:" + jumpStmt.getLine() + " -> " + "return type mismatch");
+
+        return null;
+    }
+
+    public Void checkArgTypes(FunctionDefinition funcDef, FuncCall funcCall) {
+        ExpressionTypeEvaluator my_TEval = new ExpressionTypeEvaluator(SymbolTable.top);
+        SymbolTable defSymbolTable = funcDef.getSymbolTable();
+        SymbolTable.push(funcDef.getSymbolTable());
+        ArrayList<String> type1 = new ArrayList<>(), type2 = new ArrayList<>();
+        if (funcDef.getDeclarator().getDirectDec().getParameterList() == null)
+            return null;
+        for (ParameterDec pd : funcDef.getDeclarator().getDirectDec().getParameterList().getParameterDecs()){
+            String identifier = pd.getDeclarator() != null ? pd.getDeclarator().getDirectDec().getIdentifier() :
+                    pd.getDeclarationSpecifier().getDeclarationSpecifiers().get(pd.getDeclarationSpecifier().getDeclarationSpecifiers().size() - 1).getTypeSpecifier().getType();
+            try {
+                type1.add(((VarDecSymbolTableItem) SymbolTable.top.getItem(VarDecSymbolTableItem.START_KEY + identifier)).type);
+            } catch (ItemNotFoundException e) {
+                System.out.println("Line: amoooo" + ((Identifier) funcCall.getExpr()).getLine() + "-> " + " not declared");
+            }
+        }
+        SymbolTable.pop();
+        if (funcCall.getArgExpr() == null)
+            return null;
+        for (Expr expr : funcCall.getArgExpr().getExprs()) {
+            type2.add(my_TEval.getType(expr));
+        }
+        for (int i = 0; i < type1.size(); i++) {
+            if (!my_TEval.checkType(type1.get(i), type2.get(i))){
+                int line = ((Identifier) funcCall.getExpr()).getLine();
+//                System.out.println("Line: " + line + " -> " + type1.get(i) + " ..... " + type2.get(i));
+                System.out.println("Line:" + line + " -> argument type mismatch");
+                return null;
+            }
+        }
+
         return null;
     }
 
     public Void visit(FuncCall funcCall) {
+
+        String funcName = ((Identifier) funcCall.getExpr()).getIdentifier();
+        int line = ((Identifier) funcCall.getExpr()).getLine();
+        FuncDecSymbolTableItem funcDec = null;
+        if (funcName.equals("scanf") || funcName.equals("printf") || funcName.equals("malloc") ||
+                funcName.equals("free")){}
+        else {
+            try {
+                funcDec = (FuncDecSymbolTableItem) SymbolTable.top.getItem(FuncDecSymbolTableItem.START_KEY  + funcCall.getNumArgs() + funcName );
+            } catch (ItemNotFoundException e) {
+                System.out.println("Line:" + line + "-> " + funcName + " not declared");
+            }
+        }
+        if (funcDec != null) {
+            checkArgTypes(funcDec.getFuncDec(), funcCall);
+        }
+
         funcCall.getExpr().accept(this);
         if (funcCall.getArgExpr() != null)
             funcCall.getArgExpr().accept(this);
@@ -353,12 +420,12 @@ public class TestVisitor extends Visitor<Void>{
     }
 
     public Void visit(UnaryExpr unaryExpr) {
-//        if (unaryExpr.getFirst()) {
-//            System.out.print("Line ");
-//            System.out.print(unaryExpr.getLine());
-//            System.out.print(": Expr ");
-//            System.out.println(unaryExpr.getOp());
-//        }
+        ExpressionTypeEvaluator my_TEval = new ExpressionTypeEvaluator(SymbolTable.top);
+        boolean typeCheckError = !my_TEval.checkType(unaryExpr);
+        if (typeCheckError) {
+            System.out.println("Line:" + unaryExpr.getLine() + " -> " + "type mismatch in expression");
+            return null;
+        }
         unaryExpr.getExpr().accept(this);
         return null;
     }
@@ -370,15 +437,12 @@ public class TestVisitor extends Visitor<Void>{
     }
 
     public Void visit(BinaryExpr binaryExpr) {
-//        if (binaryExpr.getFirst()){
-//            System.out.print("Line ");
-//            System.out.print(binaryExpr.getLine());
-//            System.out.print(": Expr ");
-//            if (binaryExpr.getAssignmentOp() != null)
-//                System.out.println(binaryExpr.getAssignmentOp().getOpType());
-//            else
-//                System.out.println(binaryExpr.getOperator());
-//        }
+        ExpressionTypeEvaluator my_TEval = new ExpressionTypeEvaluator(SymbolTable.top);
+        boolean typeCheckError = !my_TEval.checkType(binaryExpr);
+        if (typeCheckError) {
+            System.out.println("Line:" + binaryExpr.getLine() + " -> " + "type mismatch in expression");
+            return null;
+        }
         binaryExpr.getExpr1().accept(this);
         binaryExpr.getExpr2().accept(this);
         if (binaryExpr.getAssignmentOp() != null)
@@ -387,12 +451,12 @@ public class TestVisitor extends Visitor<Void>{
     }
 
     public Void visit(CondExpr condExpr) {
-//        if (condExpr.getFirst()){
-//            System.out.print("Line ");
-//            System.out.print(condExpr.getLine());
-//            System.out.print(": Expr ");
-//            System.out.println("?");
-//        }
+        ExpressionTypeEvaluator my_TEval = new ExpressionTypeEvaluator(SymbolTable.top);
+        boolean typeCheckError = !my_TEval.checkType(condExpr);
+        if (typeCheckError) {
+            System.out.println("Line:" + condExpr.getLine() + " -> " + "type mismatch in expression");
+            return null;
+        }
         condExpr.getExpr1().accept(this);
         condExpr.getExpr2().accept(this);
         condExpr.getExpr3().accept(this);
@@ -400,14 +464,6 @@ public class TestVisitor extends Visitor<Void>{
     }
 
     public Void visit(CommaExpr commaExpr) {
-//        if (commaExpr.getFirst()){
-//            if (commaExpr.getLine() != 0) {
-//                System.out.print("Line ");
-//                System.out.print(commaExpr.getLine());
-//                System.out.print(": Expr ");
-//                System.out.println(",");
-//            }
-//        }
         for (Expr expr : commaExpr.getExprs())
             if (expr != null)
                 expr.accept(this);
@@ -421,22 +477,10 @@ public class TestVisitor extends Visitor<Void>{
     }
 
     public Void visit(Identifier identifier) {
-//        if (identifier.getFirst()) {
-//            System.out.print("Line ");
-//            System.out.print(identifier.getLine());
-//            System.out.print(": Expr ");
-//            System.out.println(identifier.getIdentifier());
-//        }
         return null;
     }
 
     public Void visit(Constant constant) {
-//        if (constant.getFirst()) {
-//            System.out.print("Line ");
-//            System.out.print(constant.getLine());
-//            System.out.print(": Expr ");
-//            System.out.println(constant.getConstant());
-//        }
         return null;
     }
 
@@ -448,6 +492,12 @@ public class TestVisitor extends Visitor<Void>{
 
 
     public Void visit(PrefixExpr prefixExpr) {
+        ExpressionTypeEvaluator my_TEval = new ExpressionTypeEvaluator(SymbolTable.top);
+        boolean typeCheckError = !my_TEval.checkType(prefixExpr);
+        if (typeCheckError) {
+            System.out.println("Line:" + prefixExpr.getLine() + " -> " + "type mismatch in expression");
+            return null;
+        }
         if (prefixExpr.getExpr() != null)
             prefixExpr.getExpr().accept(this);
         if (prefixExpr.getCastExpr() != null)

@@ -1,10 +1,9 @@
 package main.ast;
 
-import main.ast.baseNodes_DIR.Node;
 import main.ast.expr.Expr;
 import main.visitor.IVisitor;
 
-public class Initializer extends Node {
+public class Initializer extends Node{
     private Expr expr;
     private InitializerList initList;
     public Initializer() { expr = null;  initList = null; }
