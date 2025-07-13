@@ -1,20 +1,21 @@
 // Generated from D:/GitHub/phase-3-ce-mostafa-kermaninia/src/main/grammar/SimpleLang.g4 by ANTLR 4.13.2
 package main.grammar;
 
-    import main.ast.*;
-	import main.ast.ExternalDeclaration.Declaration;
-	import main.ast.ExternalDeclaration.ExternalDeclaration;
-	import main.ast.ExternalDeclaration.FunctionDefinition;
-	import main.ast.For.ForCondition;
-	import main.ast.For.ForDec;
-	import main.ast.For.ForExpr;
-	import main.ast.Stmt.*;
-	import main.ast.expr.*;
+    import main.ast.declaration_DIR.*;
+	import main.ast.literal_DIR.*;
+	import main.ast.declaration_DIR.ForDec;
+	import main.ast.expression_DIR.*;
+	import main.ast.baseNodes_DIR.Program;
+	import main.ast.baseNodes_DIR.TranslationUnit;
 
+	import main.ast.mainNodes_DIR.Expr;
+	import main.ast.mainNodes_DIR.Pointer;
+	import main.ast.mainNodes_DIR.Stmt;
+	import main.ast.statement_DIR.*;
 	import org.antlr.v4.runtime.atn.*;
 import org.antlr.v4.runtime.dfa.DFA;
 import org.antlr.v4.runtime.*;
-	import org.antlr.v4.runtime.tree.*;
+    import org.antlr.v4.runtime.tree.*;
 import java.util.List;
 
 @SuppressWarnings({"all", "warnings", "unchecked", "unused", "cast", "CheckReturnValue", "this-escape"})

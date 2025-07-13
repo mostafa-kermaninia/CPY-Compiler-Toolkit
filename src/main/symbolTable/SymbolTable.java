@@ -11,7 +11,6 @@ import java.util.*;
 public class SymbolTable {
 
     //Start of static members
-
     public static SymbolTable top;
     public static SymbolTable root;
     private static Stack<SymbolTable> stack = new Stack<>();

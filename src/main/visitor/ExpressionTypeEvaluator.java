@@ -1,6 +1,5 @@
 package main.visitor;
 
-import main.ast.expr.*;
 import main.symbolTable.SymbolTable;
 import main.symbolTable.exceptions.ItemNotFoundException;
 import main.symbolTable.item.FuncDecSymbolTableItem;
@@ -52,8 +51,10 @@ public class ExpressionTypeEvaluator{
         if (type1.equals(type2))
             return true;
         switch (type1){
+            case "long":
+            case "short":
             case "int":
-                if (type2.equals("short") || type2.equals("long") || type2.equals("char"))
+                if (type2.equals("int") || type2.equals("short") || type2.equals("long") || type2.equals("char"))
                     return true;
                 break;
             case "float":
@@ -102,7 +103,11 @@ public class ExpressionTypeEvaluator{
                 binaryExpr.getAssignmentOp().getOpType().equals("-="))){
             return  (checkType("int", type1) && checkType("int", type2) || type1.equals("float") && type2.equals("float") ||
                       type1.equals("double") && type2.equals("double") || type1.equals("char") && type2.equals("char") ||
-                        type1.equals("char") && type2.equals("int")) && !((checkType("int", type1) && !type1.equals("char") && checkType("int", type2) && type2.equals("char")));
+                        type1.equals("char") && type2.equals("int") ||
+                        type1.equals("float") && type2.equals("int") ||
+                        type1.equals("double") && type2.equals("int") ||
+                        type1.equals("double") && type2.equals("float")
+            ) && !((checkType("int", type1) && !type1.equals("char") && checkType("int", type2) && type2.equals("char")));
         }
         else if (binaryExpr.getOperator().equals("*") || (binaryExpr.getAssignmentOp() != null &&
                 binaryExpr.getAssignmentOp().getOpType().equals("*="))){
@@ -121,7 +126,11 @@ public class ExpressionTypeEvaluator{
                     type1.equals("float") && type2.equals("float") ||
                     type1.equals("double") && type2.equals("double") ||
                     checkType("int", type1) && !type1.equals("char") && type2.equals("double") ||
-                    type1.equals("double") && checkType("int", type2) && !type2.equals("char"));
+                    type1.equals("double") && checkType("int", type2) && !type2.equals("char") ||
+                    type1.equals("float") && type2.equals("double") ||
+                    type1.equals("double") && type2.equals("float")||
+                    type1.equals("float") && type2.equals("int")||
+                    type1.equals("int") && type2.equals("float"));
         }
         else if (binaryExpr.getOperator().equals("<<") || binaryExpr.getOperator().equals(">>") &&
                 (binaryExpr.getAssignmentOp()!=null && (binaryExpr.getAssignmentOp().getOpType().equals(">>=") ||
@@ -254,6 +263,9 @@ public class ExpressionTypeEvaluator{
             if (type1.equals("int") && type2.equals("int")) return "int";
             else if (type1.equals("float") && type2.equals("float")) return "float";
             else if (type1.equals("double") && type2.equals("double")) return "double";
+            else if (type1.equals("float") && type2.equals("int")) return "float";
+            else if (type1.equals("double") && type2.equals("int")) return "double";
+            else if (type1.equals("double") && type2.equals("float")) return "double";
             else if (type1.equals("char") && type2.equals("char")) return "char";
             else if (type1.equals("char") && type2.equals("int")) return "char";
         }
@@ -263,6 +275,10 @@ public class ExpressionTypeEvaluator{
             else if (type1.equals("double") && type2.equals("double")) return "double";
             else if (type1.equals("int") && type2.equals("double")) return "double";
             else if (type1.equals("double") && type2.equals("int")) return "double";
+            else if (type1.equals("float") && type2.equals("double")) return "double";
+            else if (type1.equals("double") && type2.equals("float")) return "double";
+            else if (type1.equals("float") && type2.equals("int")) return "double";
+            else if (type1.equals("int") && type2.equals("float")) return "double";
         }
         else if (binaryExpr.getOperator().equals("*")){
             if (type1.equals("int") && type2.equals("int")) return "int";
@@ -293,7 +309,7 @@ public class ExpressionTypeEvaluator{
         String val = constant.getConstant();
         if (val.matches("[0-9]+")) return "int";
         if (val.matches("[0-9]+\\.[0-9]*[fF]?")) return "float";
-        if (val.matches("[0-9]+\\.[0-9]*")) return "double";
+        if (val.matches("[0-9]+\\.[0-9]*")) return "float";
         if (val.matches("'[^']'")) return "char";
         if (val.equals("true") || val.equals("false")) return "bool";
         if (constant.isString() || val.matches("^\".*\"")) return "string";

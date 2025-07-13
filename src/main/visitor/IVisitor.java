@@ -1,14 +1,16 @@
 package main.visitor;
 
-import main.ast.*;
-import main.ast.ExternalDeclaration.Declaration;
-import main.ast.ExternalDeclaration.ExternalDeclaration;
-import main.ast.ExternalDeclaration.FunctionDefinition;
-import main.ast.For.ForCondition;
-import main.ast.For.ForDec;
-import main.ast.For.ForExpr;
-import main.ast.Stmt.*;
-import main.ast.expr.*;
+import main.ast.baseNodes_DIR.Program;
+import main.ast.baseNodes_DIR.TranslationUnit;
+import main.ast.declaration_DIR.*;
+import main.ast.expression_DIR.ArgExpr;
+import main.ast.expression_DIR.CastExpr;
+import main.ast.expression_DIR.IdentifierList;
+import main.ast.literal_DIR.*;
+import main.ast.mainNodes_DIR.Pointer;
+import main.ast.statement_DIR.Initializer;
+import main.ast.statement_DIR.InitializerList;
+import main.ast.statement_DIR.ParameterList;
 
 
 public interface IVisitor<T> {
