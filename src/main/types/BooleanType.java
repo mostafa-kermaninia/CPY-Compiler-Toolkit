@@ -1,7 +1,6 @@
 package main.types;
 
-
-public class BooleanType extends Type{
+public class BooleanType extends Type {
     public BooleanType() {
 
     }
