@@ -11,7 +11,8 @@ import java.io.IOException;
 
 public class SimpleLang {
     public static void main(String[] args) throws IOException {
-        CPYtoC CPYtoC = new CPYtoC(args[0]);
+//        CPYtoC CPYtoC = new CPYtoC(args[0]);
+        CPYtoC CPYtoC = new CPYtoC();
         CharStream reader = CharStreams.fromString(CPYtoC.converted);
         SimpleLangLexer simpleLangLexer = new SimpleLangLexer(reader);
         CommonTokenStream tokens = new CommonTokenStream(simpleLangLexer);
