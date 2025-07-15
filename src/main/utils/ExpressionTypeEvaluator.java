@@ -12,9 +12,9 @@ public class ExpressionTypeEvaluator {
 
     SymbolTable symbolTable;
 
-    private enum DataType {
-        INT, DOUBLE, FLOAT, CHAR, BOOL, STRING, VOID, UNDEFINED, LONG, SHORT
-    }
+//    private enum DataType {
+//        INT, DOUBLE, FLOAT, CHAR, BOOL, STRING, VOID, UNDEFINED, LONG, SHORT
+//    }
 
     public ExpressionTypeEvaluator(SymbolTable symbolTable) {
         this.symbolTable = symbolTable;

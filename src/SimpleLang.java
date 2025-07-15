@@ -3,8 +3,8 @@ import main.ast.CPY_DIR.CPYtoC;
 import main.grammar.SimpleLangLexer;
 import main.grammar.SimpleLangParser;
 import main.visitor.*;
-import main.vulnerability.VulnChecker;
-import main.vulnerability.VulnVisitor;
+import main.vulnerability.VulnerabilityReporter;
+import main.vulnerability.VulnerabilityDataCollector;
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
@@ -23,13 +23,13 @@ public class SimpleLang {
         System.out.println();
  
 
-        VulnVisitor my_vulnVisitor = new VulnVisitor();
-        my_vulnVisitor.visit(program);
+        VulnerabilityDataCollector my_vulnerabilityDataCollector = new VulnerabilityDataCollector();
+        my_vulnerabilityDataCollector.visit(program);
 
-        VulnChecker my_vulnChecker = new VulnChecker(my_vulnVisitor.symbolTableMain);
-        my_vulnChecker.visit(program);
+        VulnerabilityReporter my_vulnerabilityReporter = new VulnerabilityReporter(my_vulnerabilityDataCollector.symbolTableMain);
+        my_vulnerabilityReporter.visit(program);
 
-        TypeChecker my_typeChecker = new TypeChecker(my_vulnVisitor.symbolTableMain);
+        TypeChecker my_typeChecker = new TypeChecker(my_vulnerabilityDataCollector.symbolTableMain);
         my_typeChecker.visit(program);
 
     }
