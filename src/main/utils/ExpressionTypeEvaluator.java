@@ -163,7 +163,7 @@ public class ExpressionTypeEvaluator {
         return DataType.UNDEFINED;
     }
 
-/
+
     private String fromEnum(DataType type) {
         if (type == null || type == DataType.UNDEFINED) {
             return "undefined";
