@@ -116,6 +116,7 @@ public class ExpressionTypeEvaluator {
                 } catch (ItemNotFoundException e) { return DataType.UNDEFINED; }
             }
         }
+        
         if (expr instanceof FuncCall) {
             String funcName = ((Identifier) ((FuncCall) expr).getExpr()).getIdentifier();
             try {
