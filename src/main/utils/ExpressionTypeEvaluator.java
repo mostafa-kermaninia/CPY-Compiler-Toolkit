@@ -1,18 +1,14 @@
 package main.utils;
 
-import main.ast.expression_DIR.BinaryExpr;
-import main.ast.expression_DIR.CondExpr;
-import main.ast.expression_DIR.Constant;
-import main.ast.expression_DIR.ExprCast;
-import main.ast.expression_DIR.FuncCall;
-import main.ast.expression_DIR.Identifier;
-import main.ast.expression_DIR.PrefixExpr;
-import main.ast.expression_DIR.UnaryExpr;
-import main.ast.mainNodes_DIR.Expr;
+import main.ast.expression_DIR.*;
+import main.ast.mainNodes_DIR.*;
+
 import main.symbolTable.SymbolTable;
 import main.symbolTable.exceptions.ItemNotFoundException;
 import main.symbolTable.item.FuncDecSymbolTableItem;
 import main.symbolTable.item.VarDecSymbolTableItem;
+
+import main.utils.DataType;
 
 // int + int = int
 // double + int = double
@@ -66,16 +62,12 @@ public class ExpressionTypeEvaluator {
                 if (type2.equals("int") || type2.equals("short") || type2.equals("long") || type2.equals("char"))
                     return true;
                 break;
-            case "float":
+            case "float", "char":
                 if (type2.equals("short") || type2.equals("long") || type2.equals("int"))
                     return true;
                 break;
             case "double":
                 if (type2.equals("short") || type2.equals("long") || type2.equals("int") || type2.equals("float"))
-                    return true;
-                break;
-            case "char":
-                if (type2.equals("short") || type2.equals("long") || type2.equals("int"))
                     return true;
                 break;
         }
@@ -146,28 +138,22 @@ public class ExpressionTypeEvaluator {
         } else if (binaryExpr.getOperator().equals("<<") || binaryExpr.getOperator().equals(">>") &&
                 (binaryExpr.getAssignmentOp() != null && (binaryExpr.getAssignmentOp().getOpType().equals(">>=") ||
                         binaryExpr.getAssignmentOp().getOpType().equals("<<=")))) {
-            if (!type1.equals("string") && type2.equals("int"))
-                return true;
+            return !type1.equals("string") && type2.equals("int");
         } else if ((binaryExpr.getAssignmentOp() != null && binaryExpr.getAssignmentOp().getOpType().equals("%=")) ||
                 binaryExpr.getOperator().equals("%")) {
-            if (checkType("int", type1) && checkType("int", type2))
-                return true;
+            return checkType("int", type1) && checkType("int", type2);
         }
         return false;
     }
 
     public boolean checkType(UnaryExpr unaryExpr) {
         String type = getType(unaryExpr.getExpr());
-        if (type.equals("int") || type.equals("short") || type.equals("long") || type.equals("char")
-                || type.equals("float") || type.equals("double"))
-            return true;
-        return false;
+        return type.equals("int") || type.equals("short") || type.equals("long") || type.equals("char")
+                || type.equals("float") || type.equals("double");
     }
 
     public boolean checkType(PrefixExpr prefixExpr) {
-        if (getType(prefixExpr).equals("void"))
-            return false;
-        return true;
+        return !getType(prefixExpr).equals("void");
     }
 
     public boolean checkType(CondExpr condExpr) {
@@ -190,7 +176,7 @@ public class ExpressionTypeEvaluator {
                 return ((FuncDecSymbolTableItem) SymbolTable.top
                         .getItem(FuncDecSymbolTableItem.START_KEY + funcCall.getNumArgs() + funcName)).type;
             } catch (ItemNotFoundException e) {
-                System.out.println("Line: akbar" + "-> " + funcName + " not declared");
+                return "undefined";
             }
         } else if (expr instanceof Identifier) {
             Identifier identifier = (Identifier) expr;
@@ -199,8 +185,7 @@ public class ExpressionTypeEvaluator {
                     return ((VarDecSymbolTableItem) SymbolTable.top
                             .getItem(VarDecSymbolTableItem.START_KEY + identifier.getIdentifier())).type;
                 } catch (ItemNotFoundException e) {
-                    System.out.println(
-                            "Line: hi" + identifier.getLine() + "-> " + identifier.getIdentifier() + " not declared");
+                    return "undefined";
                 }
             }
         } else if (expr instanceof PrefixExpr) {
@@ -225,7 +210,7 @@ public class ExpressionTypeEvaluator {
                 type = ((VarDecSymbolTableItem) SymbolTable.top
                         .getItem(VarDecSymbolTableItem.START_KEY + identifier)).type;
             } catch (ItemNotFoundException e) {
-                System.out.println("Line: mame" + "-> " + " not declared");
+                return "undefined";
             }
         }
         if (prefixExpr.getOps().size() != 0) {
@@ -235,8 +220,8 @@ public class ExpressionTypeEvaluator {
                     type = "int";
                 else if (op.equals("++") || op.equals("--"))
                     if (type.equals("int") || type.equals("short") || type.equals("long") || type.equals("char")
-                            || type.equals("float") || type.equals("double"))
-                        type = type;
+                            || type.equals("float") || type.equals("double")) {
+                    }
                     else
                         return "void";
             }
