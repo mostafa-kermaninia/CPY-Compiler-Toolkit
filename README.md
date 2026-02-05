@@ -54,29 +54,45 @@ CPY-Compiler-Toolkit/
 ├── Phase-2/       # Optimization & Symbol Table Modules
 └── Phase-3/       # Final Version with Security & Type Checking
     └── last version/src/main/java/  # <--- Source of Truth for the latest build
-Getting Started
-Prerequisites
-Java JDK 17 or higher
+```
 
-IntelliJ IDEA (Recommended) or any Java IDE
 
-ANTLR4 Runtime
+## Getting Started
 
-Installation & Run
-Clone the repository:
+### Prerequisites
 
-Bash
+To run this project efficiently, ensure you have the following installed:
+
+* **Java JDK 17** or higher
+* **IntelliJ IDEA** (Recommended) or any standard Java IDE
+* **ANTLR4 Runtime** library/plugin
+
+### Installation & Run
+
+1. **Clone the repository:**
+```bash
 git clone [https://github.com/Mostafa-Kermaninia/CPY-Compiler-Toolkit.git](https://github.com/Mostafa-Kermaninia/CPY-Compiler-Toolkit.git)
-Navigate to the final phase source:
 
-Bash
-cd Phase-3/"last version"
-Run the main compiler class. The input file should be a standard .c file.
+```
 
-Example Transformation
-Input (Standard C):
 
-C
+2. **Navigate to the final release (Phase 3):**
+```bash
+cd "Phase-3/last version"
+
+```
+
+
+3. **Run the Compiler:**
+Open the project in your IDE, locate the `Main` class, and run it. Ensure your run configuration points to a valid `.c` source file as input.
+
+## Example Transformation
+
+Here is a demonstration of how the Transpiler modernizes C syntax:
+
+**Input (Standard C):**
+
+```c
 int main() {
     int x = 10;
     if (x > 5) {
@@ -84,9 +100,12 @@ int main() {
     }
     return 0;
 }
-Output (CPY Transpiled):
 
-Python
+```
+
+**Output (CPY Transpiled):**
+
+```python
 int main():
     int x = 10
     if x > 5:
@@ -94,10 +113,10 @@ int main():
     end
     return 0
 end
-Contact
-Mostafa Kermaninia Senior Full-Stack Engineer & Computer Engineering Student
 
-GitHub Profile
+```
 
+## Contact
 
----
+**Mostafa Kermaninia** *Senior Full-Stack Engineer & Computer Engineering Student* [GitHub Profile](https://www.google.com/search?q=https://github.com/Mostafa-Kermaninia)
+
